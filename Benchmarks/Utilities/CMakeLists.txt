@@ -5,13 +5,15 @@ IF( ITK_FOUND )
   INCLUDE( ${ITK_USE_FILE} )
 
   SET( ITKBenchmarkUtilities_INCLUDE_FILES
-    itkHighPriorityRealTimeClock.cxx
-    itkHighPriorityRealTimeProbe.cxx
+    itkHighPriorityRealTimeClock.h
+    itkHighPriorityRealTimeProbe.h
+    itkHighPriorityRealTimeProbeCollector.h
     )
 
   SET( ITKBenchmarkUtilities_SOURCE_FILES
     itkHighPriorityRealTimeClock.cxx
     itkHighPriorityRealTimeProbe.cxx
+    itkHighPriorityRealTimeProbeCollector.cxx
     )
 
   ADD_LIBRARY( ITKBenchmarkUtilities
