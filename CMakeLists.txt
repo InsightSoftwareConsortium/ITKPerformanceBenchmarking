@@ -83,4 +83,3 @@ enable_testing()
 
 # Add sub-directory
 add_subdirectory(Benchmarks)
-

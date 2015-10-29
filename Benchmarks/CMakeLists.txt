@@ -1,27 +1,27 @@
-## Setup the option of Test
+## Setup the option of ITK Benchmark
 
-set(ITK_BENCHMARK_DIRS
-    Utilities
-    ClockTest
-   )
+# Add ITK Benchmark Utilities
+add_subdirectory(Utilities)
+include_directories(Utilities)
+
+# Add ITK Clock Test
+add_subdirectory(ClockTest)
 
 option(BENCHMARK_ITK_FILTER "Test the performance of ITK Filters." ON)
 option(BENCHMARK_ITK_REGESTRATION "Test the performance of ITK Registration." ON)
 option(BENCHMARK_ITK_SEGMENTATION "Test the performance of ITK Segmentation." ON)
 
+# Add ITK Benchmark for Filtering
 if(ITK_BENCHMARK_FILTER)
-  set(ITK_BENCHMARK_DIRS ${ITK_BENCHMARK_DIRS}
-      Filtering)
+  add_subdirectory(Filtering)
 endif()
 
+# Add ITK Benchmark for Registration
 if(ITK_BENCHMARK_REGESTRATION)
-  set(ITK_BENCHMARK_DIRS ${ITK_BENCHMARK_DIRS}
-      Registration)
+  add_subdirectory(Registration)
 endif()
 
+# Add ITK Benchmark for Segmentation
 if(ITK_BENCHMARK_SEGMENTATION)
-  set(ITK_BENCHMARK_DIRS ${ITK_BENCHMARK_DIRS}
-      Segmentation)
+  add_subdirectory(Segmentation)
 endif()
-
-subdirs(${ITK_BENCHMARK_DIRS})
