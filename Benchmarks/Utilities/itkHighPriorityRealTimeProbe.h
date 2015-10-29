@@ -19,8 +19,6 @@
 #define itkHighPriorityRealTimeProbe_h
 
 #include "itkConfigure.h"
-//#include "itkResourceProbe.h"
-//#include "itkRealTimeClock.h"
 #include "itkMacro.h"
 #include "itkIntTypes.h"
 #include <string>
@@ -62,7 +60,7 @@ public:
   virtual ~HighPriorityRealTimeProbe();
 
   /** Set name of target */
-  void SetNameOfBenchmark(std::string name);
+  void SetNameOfProbe(std::string name);
 
   /** Set number of threads */
   void SetMumberOfThreads(const unsigned int numthreads);

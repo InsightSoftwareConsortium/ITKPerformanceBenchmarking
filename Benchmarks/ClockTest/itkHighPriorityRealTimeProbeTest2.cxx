@@ -24,7 +24,7 @@ int main( int, char * [] )
 {
   // Create an ITK time probe
   itk::HighPriorityRealTimeProbe localTimer;
-  localTimer.SetNameOfBenchmark("Simple for loop");
+  localTimer.SetNameOfProbe("Simple for loop");
   // Print the initial values
   std::cout << "Testing itk::HighPriorityRealTimeProbe"             << std::endl;
   std::cout << "Type:           " << localTimer.GetType()           << std::endl;

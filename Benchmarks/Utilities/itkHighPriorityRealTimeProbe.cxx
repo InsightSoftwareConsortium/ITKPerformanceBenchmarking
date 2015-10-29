@@ -24,7 +24,6 @@
 #include <sstream>
 #include "itkMultiThreader.h"
 
-
 namespace itk
 {
 /** Constructor */
@@ -46,7 +45,7 @@ HighPriorityRealTimeProbe
 /** Set name of target */
 void
 HighPriorityRealTimeProbe
-::SetNameOfBenchmark(std::string nameOfProbe)
+::SetNameOfProbe(std::string nameOfProbe)
 {
   this->m_NameOfProbe = nameOfProbe;
 }
