@@ -23,6 +23,13 @@ target_link_libraries(itkHighPriorityRealTimeProbeTest
 add_test(NAME itkHighPriorityRealTimeProbeTest
          COMMAND itkHighPriorityRealTimeProbeTest )
 
+add_executable(itkHighPriorityRealTimeProbeTest2
+               itkHighPriorityRealTimeProbeTest2.cxx )
+target_link_libraries(itkHighPriorityRealTimeProbeTest2
+                      ${ITK_LIBRARIES} ITKBenchmarkUtilities)
+add_test(NAME itkHighPriorityRealTimeProbeTest2
+         COMMAND itkHighPriorityRealTimeProbeTest2 )
+
 add_executable(itkHighPriorityRealTimeProbesTest
                itkHighPriorityRealTimeProbesTest.cxx )
 target_link_libraries(itkHighPriorityRealTimeProbesTest

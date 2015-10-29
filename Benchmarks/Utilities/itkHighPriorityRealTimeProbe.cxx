@@ -160,6 +160,22 @@ HighPriorityRealTimeProbe
   return this->m_TotalValue;
 }
 
+/** Get Min */
+HighPriorityRealTimeProbe::TimeStampType
+HighPriorityRealTimeProbe
+::GetMin() const
+{
+  return this->m_MinValue;
+}
+
+/** Get Total */
+HighPriorityRealTimeProbe::TimeStampType
+HighPriorityRealTimeProbe
+::GetMax() const
+{
+  return this->m_MaxValue;
+}
+
 /** Get Mean */
 HighPriorityRealTimeProbe::TimeStampType
 HighPriorityRealTimeProbe
@@ -254,7 +270,6 @@ HighPriorityRealTimeProbe
      << std::setw( tabwide  ) << "Std(sec)";
 
   os << ss.str() << std::endl;
-
 }
 
 /** Print Probe Results. */
@@ -272,16 +287,69 @@ HighPriorityRealTimeProbe
     this->PrintReportHead();
     }
 
-  this->GetMean();
+  std::stringstream ss;
+  ss << std::setw( namewide ) << this->m_NameOfProbe
+     << std::setw( tabwide  ) << this->m_NumberOfIteration
+     << std::setw( tabwide  ) << itk::MultiThreader::GetGlobalDefaultNumberOfThreads()
+     << std::setw( tabwide  ) << this->GetTotal()
+     << std::setw( tabwide  ) << this->GetMin()
+     << std::setw( tabwide  ) << this->GetMean()
+     << std::setw( tabwide  ) << this->GetMax()
+     << std::setw( tabwide  ) << this->GetStandardDeviation();
+  os << ss.str() << std::endl;
+}
+
+/** Print Probe Results. */
+void
+HighPriorityRealTimeProbe
+::PrintExpandedReportHead(std::ostream & os)
+{
+  std::stringstream ss;
+  ss << std::setw( namewide ) << "Name Of Probe"
+     << std::setw( tabwide  ) << "Iteration"
+     << std::setw( tabwide  ) << "# Threads"
+     << std::setw( tabwide  ) << "Total(sec)"
+     << std::setw( tabwide  ) << "Best(sec)"
+     << std::setw( tabwide  ) << "Best(diff)"
+     << std::setw( tabwide  ) << "Best(%)"
+     << std::setw( tabwide  ) << "Mean(sec)"
+     << std::setw( tabwide  ) << "Worst(diff)"
+     << std::setw( tabwide  ) << "Worst(%)"
+     << std::setw( tabwide  ) << "Worst(sec)"
+     << std::setw( tabwide +5 ) << "Total Diff(sec)"
+     << std::setw( tabwide  ) << "Std(sec)";
+
+  os << ss.str() << std::endl;
+}
+
+/** Print Probe Results. */
+void
+HighPriorityRealTimeProbe
+::PrintExpandedReport(std::ostream & os, bool printSystemInfo, bool printReportHead )
+{
+  if(printSystemInfo)
+    {
+    this->PrintSystemInformation();
+    }
+
+  if(printReportHead)
+    {
+    this->PrintExpandedReportHead();
+    }
 
   std::stringstream ss;
   ss << std::setw( namewide ) << this->m_NameOfProbe
      << std::setw( tabwide  ) << this->m_NumberOfIteration
      << std::setw( tabwide  ) << itk::MultiThreader::GetGlobalDefaultNumberOfThreads()
-     << std::setw( tabwide  ) << this->m_TotalValue
-     << std::setw( tabwide  ) << this->m_MinValue
+     << std::setw( tabwide  ) << this->GetTotal()
+     << std::setw( tabwide  ) << this->GetMin()
+     << std::setw( tabwide  ) << this->GetMean() - this->GetMin()
+     << std::setw( tabwide  ) << (this->GetMean()/this->GetMin())*100
      << std::setw( tabwide  ) << this->GetMean()
-     << std::setw( tabwide  ) << this->m_MaxValue
+     << std::setw( tabwide  ) << this->GetMax() - this->GetMean()
+     << std::setw( tabwide  ) << (this->GetMax()/this->GetMean())*-100
+     << std::setw( tabwide  ) << this->GetMax()
+     << std::setw( tabwide +5 ) << this->GetMax() - this->GetMin()
      << std::setw( tabwide  ) << this->GetStandardDeviation();
   os << ss.str() << std::endl;
 }

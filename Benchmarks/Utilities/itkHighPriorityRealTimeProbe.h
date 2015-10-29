@@ -104,6 +104,14 @@ public:
    *  of the probe */
   virtual TimeStampType GetTotal() const;
 
+  /** Returns the min value changes between the starts and stops
+   *  of the probe */
+  virtual TimeStampType GetMin() const;
+
+  /** Returns the max value changes between the starts and stops
+   *  of the probe */
+  virtual TimeStampType GetMax() const;
+
   /** Returns the average value changes between the starts and stops
    *  of the probe. Evaluate() should be called prior to this function
    */
@@ -126,6 +134,13 @@ public:
   /** Print Probe Results. */
   void PrintReport(std::ostream & os =std::cout, bool printSystemInfo = true,
                    bool printReportHead = true);
+
+  /** Print Probe Results. */
+  void PrintExpandedReportHead(std::ostream & os =std::cout);
+
+  /** Print Probe Results. */
+  void PrintExpandedReport(std::ostream & os =std::cout, bool printSystemInfo = true,
+                           bool printReportHead = true);
 
   /** Get a handle to m_RealTimeClock. */
   itkGetConstObjectMacro( HighPriorityRealTimeClock, HighPriorityRealTimeClock );
