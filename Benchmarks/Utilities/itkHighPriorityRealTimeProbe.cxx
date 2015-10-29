@@ -19,6 +19,10 @@
 #include <numeric>
 #include <algorithm>
 #include <cmath>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
+#include "itkMultiThreader.h"
 
 
 namespace itk
@@ -27,6 +31,7 @@ namespace itk
 HighPriorityRealTimeProbe
 ::HighPriorityRealTimeProbe()
 {
+  this->GetSystemInformation();
   this->Reset();
   this->m_TypeString                  = "Time";
   this->m_UnitString                  = "sec";
@@ -41,9 +46,17 @@ HighPriorityRealTimeProbe
 /** Set name of target */
 void
 HighPriorityRealTimeProbe
-::SetNameOfTarget(std::string name)
+::SetNameOfBenchmark(std::string nameOfProbe)
 {
-  this->m_NameOfTargetClass = name;
+  this->m_NameOfProbe = nameOfProbe;
+}
+
+/** Set number of threads */
+void
+HighPriorityRealTimeProbe
+::SetMumberOfThreads(const unsigned int numthreads)
+{
+  itk::MultiThreader::SetGlobalDefaultNumberOfThreads(numthreads);
 }
 
 /** Reset */
@@ -51,18 +64,11 @@ void
 HighPriorityRealTimeProbe
 ::Reset()
 {
-  this->m_NameOfTargetClass.clear();
-  this->m_TypeString.clear();
-  this->m_UnitString.clear();
+  //this->m_NameOfTargetClass.clear();
+  //this->m_TypeString.clear();
+  //this->m_UnitString.clear();
 
-  this->ResetProbeData();
-}
-
-/** Reset */
-void
-HighPriorityRealTimeProbe
-::ResetProbeData()
-{
+  //this->ResetProbeData();
   this->m_TotalValue        = NumericTraits< TimeStampType >::ZeroValue();
   this->m_StartValue        = NumericTraits< TimeStampType >::ZeroValue();
   this->m_MinValue          = NumericTraits< TimeStampType >::ZeroValue();
@@ -122,30 +128,12 @@ HighPriorityRealTimeProbe
 
   TimeStampType elapsedtime = this->GetInstantValue() - this->m_StartValue;
   this->m_ElapsedTimeList.push_back(elapsedtime);
+  // Update Measurement
   this->UpdatekMinMaxValue(elapsedtime);
   this->m_TotalValue += elapsedtime;
   this->m_NumberOfStops++;
-}
-
-/** Compute mean, and standard deviation of measured computation time */
-bool
-HighPriorityRealTimeProbe
-::Evaluate()
-{
-  this->m_NumberOfIteration = static_cast<CountType>(this->m_ElapsedTimeList.size());
-
-  this->m_MeanValue         = m_TotalValue/static_cast<TimeStampType>(this->m_ElapsedTimeList.size());
-
-  std::vector<TimeStampType> diff(this->m_ElapsedTimeList.size());
-  std::transform(this->m_ElapsedTimeList.begin(),
-                 this->m_ElapsedTimeList.end(),
-                 diff.begin(),
-                 std::bind2nd(std::minus<TimeStampType>(), this->m_MeanValue));
-  TimeStampType sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
-  this->m_StandardDeviation = std::sqrt(sq_sum / (static_cast<TimeStampType>(this->m_ElapsedTimeList.size())-1));
-
-  return this->CheckValidation();
-
+  this->m_NumberOfIteration =
+  static_cast<CountType>(this->m_ElapsedTimeList.size());
 }
 
 /** Get Number of Starts */
@@ -175,59 +163,35 @@ HighPriorityRealTimeProbe
 /** Get Mean */
 HighPriorityRealTimeProbe::TimeStampType
 HighPriorityRealTimeProbe
-::GetMean() const
+::GetMean()
 {
+
+  this->m_MeanValue = this->m_NumberOfIteration > 0 ?
+                      m_TotalValue/static_cast<TimeStampType>(this->m_ElapsedTimeList.size()) :
+                      NumericTraits< TimeStampType >::ZeroValue();
   return this->m_MeanValue;
 }
 
 /** Get Standard deviation */
 HighPriorityRealTimeProbe::TimeStampType
 HighPriorityRealTimeProbe
-::GetStandardDeviation() const
+::GetStandardDeviation()
 {
+  std::vector<TimeStampType> diff(this->m_ElapsedTimeList.size());
+  std::transform(this->m_ElapsedTimeList.begin(),
+                 this->m_ElapsedTimeList.end(),
+                 diff.begin(),
+                 std::bind2nd(std::minus<TimeStampType>(),
+                              this->m_MeanValue));
+  TimeStampType sq_sum =
+    std::inner_product(diff.begin(),diff.end(),
+                       diff.begin(),
+                       0.0);
+
+  this->m_StandardDeviation =
+    std::sqrt(sq_sum /
+             (static_cast<TimeStampType>(this->m_ElapsedTimeList.size())-1));
   return this->m_StandardDeviation;
-}
-
-/** Print Probe Results. */
-void
-HighPriorityRealTimeProbe
-::PrintProbeResults()
-{
-  std::cout << "Target Class:: "          << this->m_NameOfTargetClass << std::endl;
-  std::cout << "- Number of Iteration     :: " << this->m_NumberOfIteration << std::endl;
-  std::cout << "- Avg of computation time :: " << this->m_MeanValue << std::endl;
-  std::cout << "- Min of computation time :: " << this->m_MinValue << std::endl;
-  std::cout << "- Max of computation time :: " << this->m_MaxValue << std::endl;
-  std::cout << "- Std of computation time :: " << this->m_StandardDeviation << std::endl;
-}
-
-void
-HighPriorityRealTimeProbe
-::TestPut(TimeStampType value)
-{
-  this->m_ElapsedTimeList.push_back(value);
-  this->UpdatekMinMaxValue(value);
-  this->m_TotalValue += value;
-
-  this->m_NumberOfStarts++;
-  this->m_NumberOfStops++;
-}
-
-/** Update the Min and Max values with an input value */
-void
-HighPriorityRealTimeProbe
-::UpdatekMinMaxValue(TimeStampType& value)
-{
-  if(this->m_NumberOfStops == 0)
-  {
-    this->m_MinValue = value;
-    this->m_MaxValue = value;
-  }
-  else
-  {
-    this->m_MinValue = this->m_MinValue > value ? value : this->m_MinValue;
-    this->m_MaxValue = this->m_MaxValue < value ? value : this->m_MaxValue;
-  }
 }
 
 /** Check validation of measurements*/
@@ -237,10 +201,144 @@ HighPriorityRealTimeProbe
 {
   if((this->m_NumberOfIteration == this->m_NumberOfStarts )
      && (this->m_NumberOfIteration == this->m_NumberOfStops))
-  {
+    {
     return true;
-  }
+    }
   return false;
+}
+
+/** Print System information */
+void HighPriorityRealTimeProbe
+::PrintSystemInformation(std::ostream & os)
+{
+  os << "System:              " << m_SystemName << std::endl;
+  os << "Processor:           " << m_ProcessorName << std::endl;
+  os << "    Cache:           " << m_ProcessorCacheSize << std::endl;
+  os << "    Clock:           " << m_ProcessorClockFrequency << std::endl;
+  os << "    Cores:           " << m_NumberOfPhysicalCPU
+     << " cpus x " << m_NumberOfLogicalCPU
+     << " Cores = "<< m_NumberOfAvailableCore << std::endl;
+  // Retrieve memory information in megabyte.
+  os << "    Virtual Memory:  Total: "
+     << m_TotalVirtualMemory
+     <<" Available: "<< m_AvailableVirtualMemory << std::endl;
+  os << "    Physical Memory: Total:"
+     << m_TotalPhysicalMemory
+     <<" Available: "<< m_AvailablePhysicalMemory << std::endl;
+
+  os << "OSName:              "<< m_OSName << std::endl;
+  os << "    Release:         "<< m_OSRelease << std::endl;
+  os << "    Version:         "<< m_OSVersion << std::endl;
+  os << "    Platform:        "<< m_OSPlatform << std::endl;
+
+  os << "    Operating System is "
+     << (m_Is64Bits?"64 bit":"32 bit") << std::endl;
+
+  os << "ITK Version: "
+     << m_ITKVersion << std::endl;
+}
+
+/** Print Probe Results. */
+void
+HighPriorityRealTimeProbe
+::PrintReportHead(std::ostream & os)
+{
+  std::stringstream ss;
+  ss << std::setw( namewide ) << "Name Of Probe"
+     << std::setw( tabwide  ) << "Iteration"
+     << std::setw( tabwide  ) << "# Threads"
+     << std::setw( tabwide  ) << "Total(sec)"
+     << std::setw( tabwide  ) << "Min(sec)"
+     << std::setw( tabwide  ) << "Mean(sec)"
+     << std::setw( tabwide  ) << "Max(sec)"
+     << std::setw( tabwide  ) << "Std(sec)";
+
+  os << ss.str() << std::endl;
+
+}
+
+/** Print Probe Results. */
+void
+HighPriorityRealTimeProbe
+::PrintReport(std::ostream & os, bool printSystemInfo, bool printReportHead )
+{
+  if(printSystemInfo)
+    {
+    this->PrintSystemInformation();
+    }
+
+  if(printReportHead)
+    {
+    this->PrintReportHead();
+    }
+
+  this->GetMean();
+
+  std::stringstream ss;
+  ss << std::setw( namewide ) << this->m_NameOfProbe
+     << std::setw( tabwide  ) << this->m_NumberOfIteration
+     << std::setw( tabwide  ) << itk::MultiThreader::GetGlobalDefaultNumberOfThreads()
+     << std::setw( tabwide  ) << this->m_TotalValue
+     << std::setw( tabwide  ) << this->m_MinValue
+     << std::setw( tabwide  ) << this->GetMean()
+     << std::setw( tabwide  ) << this->m_MaxValue
+     << std::setw( tabwide  ) << this->GetStandardDeviation();
+  os << ss.str() << std::endl;
+}
+
+/** Update the Min and Max values with an input value */
+void
+HighPriorityRealTimeProbe
+::UpdatekMinMaxValue(TimeStampType& value)
+{
+  if(this->m_NumberOfStops == 0)
+    {
+    this->m_MinValue = value;
+    this->m_MaxValue = value;
+    }
+  else
+    {
+    this->m_MinValue = this->m_MinValue > value ? value : this->m_MinValue;
+    this->m_MaxValue = this->m_MaxValue < value ? value : this->m_MaxValue;
+    }
+}
+
+/** Get System information */
+void
+HighPriorityRealTimeProbe
+::GetSystemInformation()
+{
+  m_SystemInformation.RunCPUCheck();
+  m_SystemInformation.RunMemoryCheck();
+  m_SystemInformation.RunOSCheck();
+
+  m_SystemName              = m_SystemInformation.GetHostname();
+  m_ProcessorName           = m_SystemInformation.GetExtendedProcessorName();
+  m_ProcessorCacheSize      = m_SystemInformation.GetProcessorCacheSize();
+  m_ProcessorClockFrequency = m_SystemInformation.GetProcessorClockFrequency();
+  m_NumberOfPhysicalCPU     = m_SystemInformation.GetNumberOfPhysicalCPU();
+  m_NumberOfLogicalCPU      = m_SystemInformation.GetNumberOfLogicalCPU();
+  m_NumberOfAvailableCore   = m_NumberOfPhysicalCPU*m_NumberOfLogicalCPU;
+
+  m_OSName                  = m_SystemInformation.GetOSName();
+  m_OSRelease               = m_SystemInformation.GetOSRelease();
+  m_OSVersion               = m_SystemInformation.GetOSVersion();
+  m_OSPlatform              = m_SystemInformation.GetOSPlatform();
+
+  m_Is64Bits                = m_SystemInformation.Is64Bits();
+  m_ITKVersion              = std::to_string(ITK_VERSION_MAJOR) +
+                              std::string(".") +
+                              std::to_string(ITK_VERSION_MINOR) +
+                              std::string(".") +
+                              std::to_string(ITK_VERSION_PATCH) +
+                              std::string(".");
+
+ // Retrieve memory information in megabyte.
+  m_TotalVirtualMemory      = m_SystemInformation.GetTotalVirtualMemory();
+  m_AvailableVirtualMemory  = m_SystemInformation.GetAvailableVirtualMemory();
+  m_TotalPhysicalMemory     = m_SystemInformation.GetTotalPhysicalMemory();
+  m_AvailablePhysicalMemory = m_SystemInformation.GetAvailablePhysicalMemory();
+
 }
 
 } // end namespace itk

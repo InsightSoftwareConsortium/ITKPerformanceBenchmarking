@@ -25,6 +25,7 @@
 #include "itkIntTypes.h"
 #include <string>
 #include "itkHighPriorityRealTimeClock.h"
+#include "itksys/SystemInformation.hxx"
 
 namespace itk
 {
@@ -61,13 +62,16 @@ public:
   virtual ~HighPriorityRealTimeProbe();
 
   /** Set name of target */
-  void SetNameOfTarget(std::string name);
+  void SetNameOfBenchmark(std::string name);
+
+  /** Set number of threads */
+  void SetMumberOfThreads(const unsigned int numthreads);
 
   /** Reset */
   void Reset();
 
-  /** Reset the probe */
-  void ResetProbeData();
+  /** Get System information */
+  void GetSystemInformation();
 
   /** Returns the type probed value */
   std::string GetType() const;
@@ -90,9 +94,6 @@ public:
    **/
   void Stop();
 
-  /** Compute mean, and standard deviation of measured computation time */
-  bool Evaluate();
-
   /** Returns the number of times that the probe has been started */
   CountType GetNumberOfStarts() const;
 
@@ -106,34 +107,39 @@ public:
   /** Returns the average value changes between the starts and stops
    *  of the probe. Evaluate() should be called prior to this function
    */
-  virtual TimeStampType GetMean() const;
+  virtual TimeStampType GetMean();
 
   /** Returns the standard deviation value changes between the starts and stops
    *  of the probe. Evaluate() should be called prior to this function
    */
-  virtual TimeStampType GetStandardDeviation() const;
+  virtual TimeStampType GetStandardDeviation();
+
+  /** Check validation of measurements*/
+  bool CheckValidation();
+
+  /** Print System information */
+  void PrintSystemInformation(std::ostream & os = std::cout);
 
   /** Print Probe Results. */
-  void PrintProbeResults();
+  void PrintReportHead(std::ostream & os =std::cout);
 
-  void TestPut(TimeStampType value);
+  /** Print Probe Results. */
+  void PrintReport(std::ostream & os =std::cout, bool printSystemInfo = true,
+                   bool printReportHead = true);
 
   /** Get a handle to m_RealTimeClock. */
   itkGetConstObjectMacro( HighPriorityRealTimeClock, HighPriorityRealTimeClock );
-
 
 protected:
   /** Update the Min and Max values with an input value */
   void UpdatekMinMaxValue(TimeStampType& value);
 
-  /** Check validation of measurements*/
-  bool CheckValidation();
-
 private:
-  std::string                        m_NameOfTargetClass;
   std::string                        m_TypeString;
   std::string                        m_UnitString;
+  HighPriorityRealTimeClock::Pointer m_HighPriorityRealTimeClock;
 
+  std::string                        m_NameOfProbe;
   TimeStampType                      m_StartValue;
   TimeStampType                      m_TotalValue;
   TimeStampType                      m_MinValue;
@@ -145,8 +151,29 @@ private:
   CountType                          m_NumberOfStops;
   CountType                          m_NumberOfIteration;
 
-  HighPriorityRealTimeClock::Pointer m_HighPriorityRealTimeClock;
   std::vector<TimeStampType>         m_ElapsedTimeList;
+
+  itksys::SystemInformation          m_SystemInformation;
+  std::string                        m_SystemName;
+  std::string                        m_ProcessorName;
+  int                                m_ProcessorCacheSize;
+  float                              m_ProcessorClockFrequency;
+  unsigned int                       m_NumberOfPhysicalCPU;
+  unsigned int                       m_NumberOfLogicalCPU;
+  unsigned int                       m_NumberOfAvailableCore;
+  std::string                        m_OSName;
+  std::string                        m_OSRelease;
+  std::string                        m_OSVersion;
+  std::string                        m_OSPlatform;
+  bool                               m_Is64Bits;
+  std::string                        m_ITKVersion;
+  size_t                             m_TotalVirtualMemory;
+  size_t                             m_AvailableVirtualMemory;
+  size_t                             m_TotalPhysicalMemory;
+  size_t                             m_AvailablePhysicalMemory;
+
+  static const unsigned int          tabwide  = 15;
+  static const unsigned int          namewide = 30;
 
 };
 } // end namespace itk
