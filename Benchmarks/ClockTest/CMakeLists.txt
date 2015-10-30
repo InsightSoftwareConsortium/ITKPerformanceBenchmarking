@@ -8,12 +8,12 @@ target_link_libraries(itkTimeProbeTest
 add_test(NAME itkTimeProbeTest
          COMMAND itkTimeProbeTest )
 
-add_executable(itkTimeProbesTest
-               itkTimeProbesTest.cxx )
-target_link_libraries(itkTimeProbesTest
+add_executable(itkTimeProbesCollectorTest
+               itkTimeProbesCollectorTest.cxx )
+target_link_libraries(itkTimeProbesCollectorTest
                       ${ITK_LIBRARIES} )
-add_test(NAME itkTimeProbesTest
-         COMMAND itkTimeProbesTest )
+add_test(NAME itkTimeProbesCollectorTest
+         COMMAND itkTimeProbesCollectorTest )
 
 # Add Test code for itkTimeProbe
 add_executable(itkHighPriorityRealTimeProbeTest
@@ -30,9 +30,9 @@ target_link_libraries(itkHighPriorityRealTimeProbeTest2
 add_test(NAME itkHighPriorityRealTimeProbeTest2
          COMMAND itkHighPriorityRealTimeProbeTest2 )
 
-add_executable(itkHighPriorityRealTimeProbesTest
-               itkHighPriorityRealTimeProbesTest.cxx )
-target_link_libraries(itkHighPriorityRealTimeProbesTest
+add_executable(itkHighPriorityRealTimeProbesCollectorTest
+               itkHighPriorityRealTimeProbesCollectorTest.cxx )
+target_link_libraries(itkHighPriorityRealTimeProbesCollectorTest
                       ${ITK_LIBRARIES} ITKBenchmarkUtilities)
-add_test(NAME itkHighPriorityRealTimeProbesTest
-         COMMAND itkHighPriorityRealTimeProbesTest )
+add_test(NAME itkHighPriorityRealTimeProbesCollectorTest
+         COMMAND itkHighPriorityRealTimeProbesCollectorTest )
