@@ -175,7 +175,6 @@ HighPriorityRealTimeProbe::TimeStampType
 HighPriorityRealTimeProbe
 ::GetMean()
 {
-
   this->m_MeanValue =
     this->m_NumberOfIteration > 0 ?
     m_TotalValue/static_cast<TimeStampType>(this->m_ElapsedTimeList.size()) :
@@ -202,7 +201,7 @@ HighPriorityRealTimeProbe
   int sz = this->m_ElapsedTimeList.size()-1;
   if (sz <=0)
     {
-      this->m_StandardDeviation = NumericTraits< TimeStampType >::ZeroValue();
+    this->m_StandardDeviation = NumericTraits< TimeStampType >::ZeroValue();
     }
   else
     {
