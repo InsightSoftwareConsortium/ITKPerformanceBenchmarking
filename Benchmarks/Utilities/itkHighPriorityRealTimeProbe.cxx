@@ -63,11 +63,6 @@ void
 HighPriorityRealTimeProbe
 ::Reset()
 {
-  //this->m_NameOfTargetClass.clear();
-  //this->m_TypeString.clear();
-  //this->m_UnitString.clear();
-
-  //this->ResetProbeData();
   this->m_TotalValue        = NumericTraits< TimeStampType >::ZeroValue();
   this->m_StartValue        = NumericTraits< TimeStampType >::ZeroValue();
   this->m_MinValue          = NumericTraits< TimeStampType >::ZeroValue();
@@ -181,9 +176,10 @@ HighPriorityRealTimeProbe
 ::GetMean()
 {
 
-  this->m_MeanValue = this->m_NumberOfIteration > 0 ?
-                      m_TotalValue/static_cast<TimeStampType>(this->m_ElapsedTimeList.size()) :
-                      NumericTraits< TimeStampType >::ZeroValue();
+  this->m_MeanValue =
+    this->m_NumberOfIteration > 0 ?
+    m_TotalValue/static_cast<TimeStampType>(this->m_ElapsedTimeList.size()) :
+    NumericTraits< TimeStampType >::ZeroValue();
   return this->m_MeanValue;
 }
 
@@ -256,25 +252,7 @@ void HighPriorityRealTimeProbe
 /** Print Probe Results. */
 void
 HighPriorityRealTimeProbe
-::PrintReportHead(std::ostream & os)
-{
-  std::stringstream ss;
-  ss << std::setw( namewide ) << "Name Of Probe"
-     << std::setw( tabwide  ) << "Iteration"
-     << std::setw( tabwide  ) << "# Threads"
-     << std::setw( tabwide  ) << "Total(sec)"
-     << std::setw( tabwide  ) << "Min(sec)"
-     << std::setw( tabwide  ) << "Mean(sec)"
-     << std::setw( tabwide  ) << "Max(sec)"
-     << std::setw( tabwide  ) << "Std(sec)";
-
-  os << ss.str() << std::endl;
-}
-
-/** Print Probe Results. */
-void
-HighPriorityRealTimeProbe
-::PrintReport(std::ostream & os, bool printSystemInfo, bool printReportHead )
+::Report(std::ostream & os, bool printSystemInfo, bool printReportHead )
 {
   if(printSystemInfo)
     {
@@ -301,30 +279,7 @@ HighPriorityRealTimeProbe
 /** Print Probe Results. */
 void
 HighPriorityRealTimeProbe
-::PrintExpandedReportHead(std::ostream & os)
-{
-  std::stringstream ss;
-  ss << std::setw( namewide ) << "Name Of Probe"
-     << std::setw( tabwide  ) << "Iteration"
-     << std::setw( tabwide  ) << "# Threads"
-     << std::setw( tabwide  ) << "Total(sec)"
-     << std::setw( tabwide  ) << "Best(sec)"
-     << std::setw( tabwide  ) << "Best(diff)"
-     << std::setw( tabwide  ) << "Best(%)"
-     << std::setw( tabwide  ) << "Mean(sec)"
-     << std::setw( tabwide  ) << "Worst(diff)"
-     << std::setw( tabwide  ) << "Worst(%)"
-     << std::setw( tabwide  ) << "Worst(sec)"
-     << std::setw( tabwide +5 ) << "Total Diff(sec)"
-     << std::setw( tabwide  ) << "Std(sec)";
-
-  os << ss.str() << std::endl;
-}
-
-/** Print Probe Results. */
-void
-HighPriorityRealTimeProbe
-::PrintExpandedReport(std::ostream & os, bool printSystemInfo, bool printReportHead )
+::ExpandedReport(std::ostream & os, bool printSystemInfo, bool printReportHead )
 {
   if(printSystemInfo)
     {
@@ -370,6 +325,47 @@ HighPriorityRealTimeProbe
     }
 }
 
+/** Print Probe Results. */
+void
+HighPriorityRealTimeProbe
+::PrintReportHead(std::ostream & os)
+{
+  std::stringstream ss;
+  ss << std::setw( namewide ) << "Name Of Probe"
+     << std::setw( tabwide  ) << "Iteration"
+     << std::setw( tabwide  ) << "# Threads"
+     << std::setw( tabwide  ) << "Total(sec)"
+     << std::setw( tabwide  ) << "Min(sec)"
+     << std::setw( tabwide  ) << "Mean(sec)"
+     << std::setw( tabwide  ) << "Max(sec)"
+     << std::setw( tabwide  ) << "Std(sec)";
+
+  os << ss.str() << std::endl;
+}
+
+/** Print Probe Results. */
+void
+HighPriorityRealTimeProbe
+::PrintExpandedReportHead(std::ostream & os)
+{
+  std::stringstream ss;
+  ss << std::setw( namewide ) << "Name Of Probe"
+     << std::setw( tabwide  ) << "Iteration"
+     << std::setw( tabwide  ) << "# Threads"
+     << std::setw( tabwide  ) << "Total(sec)"
+     << std::setw( tabwide  ) << "Best(sec)"
+     << std::setw( tabwide  ) << "Best(diff)"
+     << std::setw( tabwide  ) << "Best(%)"
+     << std::setw( tabwide  ) << "Mean(sec)"
+     << std::setw( tabwide  ) << "Worst(diff)"
+     << std::setw( tabwide  ) << "Worst(%)"
+     << std::setw( tabwide  ) << "Worst(sec)"
+     << std::setw( tabwide +5 ) << "Total Diff(sec)"
+     << std::setw( tabwide  ) << "Std(sec)";
+
+  os << ss.str() << std::endl;
+}
+
 /** Get System information */
 void
 HighPriorityRealTimeProbe
@@ -405,7 +401,5 @@ HighPriorityRealTimeProbe
   m_AvailableVirtualMemory  = m_SystemInformation.GetAvailableVirtualMemory();
   m_TotalPhysicalMemory     = m_SystemInformation.GetTotalPhysicalMemory();
   m_AvailablePhysicalMemory = m_SystemInformation.GetAvailablePhysicalMemory();
-
 }
-
 } // end namespace itk

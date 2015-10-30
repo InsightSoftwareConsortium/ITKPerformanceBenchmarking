@@ -50,9 +50,9 @@ int main( int, char * [] )
     }
 
     if(numOfThread ==1)
-      localTimer.PrintExpandedReport();
+      localTimer.ExpandedReport();
     else
-      localTimer.PrintExpandedReport(std::cout, false, false);
+      localTimer.ExpandedReport(std::cout, false, false);
 
     localTimer.Reset();
   }

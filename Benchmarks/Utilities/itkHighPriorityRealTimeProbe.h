@@ -68,9 +68,6 @@ public:
   /** Reset */
   void Reset();
 
-  /** Get System information */
-  void GetSystemInformation();
-
   /** Returns the type probed value */
   std::string GetType() const;
 
@@ -127,17 +124,11 @@ public:
   void PrintSystemInformation(std::ostream & os = std::cout);
 
   /** Print Probe Results. */
-  void PrintReportHead(std::ostream & os =std::cout);
-
-  /** Print Probe Results. */
-  void PrintReport(std::ostream & os =std::cout, bool printSystemInfo = true,
+  void Report(std::ostream & os =std::cout, bool printSystemInfo = true,
                    bool printReportHead = true);
 
   /** Print Probe Results. */
-  void PrintExpandedReportHead(std::ostream & os =std::cout);
-
-  /** Print Probe Results. */
-  void PrintExpandedReport(std::ostream & os =std::cout, bool printSystemInfo = true,
+  void ExpandedReport(std::ostream & os =std::cout, bool printSystemInfo = true,
                            bool printReportHead = true);
 
   /** Get a handle to m_RealTimeClock. */
@@ -146,6 +137,15 @@ public:
 protected:
   /** Update the Min and Max values with an input value */
   void UpdatekMinMaxValue(TimeStampType& value);
+
+  /** Print Probe Results. */
+  void PrintReportHead(std::ostream & os =std::cout);
+
+  /** Print Probe Results. */
+  void PrintExpandedReportHead(std::ostream & os =std::cout);
+
+  /** Get System information */
+  void GetSystemInformation();
 
 private:
   std::string                        m_TypeString;
@@ -190,5 +190,4 @@ private:
 
 };
 } // end namespace itk
-
 #endif //itkHighPriorityRealTimeProbe_h
