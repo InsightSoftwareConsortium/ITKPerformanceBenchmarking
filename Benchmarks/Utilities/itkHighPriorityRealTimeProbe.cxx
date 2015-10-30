@@ -199,9 +199,17 @@ HighPriorityRealTimeProbe
                        diff.begin(),
                        0.0);
 
-  this->m_StandardDeviation =
-    std::sqrt(sq_sum /
-             (static_cast<TimeStampType>(this->m_ElapsedTimeList.size())-1));
+  int sz = this->m_ElapsedTimeList.size()-1;
+  if (sz <=0)
+    {
+      this->m_StandardDeviation = NumericTraits< TimeStampType >::ZeroValue();
+    }
+  else
+    {
+    this->m_StandardDeviation =
+      std::sqrt(sq_sum /
+               (static_cast<TimeStampType>(sz)));
+    }
   return this->m_StandardDeviation;
 }
 
