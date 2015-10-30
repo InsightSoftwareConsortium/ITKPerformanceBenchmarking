@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef HighPriorityRealTimeProbeCollector_h
-#define HighPriorityRealTimeProbeCollector_h
+#ifndef HighPriorityRealTimeProbesCollector_h
+#define HighPriorityRealTimeProbesCollector_h
 
 #include "itkHighPriorityRealTimeProbe.h"
 #include <map>
@@ -37,7 +37,7 @@ namespace itk
  *   \sa HighPriorityRealTimeClock
  *
  */
-class ITKCommon_EXPORT HighPriorityRealTimeProbeCollector
+class ITKCommon_EXPORT HighPriorityRealTimeProbesCollector
 {
 public:
 
@@ -59,10 +59,10 @@ public:
 public:
 
   /** Constructor */
-  HighPriorityRealTimeProbeCollector();
+  HighPriorityRealTimeProbesCollector();
 
   /** Destructor */
-  virtual ~HighPriorityRealTimeProbeCollector();
+  virtual ~HighPriorityRealTimeProbesCollector();
 
   /** Set name of target */
   void SetNameOfOverallProbe(std::string nameOfProbe);
@@ -70,11 +70,11 @@ public:
   /** Set number of threads */
   void SetMumberOfThreads(const unsigned int numthreads);
 
-  /** Reset */
+  /** Reset a specific time probe*/
   void Reset(std::string probeName);
 
-  /** Get System information */
-  void GetSystemInformation();
+  /** Reset all time probes*/
+  void Reset();
 
   /** Get Name of this class */
   const char * GetNameOfClass();
@@ -128,35 +128,55 @@ public:
    */
   virtual TimeStampType GetStandardDeviation(std::string probeName);
 
-  /** Check validation of measurements*/
+  /** Check the validation of a specific time probe*/
   bool CheckValidation(std::string probeName);
+
+  /** Check the validation of all time probes*/
+  bool CheckValidation();
 
   /** Print System information */
   void PrintSystemInformation(std::ostream & os = std::cout);
 
-  /** Print Probe Results. */
-  void PrintReportHead(std::ostream & os =std::cout);
+  /** Print all time probes' results. */
+  void Report(std::ostream & os =std::cout,
+              bool printSystemInfo = true,bool printReportHead = true);
 
-  /** Print Probe Results. */
-  void PrintReport(std::string probeName,std::ostream & os =std::cout,
-                   bool printSystemInfo = true,bool printReportHead = true);
+  /** Print a specific time probe's results. */
+  void Report(std::string probeName,std::ostream & os =std::cout,
+              bool printSystemInfo = true,bool printReportHead = true);
 
-  /** Print Probe Results. */
-  void PrintExpandedReportHead(std::ostream & os =std::cout);
+  /** Print all time probes' expanded results. */
+  void ExpandedReport(std::ostream & os =std::cout,
+                      bool printSystemInfo = true,bool printReportHead = true);
 
-  /** Print Probe Results. */
-  void PrintExpandedReport(std::string probeName,std::ostream & os =std::cout,
-                           bool printSystemInfo = true,bool printReportHead = true);
+  /** Print a specific time probe's expanded results. */
+  void ExpandedReport(std::string probeName,std::ostream & os =std::cout,
+                      bool printSystemInfo = true,bool printReportHead = true);
+
+  /** Set enabling the funtion of UpdateProbeNameWithNumOfThreads */
+  void EnableUpdatingProbeNameWithNumOfThreads(bool updateProbeName = true);
 
   /** Get a handle to m_RealTimeClock. */
   itkGetConstObjectMacro( HighPriorityRealTimeClock, HighPriorityRealTimeClock );
 
 protected:
-  HighPriorityRealTimeProbeCollector::ProbeType&
-     FindHighPriorityRealTimeProbeWithName(std::string & probeName);
+  /** Update a probe name with the number of threads. */
+  std::string UpdateProbeNameWithNumOfThreads(std::string probeName);
+
+  HighPriorityRealTimeProbesCollector::ProbeType&
+     FindHighPriorityRealTimeProbeWithName(std::string probeName);
 
   bool CheckHighPriorityRealTimeProbeWithName(std::string & probeName,
                                               ProbeType& probe);
+
+  /** Print Probe Results. */
+  void PrintReportHead(std::ostream & os =std::cout);
+
+  /** Print Probe Results. */
+  void PrintExpandedReportHead(std::ostream & os =std::cout);
+
+  /** Get System information */
+  void GetSystemInformation();
 
 private:
   std::string                        m_TypeString;
@@ -187,6 +207,8 @@ private:
 
   static const unsigned int          tabwide  = 15;
   static const unsigned int          namewide = 30;
+
+  bool                               m_UpdateProbeNameWithNumOfThreads;
 
 };
 } // end namespace itk

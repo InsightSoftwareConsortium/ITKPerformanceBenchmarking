@@ -7,13 +7,13 @@ IF( ITK_FOUND )
   SET( ITKBenchmarkUtilities_INCLUDE_FILES
     itkHighPriorityRealTimeClock.h
     itkHighPriorityRealTimeProbe.h
-    itkHighPriorityRealTimeProbeCollector.h
+    itkHighPriorityRealTimeProbesCollector.h
     )
 
   SET( ITKBenchmarkUtilities_SOURCE_FILES
     itkHighPriorityRealTimeClock.cxx
     itkHighPriorityRealTimeProbe.cxx
-    itkHighPriorityRealTimeProbeCollector.cxx
+    itkHighPriorityRealTimeProbesCollector.cxx
     )
 
   ADD_LIBRARY( ITKBenchmarkUtilities
