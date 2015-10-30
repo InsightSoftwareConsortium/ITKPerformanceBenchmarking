@@ -166,7 +166,6 @@ private:
 
   std::vector<TimeStampType>         m_ElapsedTimeList;
 
-  itksys::SystemInformation          m_SystemInformation;
   std::string                        m_SystemName;
   std::string                        m_ProcessorName;
   int                                m_ProcessorCacheSize;

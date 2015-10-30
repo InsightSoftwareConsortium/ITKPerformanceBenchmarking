@@ -371,24 +371,25 @@ void
 HighPriorityRealTimeProbe
 ::GetSystemInformation()
 {
-  m_SystemInformation.RunCPUCheck();
-  m_SystemInformation.RunMemoryCheck();
-  m_SystemInformation.RunOSCheck();
+  itksys::SystemInformation systeminfo;
+  systeminfo.RunCPUCheck();
+  systeminfo.RunMemoryCheck();
+  systeminfo.RunOSCheck();
 
-  m_SystemName              = m_SystemInformation.GetHostname();
-  m_ProcessorName           = m_SystemInformation.GetExtendedProcessorName();
-  m_ProcessorCacheSize      = m_SystemInformation.GetProcessorCacheSize();
-  m_ProcessorClockFrequency = m_SystemInformation.GetProcessorClockFrequency();
-  m_NumberOfPhysicalCPU     = m_SystemInformation.GetNumberOfPhysicalCPU();
-  m_NumberOfLogicalCPU      = m_SystemInformation.GetNumberOfLogicalCPU();
+  m_SystemName              = systeminfo.GetHostname();
+  m_ProcessorName           = systeminfo.GetExtendedProcessorName();
+  m_ProcessorCacheSize      = systeminfo.GetProcessorCacheSize();
+  m_ProcessorClockFrequency = systeminfo.GetProcessorClockFrequency();
+  m_NumberOfPhysicalCPU     = systeminfo.GetNumberOfPhysicalCPU();
+  m_NumberOfLogicalCPU      = systeminfo.GetNumberOfLogicalCPU();
   m_NumberOfAvailableCore   = m_NumberOfPhysicalCPU*m_NumberOfLogicalCPU;
 
-  m_OSName                  = m_SystemInformation.GetOSName();
-  m_OSRelease               = m_SystemInformation.GetOSRelease();
-  m_OSVersion               = m_SystemInformation.GetOSVersion();
-  m_OSPlatform              = m_SystemInformation.GetOSPlatform();
+  m_OSName                  = systeminfo.GetOSName();
+  m_OSRelease               = systeminfo.GetOSRelease();
+  m_OSVersion               = systeminfo.GetOSVersion();
+  m_OSPlatform              = systeminfo.GetOSPlatform();
 
-  m_Is64Bits                = m_SystemInformation.Is64Bits();
+  m_Is64Bits                = systeminfo.Is64Bits();
   m_ITKVersion              = std::to_string(ITK_VERSION_MAJOR) +
                               std::string(".") +
                               std::to_string(ITK_VERSION_MINOR) +
@@ -397,9 +398,9 @@ HighPriorityRealTimeProbe
                               std::string(".");
 
  // Retrieve memory information in megabyte.
-  m_TotalVirtualMemory      = m_SystemInformation.GetTotalVirtualMemory();
-  m_AvailableVirtualMemory  = m_SystemInformation.GetAvailableVirtualMemory();
-  m_TotalPhysicalMemory     = m_SystemInformation.GetTotalPhysicalMemory();
-  m_AvailablePhysicalMemory = m_SystemInformation.GetAvailablePhysicalMemory();
+  m_TotalVirtualMemory      = systeminfo.GetTotalVirtualMemory();
+  m_AvailableVirtualMemory  = systeminfo.GetAvailableVirtualMemory();
+  m_TotalPhysicalMemory     = systeminfo.GetTotalPhysicalMemory();
+  m_AvailablePhysicalMemory = systeminfo.GetAvailablePhysicalMemory();
 }
 } // end namespace itk
