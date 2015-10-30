@@ -264,12 +264,12 @@ HighPriorityRealTimeProbe
 {
   if(printSystemInfo)
     {
-    this->PrintSystemInformation();
+    this->PrintSystemInformation(os);
     }
 
   if(printReportHead)
     {
-    this->PrintReportHead();
+    this->PrintReportHead(os);
     }
 
   std::stringstream ss;
@@ -291,12 +291,12 @@ HighPriorityRealTimeProbe
 {
   if(printSystemInfo)
     {
-    this->PrintSystemInformation();
+    this->PrintSystemInformation(os);
     }
 
   if(printReportHead)
     {
-    this->PrintExpandedReportHead();
+    this->PrintExpandedReportHead(os);
     }
 
   std::stringstream ss;
