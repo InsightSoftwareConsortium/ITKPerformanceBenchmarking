@@ -36,7 +36,7 @@ int main( int, char * [] )
 
   for(numOfThread =1; numOfThread <= max_numOfThread; ++numOfThread)
   {
-    localTimer.SetMumberOfThreads(numOfThread);
+    localTimer.SetNumberOfThreads(numOfThread);
     for(int i=0; i<10; ++i)
     {
       // time a task
@@ -50,9 +50,9 @@ int main( int, char * [] )
     }
 
     if(numOfThread ==1)
-      localTimer.Report();
+      localTimer.ExpandedReport();
     else
-      localTimer.Report(std::cout, false, false);
+      localTimer.ExpandedReport(std::cout, false, false);
 
     localTimer.Reset();
   }
