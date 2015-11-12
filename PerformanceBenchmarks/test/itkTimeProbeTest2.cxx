@@ -17,11 +17,11 @@
  *=========================================================================*/
 
 #include <iostream>
-#include "itkHighPriorityRealTimeProbe.h"
+#include "itkTimeProbe.h"
 #include "itkMath.h"
 
 // Check the validation of resource probe's result
-bool CheckTimeProbe(itk::HighPriorityRealTimeProbe& probe)
+bool CheckTimeProbe(itk::TimeProbe& probe)
 {
   bool check = true;
   // Check the numbers of iteration, starts, and stops
@@ -36,10 +36,12 @@ bool CheckTimeProbe(itk::HighPriorityRealTimeProbe& probe)
 
   return check;
 }
+
 int main( int, char * [] )
 {
   // Create an ITK time probe
-  itk::HighPriorityRealTimeProbe localTimer;
+  itk::TimeProbe localTimer;
+
   // Set a name of probe
   localTimer.SetNameOfProbe("Simple for-loop");
 
@@ -101,24 +103,24 @@ int main( int, char * [] )
     std::cerr << "Reset() failure" << std::endl;
     return EXIT_FAILURE;
     }
-  if( localTimer.GetNumberOfStops() != itk::NumericTraits< itk::HighPriorityRealTimeProbe::CountType >::ZeroValue() )
+  if( localTimer.GetNumberOfStops() != itk::NumericTraits< itk::TimeProbe::CountType >::ZeroValue() )
     {
     std::cerr << "Reset() failure" << std::endl;
     return EXIT_FAILURE;
     }
- if( itk::Math::NotExactlyEquals(localTimer.GetTotal(), itk::NumericTraits< itk::HighPriorityRealTimeProbe::TimeStampType  >::ZeroValue()) )
+ if( itk::Math::NotExactlyEquals(localTimer.GetTotal(), itk::NumericTraits< itk::TimeProbe::TimeStampType  >::ZeroValue()) )
     {
     std::cerr << "Reset() failure" << std::endl;
     return EXIT_FAILURE;
     }
-  if( itk::Math::NotExactlyEquals(localTimer.GetMean(), itk::NumericTraits< itk::HighPriorityRealTimeProbe::TimeStampType >::ZeroValue()) )
+  if( itk::Math::NotExactlyEquals(localTimer.GetMean(), itk::NumericTraits< itk::TimeProbe::TimeStampType >::ZeroValue()) )
     {
     std::cerr << "Reset() failure" << std::endl;
     return EXIT_FAILURE;
     }
 
   /** Invoke GetRealTimeClock. */
-  itk::RealTimeStamp timeStamp = localTimer.GetHighPriorityRealTimeClock()->GetRealTimeStamp();
+  itk::RealTimeStamp timeStamp = localTimer.GetRealTimeClock()->GetRealTimeStamp();
   std::cout << std::endl << "Check RealTimeStamp" << std::endl;
   std::cout << "day  " << timeStamp.GetTimeInDays() << std::endl;
   std::cout << "hour " << timeStamp.GetTimeInHours() << std::endl;

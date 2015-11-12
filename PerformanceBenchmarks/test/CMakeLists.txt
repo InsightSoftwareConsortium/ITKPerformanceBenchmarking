@@ -1,15 +1,6 @@
 itk_module_test()
 
-#set(ITKGPUCommon-tests
-# itkGPUImageTest.cxx
-# itkGPUReductionTest.cxx
-# )
-
-#CreateTestDriver(ITKGPUCommon "${ITKGPUCommon-Test_LIBRARIES}" "${ITKGPUCommon-tests}")
-#itk_add_test(NAME itkGPUImageTest COMMAND ITKGPUCommonTestDriver itkGPUImageTest)
-#itk_add_test(NAME itkGPUReductionTest COMMAND ITKGPUCommonTestDriver itkGPUReductionTest)
-
-# Add Test code for itkTimeProbe
+# Add Test code for itkPerformanceBenchmarks
 add_executable(itkHighPriorityRealTimeProbeTest
                itkHighPriorityRealTimeProbeTest.cxx )
 target_link_libraries(itkHighPriorityRealTimeProbeTest
@@ -18,9 +9,26 @@ add_test(NAME itkHighPriorityRealTimeProbeTest
          COMMAND itkHighPriorityRealTimeProbeTest )
 
 
-add_executable(itkHighPriorityRealTimeProbesCollectorTest3
-               itkHighPriorityRealTimeProbesCollectorTest3.cxx )
-target_link_libraries(itkHighPriorityRealTimeProbesCollectorTest3
+add_executable(itkTimeProbeTest2
+               itkTimeProbeTest2.cxx )
+target_link_libraries(itkTimeProbeTest2
                       ${ITK_LIBRARIES} PerformanceBenchmarks)
-add_test(NAME itkHighPriorityRealTimeProbesCollectorTest3
-         COMMAND itkHighPriorityRealTimeProbesCollectorTest3 )
+add_test(NAME itkTimeProbeTest2
+         COMMAND itkTimeProbeTest2 )
+
+
+add_executable(itkHighPriorityRealTimeProbesCollectorTest
+               itkHighPriorityRealTimeProbesCollectorTest.cxx )
+target_link_libraries(itkHighPriorityRealTimeProbesCollectorTest
+                      ${ITK_LIBRARIES} PerformanceBenchmarks)
+add_test(NAME itkHighPriorityRealTimeProbesCollectorTest
+         COMMAND itkHighPriorityRealTimeProbesCollectorTest )
+
+
+add_executable(itkTimeProbesTest2
+               itkTimeProbesTest2.cxx )
+target_link_libraries(itkTimeProbesTest2
+                      ${ITK_LIBRARIES} PerformanceBenchmarks)
+add_test(NAME itkTimeProbesTest2
+         COMMAND itkTimeProbesTest2 )
+
