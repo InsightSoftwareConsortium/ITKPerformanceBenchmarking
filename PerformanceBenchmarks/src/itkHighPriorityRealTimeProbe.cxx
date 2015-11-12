@@ -28,7 +28,7 @@ namespace itk
 {
 /** Constructor */
 HighPriorityRealTimeProbe
-::HighPriorityRealTimeProbe():ResourceExpandedProbe< TimeStampType, TimeStampType >("Time", "s")
+::HighPriorityRealTimeProbe():ResourceProbe< TimeStampType, TimeStampType >("Time", "s")
 {
   this->m_HighPriorityRealTimeClock   = HighPriorityRealTimeClock::New();
 }
