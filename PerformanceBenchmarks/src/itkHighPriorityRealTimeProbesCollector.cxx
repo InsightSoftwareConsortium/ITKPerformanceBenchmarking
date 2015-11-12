@@ -24,7 +24,6 @@ namespace itk
 /** Constructor */
 HighPriorityRealTimeProbesCollector
 ::HighPriorityRealTimeProbesCollector()
-:ResourceExpandedProbesCollector<HighPriorityRealTimeProbe>()
 {
 }
 

@@ -18,7 +18,7 @@
 #ifndef HighPriorityRealTimeProbesCollector_h
 #define HighPriorityRealTimeProbesCollector_h
 
-#include "itkResourceExpandedProbesCollector.h"
+#include "itkResourceProbesCollectorBase.h"
 #include "itkHighPriorityRealTimeProbe.h"
 #include <map>
 
@@ -38,7 +38,7 @@ namespace itk
  *   \sa HighPriorityRealTimeClock
  *
  */
-class PerformanceBenchmarks_EXPORT HighPriorityRealTimeProbesCollector:public ResourceExpandedProbesCollector<HighPriorityRealTimeProbe>
+class PerformanceBenchmarks_EXPORT HighPriorityRealTimeProbesCollector:public ResourceProbesCollectorBase<HighPriorityRealTimeProbe>
 {
 public:
 
