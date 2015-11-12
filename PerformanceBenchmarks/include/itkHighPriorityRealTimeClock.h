@@ -28,7 +28,7 @@
 
 #else
 
-#endif  // defined(WIN32) || defined(_WIN32)
+#endif  // defined(_WIN32)
 
 namespace itk
 {
@@ -43,10 +43,10 @@ namespace itk
 class PerformanceBenchmarks_EXPORT HighPriorityRealTimeClock : public RealTimeClock
 {
 public:
-  typedef HighPriorityRealTimeClock Self;
-  typedef Object Superclass;
-  typedef SmartPointer< Self > Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
+  typedef HighPriorityRealTimeClock   Self;
+  typedef Object                      Superclass;
+  typedef SmartPointer< Self >        Pointer;
+  typedef SmartPointer< const Self >  ConstPointer;
 
   /** Method for defining the name of the class */
   itkTypeMacro(HighPriorityRealTimeClock, Object);
@@ -70,16 +70,16 @@ private:
 
 #if defined(WIN32) || defined(_WIN32)
 
-  DWORD dwOldPriorityClass;
-  int nOldThreadPriority;
+  DWORD  dwOldPriorityClass;
+  int    nOldThreadPriority;
 
 #else
 
-  int OldProcessPriority;
+  int    OldProcessPriority;
 
 #endif  // defined(WIN32) || defined(_WIN32)
 
-  void DisplayErrorMessage();
+  void   DisplayErrorMessage();
 };
 
 } // end of namespace itk
