@@ -1,4 +1,6 @@
 project(ITKBenchmarkFiltering)
 
-#add_executable(FourierDescriptors1 FourierDescriptors1.cxx )
-#target_link_libraries(FourierDescriptors1 ${ITK_LIBRARIES})
+message("ITKBenchmarkFiltering")
+
+add_executable(Benchmark_FFTDirectInverse Benchmark_FFTDirectInverse.cxx )
+target_link_libraries(Benchmark_FFTDirectInverse  ${ITK_LIBRARIES} PerformanceBenchmarks)
