@@ -4,6 +4,11 @@ project(PerformanceBenchmarks)
 
 option(PerformanceBenchmarks_SUPERBUILD "" ON)
 
+#message("ITK_DIR ::"  ${ITK_DIR})
+
+set(ITK_DIR ${ITK_DIR})
+
+
 if (PerformanceBenchmarks_SUPERBUILD)
   # External Project Build of ITK
   include(ExternalProject)
@@ -21,12 +26,6 @@ if (PerformanceBenchmarks_SUPERBUILD)
       SOURCE_DIR ${ITK_SOURCE_DIR}
       BINARY_DIR ${ITK_BUILD_DIR}
       INSTALL_DIR ${ITK_BUILD_DIR}
-      LOG_DOWNLOAD 1
-      LOG_UPDATE 0
-      LOG_CONFIGURE 0
-      LOG_BUILD 0
-      LOG_TEST 0
-      LOG_INSTALL 0
       CMAKE_GENERATOR ${gen}
       CMAKE_ARGS
         -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
@@ -43,22 +42,14 @@ if (PerformanceBenchmarks_SUPERBUILD)
       INSTALL_COMMAND ""
       )
 
-    set(SUPER_BUILD_DEPENDS ${SUPER_BUILD_DEPENDS} ITK)
+    set(ITK_DIR ${ITK_BUILD_DIR})
   endif()
 
-  message("PerformanceBenchmarks")
-  message("SUPER_BUILD_DEPENDS::"  ${SUPER_BUILD_DEPENDS})
   ExternalProject_Add(PerformanceBenchmarks
     UPDATE_COMMAND ""
     DOWNLOAD_COMMAND ""
     SOURCE_DIR ${CMAKE_SOURCE_DIR}
     BINARY_DIR ${CMAKE_BINARY_DIR}
-    LOG_DOWNLOAD 1
-    LOG_UPDATE 0
-    LOG_CONFIGURE 0
-    LOG_BUILD 0
-    LOG_TEST 0
-    LOG_INSTALL 0
     CMAKE_GENERATOR ${gen}
     CMAKE_ARGS
       -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
@@ -69,40 +60,33 @@ if (PerformanceBenchmarks_SUPERBUILD)
       -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
       -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
       -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-      -DITK_DIR:PATH=${ITK_BUILD_DIR}
-      -D${PROJECT_NAME}_SUPERBUILD:BOOL=OFF
+      -DITK_DIR:PATH=${ITK_DIR}
+      -DPerformanceBenchmarks_SUPERBUILD:BOOL=OFF
     INSTALL_COMMAND ""
-    #DEPENDS ${SUPER_BUILD_DEPENDS}
     )
-    set(SUPER_BUILD_DEPENDS ${SUPER_BUILD_DEPENDS} PerformanceBenchmarks)
 
-    message("Build Examples")
-    message("SUPER_BUILD_DEPENDS::"  ${SUPER_BUILD_DEPENDS})
-    ExternalProject_Add(ITK_BENCHMARK
-    UPDATE_COMMAND ""
-    DOWNLOAD_COMMAND ""
-    SOURCE_DIR ${CMAKE_SOURCE_DIR}/examples
-    BINARY_DIR ${CMAKE_BINARY_DIR}/examples
-    LOG_DOWNLOAD 1
-    LOG_UPDATE 0
-    LOG_CONFIGURE 0
-    LOG_BUILD 0
-    LOG_TEST 0
-    LOG_INSTALL 0
-    CMAKE_GENERATOR ${gen}
-    CMAKE_ARGS
-      -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
-      -DCMAKE_CXX_COMPILER_ARG1:STRING=${CMAKE_CXX_COMPILER_ARG1}
-      -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
-      -DCMAKE_C_COMPILER_ARG1:STRING=${CMAKE_C_COMPILER_ARG1}
-      -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-      -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
-      -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-      -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-      -D${PROJECT_NAME}_SUPERBUILD:BOOL=OFF
-    INSTALL_COMMAND ""
-    #DEPENDS ${SUPER_BUILD_DEPENDS}
-    )
+#    ExternalProject_Add(ITK_BENCHMARK
+#    UPDATE_COMMAND ""
+#    DOWNLOAD_COMMAND ""
+#    SOURCE_DIR "${CMAKE_SOURCE_DIR}/examples/"
+#    BINARY_DIR "${CMAKE_BINARY_DIR}/examples/"
+#    CMAKE_GENERATOR ${gen}
+#    CMAKE_ARGS
+#      -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+#      -DCMAKE_CXX_COMPILER_ARG1:STRING=${CMAKE_CXX_COMPILER_ARG1}
+#      -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
+#      -DCMAKE_C_COMPILER_ARG1:STRING=${CMAKE_C_COMPILER_ARG1}
+#      -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+#      -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
+#      -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+#      -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+#      -DITK_DIR:PATH=${ITK_DIR}
+#    INSTALL_COMMAND ""
+#    DEPENDS PerformanceBenchmarks
+#    )
+
+    #/ITKPerformanceBenchmarks/examples/Filtering/FFTDirectInverse.cxx:40: error:
+    #'itkHighPriorityRealTimeProbesCollector.h' file not found
 
     return()
 endif()
@@ -117,4 +101,5 @@ else()
   itk_module_impl()
 endif()
 
+add_subdirectory(examples)
 
