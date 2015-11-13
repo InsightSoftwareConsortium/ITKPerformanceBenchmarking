@@ -73,7 +73,6 @@ void TestTransformPhysicalPointToIndex(T * image)
 //-------------------------
 int main(int, char* [] )
 {
-  std::cout << "Hello" << std::endl;
   itk::HighPriorityRealTimeProbesCollector    collector;
 
   const unsigned int N =  1000L;
