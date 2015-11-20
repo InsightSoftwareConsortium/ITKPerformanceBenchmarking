@@ -6,7 +6,6 @@ itk_module(PerformanceBenchmarks
     ITKCommon
   TEST_DEPENDS
     ITKTestKernel
-    ITKCommon
   DESCRIPTION
   "${DOCUMENTATION}"
 )
