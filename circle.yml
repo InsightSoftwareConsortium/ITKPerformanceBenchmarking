@@ -10,6 +10,11 @@ dependencies:
 
 test:
   override:
-    - mkdir ~/ITKPerformanceBenchmarks-build
-    - docker run -v ~/ITKPerformanceBenchmarks:/usr/src/ITKPerformanceBenchmarks -v ~/ITKPerformanceBenchmarks-build:/usr/src/ITKPerformanceBenchmarks-build insighttoolkit/performancebenchmarks-test /usr/src/ITKPerformanceBenchmarks/test/Docker/test.sh
+    - ~/ITKPerformanceBenchmarks/test/Docker/run.sh
 
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push insighttoolkit/performancebenchmarks-test
