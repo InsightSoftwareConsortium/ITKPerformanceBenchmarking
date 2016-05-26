@@ -1,0 +1,15 @@
+machine:
+  services:
+    - docker
+
+dependencies:
+  override:
+    - docker info
+    - docker pull insighttoolkit/performancebenchmarks-test
+    - ~/ITKPerformanceBenchmarks/test/Docker/build.sh
+
+test:
+  override:
+    - mkdir ~/ITKPerformanceBenchmarks-build
+    - docker run -v ~/ITKPerformanceBenchmarks:/usr/src/ITKPerformanceBenchmarks -v ~/ITKPerformanceBenchmarks-build:/usr/src/ITKPerformanceBenchmarks-build insighttoolkit/performancebenchmarks-test /usr/src/ITKPerformanceBenchmarks/test/Docker/test.sh
+
