@@ -35,7 +35,8 @@ namespace itk
  *   the execution over multiple passes.  The values of time are taken from the
  *   HighPriorityRealTimeClock.
  *
- *   \sa HighPriorityRealTimeClock
+ * \sa HighPriorityRealTimeClock
+ * \ingroup PerformanceBenchmarks
  *
  */
 class PerformanceBenchmarks_EXPORT HighPriorityRealTimeProbesCollector:public ResourceProbesCollectorBase<HighPriorityRealTimeProbe>

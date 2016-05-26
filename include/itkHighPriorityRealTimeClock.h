@@ -38,6 +38,8 @@ namespace itk
 *
 * It subclasses from RealTimeClock to bump the thread priority and affinity.
 *
+* \ingroup PerformanceBenchmarks
+*
 */
 
 class PerformanceBenchmarks_EXPORT HighPriorityRealTimeClock : public RealTimeClock
