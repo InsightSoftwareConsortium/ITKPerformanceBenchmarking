@@ -46,12 +46,12 @@ class PerformanceBenchmarks_EXPORT HighPriorityRealTimeClock : public RealTimeCl
 {
 public:
   typedef HighPriorityRealTimeClock   Self;
-  typedef Object                      Superclass;
+  typedef RealTimeClock               Superclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
 
   /** Method for defining the name of the class */
-  itkTypeMacro(HighPriorityRealTimeClock, Object);
+  itkTypeMacro(HighPriorityRealTimeClock, RealTimeClock);
 
   /** Method for creation through the object factory */
   itkNewMacro(Self);
