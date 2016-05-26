@@ -65,8 +65,8 @@ void HighPriorityRealTimeClock::RaisePriority()
 {
 #if defined(WIN32) || defined(_WIN32)
 
-  this->dwOldPriorityClass = ::GetPriorityClass(::GetCurrentProcess());
-  if (!this->dwOldPriorityClass)
+  this->m_OldPriorityClass = ::GetPriorityClass(::GetCurrentProcess());
+  if (!this->m_OldPriorityClass)
     {
     this->DisplayErrorMessage();
     itkExceptionMacro("Current priority class could not be retrieved");
@@ -81,8 +81,8 @@ void HighPriorityRealTimeClock::RaisePriority()
     itkExceptionMacro("Priority class could not be set");
     }
 
-  this->nOldThreadPriority = ::GetThreadPriority(::GetCurrentThread());
-  if (this->nOldThreadPriority == THREAD_PRIORITY_ERROR_RETURN)
+  this->m_OldThreadPriority = ::GetThreadPriority(::GetCurrentThread());
+  if (this->m_OldThreadPriority == THREAD_PRIORITY_ERROR_RETURN)
     {
     this->DisplayErrorMessage();
     itkExceptionMacro("Current thread priority could not be retrieved");
@@ -97,8 +97,8 @@ void HighPriorityRealTimeClock::RaisePriority()
 #else
 
   errno = 0;
-  this->OldProcessPriority = getpriority(PRIO_PROCESS, 0);
-  if (this->OldProcessPriority == -1 && errno != 0)
+  this->m_OldProcessPriority = getpriority(PRIO_PROCESS, 0);
+  if (this->m_OldProcessPriority == -1 && errno != 0)
     {
     itkExceptionMacro("Current process priority could not be retrieved");
     }
@@ -151,14 +151,14 @@ void HighPriorityRealTimeClock::RestorePriority()
 {
 #if defined(WIN32) || defined(_WIN32)
 
-  if (this->dwOldPriorityClass &&
-      !::SetPriorityClass(::GetCurrentProcess(), this->dwOldPriorityClass))
+  if (this->m_OldPriorityClass &&
+      !::SetPriorityClass(::GetCurrentProcess(), this->m_OldPriorityClass))
     {
     this->DisplayErrorMessage();
     }
 
-  if (this->nOldThreadPriority != THREAD_PRIORITY_ERROR_RETURN &&
-      !::SetThreadPriority(::GetCurrentThread(), this->nOldThreadPriority))
+  if (this->m_OldThreadPriority != THREAD_PRIORITY_ERROR_RETURN &&
+      !::SetThreadPriority(::GetCurrentThread(), this->m_OldThreadPriority))
     {
     this->DisplayErrorMessage();
     }
@@ -166,7 +166,7 @@ void HighPriorityRealTimeClock::RestorePriority()
 #else
 
   errno = 0;
-  if (setpriority(PRIO_PROCESS, 0, this->OldProcessPriority) == -1)
+  if (setpriority(PRIO_PROCESS, 0, this->m_OldProcessPriority) == -1)
     {
     std::string msg("Process priority could not be set: ");
     switch (errno)

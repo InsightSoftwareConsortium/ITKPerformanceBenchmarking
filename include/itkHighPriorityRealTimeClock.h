@@ -72,12 +72,12 @@ private:
 
 #if defined(WIN32) || defined(_WIN32)
 
-  DWORD  dwOldPriorityClass;
-  int    nOldThreadPriority;
+  DWORD  m_OldPriorityClass;
+  int    m_OldThreadPriority;
 
 #else
 
-  int    OldProcessPriority;
+  int    m_OldProcessPriority;
 
 #endif  // defined(WIN32) || defined(_WIN32)
 

@@ -15,8 +15,8 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef HighPriorityRealTimeProbesCollector_h
-#define HighPriorityRealTimeProbesCollector_h
+#ifndef itkHighPriorityRealTimeProbesCollector_h
+#define itkHighPriorityRealTimeProbesCollector_h
 
 #include "itkResourceProbesCollectorBase.h"
 #include "itkHighPriorityRealTimeProbe.h"
@@ -39,10 +39,10 @@ namespace itk
  * \ingroup PerformanceBenchmarks
  *
  */
-class PerformanceBenchmarks_EXPORT HighPriorityRealTimeProbesCollector:public ResourceProbesCollectorBase<HighPriorityRealTimeProbe>
+class PerformanceBenchmarks_EXPORT HighPriorityRealTimeProbesCollector:
+  public ResourceProbesCollectorBase< HighPriorityRealTimeProbe >
 {
 public:
-
   /** Constructor */
   HighPriorityRealTimeProbesCollector();
 
@@ -50,7 +50,6 @@ public:
   virtual ~HighPriorityRealTimeProbesCollector();
 
 private:
-
 
 };
 } // end namespace itk
