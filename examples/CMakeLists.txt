@@ -6,7 +6,7 @@ if (NOT DEFINED ITKBenchmarks_SUPERBUILD)
 endif()
 
 
-if(ITKBenchmarks_SUPERBUILD)
+if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
   # External Project Build of ITK
   include(ExternalProject)
   set(ITKBenchmarks_EXECUTABLE_OUTPUT_PATH  "${CMAKE_BINARY_DIR}/bin")
@@ -23,7 +23,7 @@ if(ITKBenchmarks_SUPERBUILD)
       DOWNLOAD_DIR ${ITK_SOURCE_DIR}
       SOURCE_DIR ${ITK_SOURCE_DIR}
       BINARY_DIR ${ITK_BUILD_DIR}
-      INSTALL_DIR ${ITK_BUILD_DIR}
+      INSTALL_DIR ${ITK_INSTALL_DIR}
       CMAKE_GENERATOR ${CMAKE_GENERATOR}
       CMAKE_ARGS
         -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${ITKBenchmarks_EXECUTABLE_OUTPUT_PATH}
@@ -41,15 +41,36 @@ if(ITKBenchmarks_SUPERBUILD)
       INSTALL_COMMAND ""
       )
     set(ITK_DIR ${ITK_BUILD_DIR})
+
+    set(PerformanceBenchmarks_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../" CACHE INTERNAL "Path to PerformanceBenchmarks")
+
+    ExternalProject_Add(PerformanceBenchmarksModule
+      UPDATE_COMMAND ""
+      DOWNLOAD_COMMAND ""
+      SOURCE_DIR "${PerformanceBenchmarks_SOURCE_DIR}"
+      BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/PerformanceBenchmarksModule-build"
+      CMAKE_GENERATOR ${CMAKE_GENERATOR}
+      CMAKE_ARGS
+        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${ITKBenchmarks_EXECUTABLE_OUTPUT_PATH}
+        -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
+        -DCMAKE_CXX_COMPILER_ARG1:STRING=${CMAKE_CXX_COMPILER_ARG1}
+        -DCMAKE_C_COMPILER:STRING=${CMAKE_C_COMPILER}
+        -DCMAKE_C_COMPILER_ARG1:STRING=${CMAKE_C_COMPILER_ARG1}
+        -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+        -DCMAKE_C_FLAGS:STRING=${CMAKE_C_FLAGS}
+        -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
+        -DITK_DIR:PATH=${ITK_DIR}
+      INSTALL_COMMAND ""
+      DEPENDS ITK
+      )
   endif()
 
-  set( PerformanceBenchmarks_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../" CACHE INTERNAL "Path to PerformanceBenchmarks")
-
-  ExternalProject_Add(PerformanceBenchmarks
+  ExternalProject_Add(ITKBenchmarks
     UPDATE_COMMAND ""
     DOWNLOAD_COMMAND ""
-    SOURCE_DIR "${PerformanceBenchmarks_SOURCE_DIR}"
-    BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/PerformanceBenchmarks-build"
+    SOURCE_DIR "${PerformanceBenchmarks_SOURCE_DIR}/examples"
+    BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/ITKBenchmarks-build"
     CMAKE_GENERATOR ${CMAKE_GENERATOR}
     CMAKE_ARGS
       -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${ITKBenchmarks_EXECUTABLE_OUTPUT_PATH}
@@ -64,7 +85,7 @@ if(ITKBenchmarks_SUPERBUILD)
       -DITK_DIR:PATH=${ITK_DIR}
       -DITKBenchmarks_SUPERBUILD:BOOL=OFF
     INSTALL_COMMAND ""
-    DEPENDS ITK
+    DEPENDS PerformanceBenchmarksModule
     )
   return()
 endif()
@@ -72,8 +93,6 @@ endif()
 
 find_package(ITK REQUIRED)
 include(${ITK_USE_FILE})
-
-set(ITK_TEST_DRIVER itkTestDriver)
 
 if(NOT DEFINED BENCHMARK_ITK_FILTER)
   option(BENCHMARK_ITK_FILTER "Test the performance of ITK Filters." ON)
