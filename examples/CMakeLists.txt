@@ -91,29 +91,19 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
 endif()
 
 
-if(NOT DEFINED BENCHMARK_ITK_FILTER)
-  option(BENCHMARK_ITK_FILTER "Test the performance of ITK Filters." ON)
 endif()
 
-if(NOT DEFINED BENCHMARK_ITK_REGESTRATION)
-  option(BENCHMARK_ITK_REGESTRATION "Test the performance of ITK Registration." ON)
-endif()
-
-if(NOT DEFINED BENCHMARK_ITK_SEGMENTATION)
-  option(BENCHMARK_ITK_SEGMENTATION "Test the performance of ITK Segmentation." ON)
-endif()
-
-# Add ITK Benchmark for Filtering
-if(BENCHMARK_ITK_FILTER)
+option(BENCHMARK_ITK_FILTERING "Test the performance of ITK Filters." ON)
+if(BENCHMARK_ITK_FILTERING)
   add_subdirectory(Filtering)
 endif()
 
-# Add ITK Benchmark for Registration
-if(BENCHMARK_ITK_REGESTRATION)
+option(BENCHMARK_ITK_REGISTRATION "Test the performance of ITK Registration." ON)
+if(BENCHMARK_ITK_REGISTRATION)
   add_subdirectory(Registration)
 endif()
 
-# Add ITK Benchmark for Segmentation
+option(BENCHMARK_ITK_SEGMENTATION "Test the performance of ITK Segmentation." ON)
 if(BENCHMARK_ITK_SEGMENTATION)
   add_subdirectory(Segmentation)
 endif()
