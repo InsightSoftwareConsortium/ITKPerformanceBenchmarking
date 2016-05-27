@@ -91,9 +91,6 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
 endif()
 
 
-find_package(ITK REQUIRED)
-include(${ITK_USE_FILE})
-
 if(NOT DEFINED BENCHMARK_ITK_FILTER)
   option(BENCHMARK_ITK_FILTER "Test the performance of ITK Filters." ON)
 endif()
