@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.4)
 project(ITKBenchmarks)
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH})
 
 if (NOT DEFINED ITKBenchmarks_SUPERBUILD)
   option(ITKBenchmarks_SUPERBUILD "Build ITK and the PerformanceBenchmarks module prior to building the benchmarks." ON)
@@ -90,8 +92,11 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
   return()
 endif()
 
-
-endif()
+include(ITKBenchmarksExternalData)
+ExternalData_Expand_Arguments(ITKBenchmarksData
+  BRAIN_IMAGE
+  "DATA{Data/Input/brainweb165a10f17.mha}"
+  )
 
 option(BENCHMARK_ITK_FILTERING "Test the performance of ITK Filters." ON)
 if(BENCHMARK_ITK_FILTERING)
@@ -107,3 +112,5 @@ option(BENCHMARK_ITK_SEGMENTATION "Test the performance of ITK Segmentation." ON
 if(BENCHMARK_ITK_SEGMENTATION)
   add_subdirectory(Segmentation)
 endif()
+
+ExternalData_Add_Target(ITKBenchmarksData)
