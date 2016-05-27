@@ -2,31 +2,29 @@ cmake_minimum_required(VERSION 2.8)
 project(ITKBenchmarks)
 
 if (NOT DEFINED ITKBenchmarks_SUPERBUILD)
-  option(ITKBenchmarks_SUPERBUILD "" ON)
+  option(ITKBenchmarks_SUPERBUILD "Build ITK and the PerformanceBenchmarks module prior to building the benchmarks." ON)
 endif()
 
 
 if(ITKBenchmarks_SUPERBUILD)
   # External Project Build of ITK
   include(ExternalProject)
-
   set(ITKBenchmarks_EXECUTABLE_OUTPUT_PATH  "${CMAKE_BINARY_DIR}/bin")
 
-  if( NOT ITK_DIR)
-
-    set( ITK_SOURCE_DIR ${CMAKE_BINARY_DIR}/ITK-src )
-    set( ITK_BUILD_DIR ${CMAKE_BINARY_DIR}/ITK-build CACHE INTERNAL "Path to store itk binaries")
+  if(NOT ITK_DIR)
+    set(ITK_SOURCE_DIR ${CMAKE_BINARY_DIR}/ITK-src)
+    set(ITK_BUILD_DIR ${CMAKE_BINARY_DIR}/ITK-build CACHE INTERNAL "Path to store itk binaries")
     set(ITK_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/ITK-install CACHE INTERNAL "Path to store itk install")
 
     ExternalProject_Add(ITK
-      GIT_REPOSITORY "git://itk.org/ITK.git"
-      GIT_TAG 1d04c03baf78014c154f5e2bb2508faadd7f926a
+      GIT_REPOSITORY "https://itk.org/ITK.git"
+      GIT_TAG v4.10.0
       UPDATE_COMMAND ""
       DOWNLOAD_DIR ${ITK_SOURCE_DIR}
       SOURCE_DIR ${ITK_SOURCE_DIR}
       BINARY_DIR ${ITK_BUILD_DIR}
       INSTALL_DIR ${ITK_BUILD_DIR}
-      CMAKE_GENERATOR ${gen}
+      CMAKE_GENERATOR ${CMAKE_GENERATOR}
       CMAKE_ARGS
         -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${ITKBenchmarks_EXECUTABLE_OUTPUT_PATH}
         -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
@@ -42,18 +40,17 @@ if(ITKBenchmarks_SUPERBUILD)
         -DITK_USE_BRAINWEB_DATA:BOOL=ON
       INSTALL_COMMAND ""
       )
-
     set(ITK_DIR ${ITK_BUILD_DIR})
   endif()
 
   set( PerformanceBenchmarks_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../" CACHE INTERNAL "Path to PerformanceBenchmarks")
 
-  ExternalProject_Add(PerformanceBenchmarks2
+  ExternalProject_Add(PerformanceBenchmarks
     UPDATE_COMMAND ""
     DOWNLOAD_COMMAND ""
     SOURCE_DIR "${PerformanceBenchmarks_SOURCE_DIR}"
-    BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/PerformanceBenchmarks/"
-    CMAKE_GENERATOR ${gen}
+    BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/PerformanceBenchmarks-build"
+    CMAKE_GENERATOR ${CMAKE_GENERATOR}
     CMAKE_ARGS
       -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${ITKBenchmarks_EXECUTABLE_OUTPUT_PATH}
       -DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}
@@ -67,12 +64,9 @@ if(ITKBenchmarks_SUPERBUILD)
       -DITK_DIR:PATH=${ITK_DIR}
       -DITKBenchmarks_SUPERBUILD:BOOL=OFF
     INSTALL_COMMAND ""
-    DEPENDS
+    DEPENDS ITK
     )
-
-
   return()
-
 endif()
 
 
@@ -81,15 +75,15 @@ include(${ITK_USE_FILE})
 
 set(ITK_TEST_DRIVER itkTestDriver)
 
-if (NOT DEFINED BENCHMARK_ITK_FILTER)
+if(NOT DEFINED BENCHMARK_ITK_FILTER)
   option(BENCHMARK_ITK_FILTER "Test the performance of ITK Filters." ON)
 endif()
 
-if (NOT DEFINED BENCHMARK_ITK_REGESTRATION)
+if(NOT DEFINED BENCHMARK_ITK_REGESTRATION)
   option(BENCHMARK_ITK_REGESTRATION "Test the performance of ITK Registration." ON)
 endif()
 
-if (NOT DEFINED BENCHMARK_ITK_SEGMENTATION)
+if(NOT DEFINED BENCHMARK_ITK_SEGMENTATION)
   option(BENCHMARK_ITK_SEGMENTATION "Test the performance of ITK Segmentation." ON)
 endif()
 
