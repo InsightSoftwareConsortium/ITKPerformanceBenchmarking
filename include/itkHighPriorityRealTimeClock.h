@@ -38,18 +38,20 @@ namespace itk
 *
 * It subclasses from RealTimeClock to bump the thread priority and affinity.
 *
+* \ingroup PerformanceBenchmarks
+*
 */
 
 class PerformanceBenchmarks_EXPORT HighPriorityRealTimeClock : public RealTimeClock
 {
 public:
   typedef HighPriorityRealTimeClock   Self;
-  typedef Object                      Superclass;
+  typedef RealTimeClock               Superclass;
   typedef SmartPointer< Self >        Pointer;
   typedef SmartPointer< const Self >  ConstPointer;
 
   /** Method for defining the name of the class */
-  itkTypeMacro(HighPriorityRealTimeClock, Object);
+  itkTypeMacro(HighPriorityRealTimeClock, RealTimeClock);
 
   /** Method for creation through the object factory */
   itkNewMacro(Self);
@@ -70,12 +72,12 @@ private:
 
 #if defined(WIN32) || defined(_WIN32)
 
-  DWORD  dwOldPriorityClass;
-  int    nOldThreadPriority;
+  DWORD  m_OldPriorityClass;
+  int    m_OldThreadPriority;
 
 #else
 
-  int    OldProcessPriority;
+  int    m_OldProcessPriority;
 
 #endif  // defined(WIN32) || defined(_WIN32)
 

@@ -17,8 +17,6 @@
  *=========================================================================*/
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
-
-
 namespace itk
 {
 /** Constructor */

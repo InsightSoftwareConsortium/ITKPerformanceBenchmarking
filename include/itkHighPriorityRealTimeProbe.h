@@ -34,6 +34,8 @@ namespace itk
  *
  *   \sa HighPriorityRealTimeClock
  *
+ * \ingroup PerformanceBenchmarks
+ *
  */
 class PerformanceBenchmarks_EXPORT HighPriorityRealTimeProbe:public
   ResourceProbe< HighPriorityRealTimeClock::TimeStampType, HighPriorityRealTimeClock::TimeStampType >
