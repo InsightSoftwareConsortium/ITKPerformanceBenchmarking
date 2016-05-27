@@ -44,7 +44,7 @@ int main( int argc, char * argv[] )
   typedef itk::MedianImageFilter< ImageType, ImageType >  FilterType;
   FilterType::Pointer filter = FilterType::New();
   ImageType::SizeType radius;
-  radius.Fill( 3 );
+  radius.Fill( 2 );
   filter->SetRadius( radius );
   filter->SetInput( reader->GetOutput() );
 

@@ -97,6 +97,9 @@ ExternalData_Expand_Arguments(ITKBenchmarksData
   BRAIN_IMAGE
   "DATA{Data/Input/brainweb165a10f17.mha}"
   )
+set(TEST_OUTPUT_DIR "${PROJECT_BINARY_DIR}/Testing")
+
+enable_testing()
 
 option(BENCHMARK_ITK_FILTERING "Test the performance of ITK Filters." ON)
 if(BENCHMARK_ITK_FILTERING)
