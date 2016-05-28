@@ -23,11 +23,7 @@
 #include "PerformanceBenchmarksExport.h"
 
 #if defined(_WIN32)
-
 #include <windows.h>
-
-#else
-
 #endif  // defined(_WIN32)
 
 namespace itk
@@ -41,7 +37,6 @@ namespace itk
 * \ingroup PerformanceBenchmarks
 *
 */
-
 class PerformanceBenchmarks_EXPORT HighPriorityRealTimeClock : public RealTimeClock
 {
 public:
@@ -57,11 +52,10 @@ public:
   itkNewMacro(Self);
 
 protected:
-
-  /** constructor */
+  /** Constructor */
   HighPriorityRealTimeClock();
 
-  /** destructor */
+  /** Destructor */
   virtual ~HighPriorityRealTimeClock();
 
   /** Method for raising and restoring the priority */
@@ -70,16 +64,12 @@ protected:
 
 private:
 
-#if defined(WIN32) || defined(_WIN32)
-
+#if defined(_WIN32)
   DWORD  m_OldPriorityClass;
   int    m_OldThreadPriority;
-
 #else
-
   int    m_OldProcessPriority;
-
-#endif  // defined(WIN32) || defined(_WIN32)
+#endif  //  defined(_WIN32)
 
   void   DisplayErrorMessage();
 };

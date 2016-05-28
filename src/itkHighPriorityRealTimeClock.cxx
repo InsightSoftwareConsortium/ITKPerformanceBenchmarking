@@ -18,7 +18,7 @@
 #include <iostream>
 #include "itkHighPriorityRealTimeClock.h"
 
-#if defined(WIN32) || defined(_WIN32)
+#if defined(_WIN32)
 
 #else
 
@@ -33,7 +33,7 @@ namespace itk
 
 void HighPriorityRealTimeClock::DisplayErrorMessage()
 {
-#if defined(WIN32) || defined(_WIN32)
+#if defined(_WIN32)
   LPVOID lpMsgBuf;
   FormatMessage(
     FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -48,7 +48,7 @@ void HighPriorityRealTimeClock::DisplayErrorMessage()
     );
   MessageBox(NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION);
   LocalFree(lpMsgBuf);
-#endif  // defined(WIN32) || defined(_WIN32)
+#endif  // defined(_WIN32)
 }
 
 HighPriorityRealTimeClock::HighPriorityRealTimeClock()
@@ -63,8 +63,7 @@ HighPriorityRealTimeClock::~HighPriorityRealTimeClock()
 
 void HighPriorityRealTimeClock::RaisePriority()
 {
-#if defined(WIN32) || defined(_WIN32)
-
+#if defined(_WIN32)
   this->m_OldPriorityClass = ::GetPriorityClass(::GetCurrentProcess());
   if (!this->m_OldPriorityClass)
     {
@@ -93,9 +92,7 @@ void HighPriorityRealTimeClock::RaisePriority()
     this->DisplayErrorMessage();
     itkExceptionMacro("Thread priority could not be set");
     }
-
 #else
-
   errno = 0;
   this->m_OldProcessPriority = getpriority(PRIO_PROCESS, 0);
   if (this->m_OldProcessPriority == -1 && errno != 0)
@@ -143,14 +140,12 @@ void HighPriorityRealTimeClock::RaisePriority()
       itkExceptionMacro(<< msg.c_str());
       }
     }
-
-#endif  // defined(WIN32) || defined(_WIN32)
+#endif  // defined(_WIN32)
 }
 
 void HighPriorityRealTimeClock::RestorePriority()
 {
-#if defined(WIN32) || defined(_WIN32)
-
+#if defined(_WIN32)
   if (this->m_OldPriorityClass &&
       !::SetPriorityClass(::GetCurrentProcess(), this->m_OldPriorityClass))
     {
@@ -162,9 +157,7 @@ void HighPriorityRealTimeClock::RestorePriority()
     {
     this->DisplayErrorMessage();
     }
-
 #else
-
   errno = 0;
   if (setpriority(PRIO_PROCESS, 0, this->m_OldProcessPriority) == -1)
     {
@@ -192,7 +185,6 @@ void HighPriorityRealTimeClock::RestorePriority()
       }
     itkExceptionMacro(<< msg.c_str());
     }
-
 #endif  // defined(WIN32) || defined(_WIN32)
 }
 

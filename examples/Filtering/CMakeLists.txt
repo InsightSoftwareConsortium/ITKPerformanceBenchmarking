@@ -3,9 +3,7 @@ project(ITKBenchmarkFiltering)
 find_package(ITK REQUIRED
   COMPONENTS
     PerformanceBenchmarks
-    ITKFFT
     ITKIOImageBase
-    ITKImageGrid
     ITKSmoothing
     ITKIOMeta
   )

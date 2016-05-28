@@ -30,7 +30,7 @@ namespace itk
 HighPriorityRealTimeProbe
 ::HighPriorityRealTimeProbe():ResourceProbe< TimeStampType, TimeStampType >("Time", "s")
 {
-  this->m_HighPriorityRealTimeClock   = HighPriorityRealTimeClock::New();
+  this->m_HighPriorityRealTimeClock = HighPriorityRealTimeClock::New();
 }
 
 /** Destructor */
