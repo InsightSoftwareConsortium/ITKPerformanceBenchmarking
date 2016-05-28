@@ -31,7 +31,9 @@
 namespace itk
 {
 
-void HighPriorityRealTimeClock::DisplayErrorMessage()
+void
+HighPriorityRealTimeClock
+::DisplayErrorMessage()
 {
 #if defined(_WIN32)
   LPVOID lpMsgBuf;
@@ -51,17 +53,24 @@ void HighPriorityRealTimeClock::DisplayErrorMessage()
 #endif  // defined(_WIN32)
 }
 
-HighPriorityRealTimeClock::HighPriorityRealTimeClock()
+
+HighPriorityRealTimeClock
+::HighPriorityRealTimeClock()
 {
   this->RaisePriority();
 }
 
-HighPriorityRealTimeClock::~HighPriorityRealTimeClock()
+
+HighPriorityRealTimeClock
+::~HighPriorityRealTimeClock()
 {
   this->RestorePriority();
 }
 
-void HighPriorityRealTimeClock::RaisePriority()
+
+void
+HighPriorityRealTimeClock
+::RaisePriority()
 {
 #if defined(_WIN32)
   this->m_OldPriorityClass = ::GetPriorityClass(::GetCurrentProcess());
@@ -143,7 +152,10 @@ void HighPriorityRealTimeClock::RaisePriority()
 #endif  // defined(_WIN32)
 }
 
-void HighPriorityRealTimeClock::RestorePriority()
+
+void
+HighPriorityRealTimeClock
+::RestorePriority()
 {
 #if defined(_WIN32)
   if (this->m_OldPriorityClass &&
@@ -185,7 +197,7 @@ void HighPriorityRealTimeClock::RestorePriority()
       }
     itkExceptionMacro(<< msg.c_str());
     }
-#endif  // defined(WIN32) || defined(_WIN32)
+#endif  // defined(_WIN32)
 }
 
 }

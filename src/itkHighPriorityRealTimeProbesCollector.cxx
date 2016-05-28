@@ -19,13 +19,13 @@
 
 namespace itk
 {
-/** Constructor */
+
 HighPriorityRealTimeProbesCollector
 ::HighPriorityRealTimeProbesCollector()
 {
 }
 
-/** Destructor */
+
 HighPriorityRealTimeProbesCollector
 ::~HighPriorityRealTimeProbesCollector()
 {
