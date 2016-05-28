@@ -11,9 +11,6 @@ find_package(ITK REQUIRED
   )
 include(${ITK_USE_FILE})
 
-add_executable(Benchmark_FFTDirectInverse Benchmark_FFTDirectInverse.cxx )
-target_link_libraries(Benchmark_FFTDirectInverse  ${ITK_LIBRARIES})
-
 add_executable(MedianImageFilterBenchmark MedianImageFilterBenchmark.cxx )
 target_link_libraries(MedianImageFilterBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarkData
