@@ -19,8 +19,8 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
     set(ITK_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/ITK-install CACHE INTERNAL "Path to store itk install")
 
     ExternalProject_Add(ITK
-      GIT_REPOSITORY "https://itk.org/ITK.git"
-      GIT_TAG v4.10.0
+      GIT_REPOSITORY "https://github.com/thewtex/ITK.git"
+      GIT_TAG 5c4fac1308f550c27679f79b82230d6dc80dc0e7
       UPDATE_COMMAND ""
       DOWNLOAD_DIR ${ITK_SOURCE_DIR}
       SOURCE_DIR ${ITK_SOURCE_DIR}
