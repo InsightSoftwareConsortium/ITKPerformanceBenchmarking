@@ -69,8 +69,11 @@ int main( int argc, char * argv[] )
 
     inputImage->Modified();
     }
-  collector.Report(std::cout, true, true);
-  collector.ExpandedReport(std::cout, true, true);
+  bool printSystemInfo = true;
+  bool printReportHead = true;
+  bool useTabs = false;
+  collector.ExpandedReport( std::cout, printSystemInfo, printReportHead, useTabs );
+  collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
 
   typedef itk::ImageFileWriter< ImageType >  WriterType;
   WriterType::Pointer writer = WriterType::New();
