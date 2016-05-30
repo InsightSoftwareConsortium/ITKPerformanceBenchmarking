@@ -20,6 +20,7 @@
 #include "itkImageFileWriter.h"
 #include "itkMedianImageFilter.h"
 
+#include "itkHighPriorityRealTimeProbesCollector.h"
 
 int main( int argc, char * argv[] )
 {
@@ -40,13 +41,36 @@ int main( int argc, char * argv[] )
   typedef itk::ImageFileReader< ImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
+  try
+    {
+    reader->Update();
+    }
+  catch( itk::ExceptionObject & error ) 
+    {
+    std::cerr << "Error: " << error << std::endl;
+    return EXIT_FAILURE;
+    }
+  ImageType::Pointer inputImage = reader->GetOutput();
 
   typedef itk::MedianImageFilter< ImageType, ImageType >  FilterType;
   FilterType::Pointer filter = FilterType::New();
   ImageType::SizeType radius;
   radius.Fill( 2 );
   filter->SetRadius( radius );
-  filter->SetInput( reader->GetOutput() );
+  filter->SetInput( inputImage );
+
+  itk::HighPriorityRealTimeProbesCollector collector;
+  const unsigned int numberOfIterations = 4;
+  for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
+    {
+    collector.Start("MedianFilter");
+    filter->UpdateLargestPossibleRegion();
+    collector.Stop("MedianFilter");
+
+    inputImage->Modified();
+    }
+  collector.Report(std::cout, true, true);
+  collector.ExpandedReport(std::cout, true, true);
 
   typedef itk::ImageFileWriter< ImageType >  WriterType;
   WriterType::Pointer writer = WriterType::New();

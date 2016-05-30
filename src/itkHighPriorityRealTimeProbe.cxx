@@ -26,23 +26,25 @@
 
 namespace itk
 {
-/** Constructor */
+
 HighPriorityRealTimeProbe
-::HighPriorityRealTimeProbe():ResourceProbe< TimeStampType, TimeStampType >("Time", "s")
+::HighPriorityRealTimeProbe() :ResourceProbe< TimeStampType, TimeStampType >("Time", "s")
 {
-  this->m_HighPriorityRealTimeClock   = HighPriorityRealTimeClock::New();
+  this->m_HighPriorityRealTimeClock = HighPriorityRealTimeClock::New();
 }
 
-/** Destructor */
+
 HighPriorityRealTimeProbe
 ::~HighPriorityRealTimeProbe()
-{}
+{
+}
 
-/** Get the current time. */
+
 HighPriorityRealTimeProbe::TimeStampType
 HighPriorityRealTimeProbe
 ::GetInstantValue() const
 {
+  // Get the current time.
   return m_HighPriorityRealTimeClock->GetTimeInSeconds();
 }
 
