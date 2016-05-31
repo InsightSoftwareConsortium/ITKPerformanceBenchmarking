@@ -22,8 +22,9 @@ RUN mkdir -p /usr/src/ITKPerformanceBenchmarks-build && \
   mkdir -p /usr/src/ITKBenchmarks-build
 WORKDIR /usr/src
 
-ENV ITK_GIT_TAG 5c4fac1308f550c27679f79b82230d6dc80dc0e7
-RUN git clone https://github.com/thewtex/ITK.git && \
+# ITK master 2016-05-30
+ENV ITK_GIT_TAG 1257b0468c147ba2b1a65bae67169bdf35f4fa50
+RUN git clone https://itk.org/ITK.git && \
   cd ITK && \
   git checkout ${ITK_GIT_TAG} && \
   cd ../ && \

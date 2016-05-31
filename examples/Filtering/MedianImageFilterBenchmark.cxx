@@ -22,16 +22,19 @@
 
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
+#include <fstream>
+
 int main( int argc, char * argv[] )
 {
-  if( argc < 3 )
+  if( argc < 4 )
     {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " inputImageFile outputImageFile" << std::endl;
+    std::cerr << argv[0] << " inputImageFile outputImageFile timingsFile" << std::endl;
     return EXIT_FAILURE;
     }
   const char * inputImageFileName = argv[1];
   const char * outputImageFileName = argv[2];
+  const char * timingsFileName = argv[3];
 
   const unsigned int Dimension = 3;
   typedef unsigned char PixelType;
@@ -58,19 +61,26 @@ int main( int argc, char * argv[] )
   radius.Fill( 2 );
   filter->SetRadius( radius );
   filter->SetInput( inputImage );
+  filter->UpdateLargestPossibleRegion();
 
   itk::HighPriorityRealTimeProbesCollector collector;
-  const unsigned int numberOfIterations = 4;
+  const unsigned int numberOfIterations = 3;
   for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
     {
+    inputImage->Modified();
     collector.Start("MedianFilter");
     filter->UpdateLargestPossibleRegion();
     collector.Stop("MedianFilter");
-
-    inputImage->Modified();
     }
-  collector.Report(std::cout, true, true);
-  collector.ExpandedReport(std::cout, true, true);
+  bool printSystemInfo = true;
+  bool printReportHead = true;
+  bool useTabs = false;
+  collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
+
+  std::ofstream timingsFile( timingsFileName, std::ios::out );
+  printSystemInfo = false;
+  useTabs = true;
+  collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
   typedef itk::ImageFileWriter< ImageType >  WriterType;
   WriterType::Pointer writer = WriterType::New();
