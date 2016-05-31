@@ -16,4 +16,5 @@ ExternalData_Add_Test(ITKBenchmarkData
   COMMAND MedianImageFilterBenchmark
     ${BRAIN_IMAGE}
     ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.mha
+    ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.tsv
   )
