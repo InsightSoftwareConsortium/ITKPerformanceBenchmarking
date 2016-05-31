@@ -61,16 +61,16 @@ int main( int argc, char * argv[] )
   radius.Fill( 2 );
   filter->SetRadius( radius );
   filter->SetInput( inputImage );
+  filter->UpdateLargestPossibleRegion();
 
   itk::HighPriorityRealTimeProbesCollector collector;
-  const unsigned int numberOfIterations = 4;
+  const unsigned int numberOfIterations = 3;
   for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
     {
+    inputImage->Modified();
     collector.Start("MedianFilter");
     filter->UpdateLargestPossibleRegion();
     collector.Stop("MedianFilter");
-
-    inputImage->Modified();
     }
   bool printSystemInfo = true;
   bool printReportHead = true;
