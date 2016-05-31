@@ -18,3 +18,4 @@ ExternalData_Add_Test(ITKBenchmarkData
     ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.mha
     ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.tsv
   )
+set_property(TEST MedianImageFilterBenchmarkTest APPEND PROPERTY LABELS Filtering)

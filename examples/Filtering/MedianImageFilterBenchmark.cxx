@@ -48,7 +48,7 @@ int main( int argc, char * argv[] )
     {
     reader->Update();
     }
-  catch( itk::ExceptionObject & error ) 
+  catch( itk::ExceptionObject & error )
     {
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
@@ -61,6 +61,7 @@ int main( int argc, char * argv[] )
   radius.Fill( 2 );
   filter->SetRadius( radius );
   filter->SetInput( inputImage );
+  // Cache disk IO
   filter->UpdateLargestPossibleRegion();
 
   itk::HighPriorityRealTimeProbesCollector collector;
