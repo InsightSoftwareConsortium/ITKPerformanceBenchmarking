@@ -18,7 +18,7 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkMedianImageFilter.h"
+#include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
 
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
@@ -55,11 +55,11 @@ int main( int argc, char * argv[] )
     }
   ImageType::Pointer inputImage = reader->GetOutput();
 
-  typedef itk::MedianImageFilter< ImageType, ImageType >  FilterType;
+  typedef itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType, ImageType >  FilterType;
   FilterType::Pointer filter = FilterType::New();
   ImageType::SizeType radius;
   radius.Fill( 2 );
-  filter->SetRadius( radius );
+  filter->SetSigma( 3.0 );
   filter->SetInput( inputImage );
   // Cache disk IO
   filter->UpdateLargestPossibleRegion();
@@ -69,9 +69,9 @@ int main( int argc, char * argv[] )
   for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
     {
     inputImage->Modified();
-    collector.Start("MedianFilter");
+    collector.Start("GradientMagnitude");
     filter->UpdateLargestPossibleRegion();
-    collector.Stop("MedianFilter");
+    collector.Stop("GradientMagnitude");
     }
   bool printSystemInfo = true;
   bool printReportHead = true;

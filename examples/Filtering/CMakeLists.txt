@@ -5,6 +5,7 @@ find_package(ITK REQUIRED
     PerformanceBenchmarks
     ITKIOImageBase
     ITKSmoothing
+    ITKImageGradient
     ITKIOMeta
   )
 include(${ITK_USE_FILE})
@@ -18,3 +19,15 @@ ExternalData_Add_Test(ITKBenchmarkData
     ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.mha
     ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.tsv
   )
+set_property(TEST MedianImageFilterBenchmarkTest APPEND PROPERTY LABELS Filtering)
+
+add_executable(GradientMagnitudeRecursiveGaussianImageFilterBenchmark GradientMagnitudeRecursiveGaussianImageFilterBenchmark.cxx )
+target_link_libraries(GradientMagnitudeRecursiveGaussianImageFilterBenchmark ${ITK_LIBRARIES})
+ExternalData_Add_Test(ITKBenchmarkData
+  NAME GradientMagnitudeRecursiveGaussianImageFilterBenchmarkTest
+  COMMAND GradientMagnitudeRecursiveGaussianImageFilterBenchmark
+    ${BRAIN_IMAGE}
+    ${TEST_OUTPUT_DIR}/GradientMagnitudeRecursiveGaussianImageFilterBenchmark.mha
+    ${TEST_OUTPUT_DIR}/GradientMagnitudeRecursiveGaussianImageFilterBenchmark.tsv
+  )
+set_property(TEST GradientMagnitudeRecursiveGaussianImageFilterBenchmarkTest APPEND PROPERTY LABELS Filtering)
