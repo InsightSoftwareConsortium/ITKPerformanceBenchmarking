@@ -54,6 +54,7 @@ int main( int argc, char * argv[] )
     return EXIT_FAILURE;
     }
   ImageType::Pointer inputImage = reader->GetOutput();
+  inputImage->DisconnectPipeline();
 
   typedef itk::MedianImageFilter< ImageType, ImageType >  FilterType;
   FilterType::Pointer filter = FilterType::New();
@@ -61,8 +62,6 @@ int main( int argc, char * argv[] )
   radius.Fill( 2 );
   filter->SetRadius( radius );
   filter->SetInput( inputImage );
-  // Cache disk IO
-  filter->UpdateLargestPossibleRegion();
 
   itk::HighPriorityRealTimeProbesCollector collector;
   const unsigned int numberOfIterations = 3;
