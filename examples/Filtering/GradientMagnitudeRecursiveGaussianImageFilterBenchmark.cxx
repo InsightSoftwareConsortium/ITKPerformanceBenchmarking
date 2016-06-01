@@ -59,7 +59,7 @@ int main( int argc, char * argv[] )
   FilterType::Pointer filter = FilterType::New();
   ImageType::SizeType radius;
   radius.Fill( 2 );
-  filter->SetSigma( 3.0 );
+  filter->SetSigma( 2.0 );
   filter->SetInput( inputImage );
   // Cache disk IO
   filter->UpdateLargestPossibleRegion();
