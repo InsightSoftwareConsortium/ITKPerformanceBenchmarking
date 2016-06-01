@@ -119,8 +119,8 @@ int main( int argc, char * argv[] )
   optimizer->SetMinimumStepLength( 0.001 );
   optimizer->SetRelaxationFactor( 0.5 );
   optimizer->SetNumberOfIterations( 200 );
-  CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
-  optimizer->AddObserver( itk::IterationEvent(), observer );
+  //CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
+  //optimizer->AddObserver( itk::IterationEvent(), observer );
 
   typedef itk::MeanSquaresImageToImageMetricv4< ImageType, ImageType > MetricType;
   MetricType::Pointer metric = MetricType::New();
@@ -196,7 +196,6 @@ int main( int argc, char * argv[] )
   collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
   TransformType::ConstPointer transform = registration->GetTransform();
-  std::cout << "Final parameteters: " << transform->GetParameters() << std::endl;
 
   typedef itk::TransformFileWriterTemplate< ParametersValueType > WriterType;
   WriterType::Pointer writer = WriterType::New();
