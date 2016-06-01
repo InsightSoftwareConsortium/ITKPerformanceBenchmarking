@@ -14,7 +14,7 @@ enable_language(CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH})
 
 if (NOT DEFINED ITKBenchmarks_SUPERBUILD)
-  option(ITKBenchmarks_SUPERBUILD "Build ITK and the PerformanceBenchmarks module prior to building the benchmarks." ON)
+  option(ITKBenchmarks_SUPERBUILD "Build ITK and the PerformanceBenchmarking module prior to building the benchmarks." ON)
 endif()
 
 
@@ -62,13 +62,13 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
       )
     set(ITK_DIR ${ITK_BUILD_DIR})
 
-    set(PerformanceBenchmarks_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../" CACHE INTERNAL "Path to PerformanceBenchmarks")
+    set(PerformanceBenchmarking_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../" CACHE INTERNAL "Path to PerformanceBenchmarking")
 
-    ExternalProject_Add(PerformanceBenchmarksModule
+    ExternalProject_Add(PerformanceBenchmarkingModule
       UPDATE_COMMAND ""
       DOWNLOAD_COMMAND ""
-      SOURCE_DIR "${PerformanceBenchmarks_SOURCE_DIR}"
-      BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/PerformanceBenchmarksModule-build"
+      SOURCE_DIR "${PerformanceBenchmarking_SOURCE_DIR}"
+      BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/PerformanceBenchmarkingModule-build"
       CMAKE_GENERATOR ${CMAKE_GENERATOR}
       CMAKE_ARGS
         -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${ITKBenchmarks_EXECUTABLE_OUTPUT_PATH}
@@ -89,7 +89,7 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
   ExternalProject_Add(ITKBenchmarks
     UPDATE_COMMAND ""
     DOWNLOAD_COMMAND ""
-    SOURCE_DIR "${PerformanceBenchmarks_SOURCE_DIR}/examples"
+    SOURCE_DIR "${PerformanceBenchmarking_SOURCE_DIR}/examples"
     BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/ITKBenchmarks-build"
     CMAKE_GENERATOR ${CMAKE_GENERATOR}
     CMAKE_ARGS
@@ -105,7 +105,7 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
       -DITK_DIR:PATH=${ITK_DIR}
       -DITKBenchmarks_SUPERBUILD:BOOL=OFF
     INSTALL_COMMAND ""
-    DEPENDS PerformanceBenchmarksModule
+    DEPENDS PerformanceBenchmarkingModule
     )
   return()
 endif()

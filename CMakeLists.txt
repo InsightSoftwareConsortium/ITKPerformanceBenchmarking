@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(PerformanceBenchmarks)
+project(PerformanceBenchmarking)
 
-set(PerformanceBenchmarks_LIBRARIES PerformanceBenchmarks)
+set(PerformanceBenchmarking_LIBRARIES PerformanceBenchmarking)
 
 if(NOT ITK_SOURCE_DIR)
   find_package(ITK REQUIRED)

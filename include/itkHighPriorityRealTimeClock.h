@@ -20,7 +20,7 @@
 #define itkHighPriorityRealTimeClock_h
 
 #include "itkRealTimeClock.h"
-#include "PerformanceBenchmarksExport.h"
+#include "PerformanceBenchmarkingExport.h"
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -34,10 +34,10 @@ namespace itk
 *
 * It subclasses from RealTimeClock to bump the thread priority and affinity.
 *
-* \ingroup PerformanceBenchmarks
+* \ingroup PerformanceBenchmarking
 *
 */
-class PerformanceBenchmarks_EXPORT HighPriorityRealTimeClock : public RealTimeClock
+class PerformanceBenchmarking_EXPORT HighPriorityRealTimeClock : public RealTimeClock
 {
 public:
   typedef HighPriorityRealTimeClock   Self;

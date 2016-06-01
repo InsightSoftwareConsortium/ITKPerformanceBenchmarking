@@ -6,18 +6,18 @@
 set -x
 set -o
 
-cd /usr/src/ITKPerformanceBenchmarks
+cd /usr/src/ITKPerformanceBenchmarking
 branch=$(git rev-parse --abbrev-ref HEAD)
 date=$(date +%F_%H_%M_%S)
 sha=$(git rev-parse --short HEAD)
 
-cd /usr/src/ITKPerformanceBenchmarks-build
+cd /usr/src/ITKPerformanceBenchmarking-build
 cmake \
   -G Ninja \
   -DITK_DIR:PATH=/usr/src/ITK-build \
   -DCMAKE_BUILD_TYPE:STRING=Release \
-  -DBUILDNAME:STRING=External-PerformanceBenchmarks-${branch}-${date}-${sha} \
-    /usr/src/ITKPerformanceBenchmarks
+  -DBUILDNAME:STRING=External-PerformanceBenchmarking-${branch}-${date}-${sha} \
+    /usr/src/ITKPerformanceBenchmarking
 ctest -VV -D Experimental
 
 cd /usr/src/ITKBenchmarks-build
@@ -25,6 +25,6 @@ cmake \
   -G Ninja \
   -DITK_DIR:PATH=/usr/src/ITK-build \
   -DCMAKE_BUILD_TYPE:STRING=Release \
-    /usr/src/ITKPerformanceBenchmarks/examples/
+    /usr/src/ITKPerformanceBenchmarking/examples/
 ninja
 ctest -V
