@@ -1,34 +1,30 @@
 itk_module_test()
 
-# Add Test code for itkPerformanceBenchmarking
-add_executable(itkHighPriorityRealTimeProbeTest
-               itkHighPriorityRealTimeProbeTest.cxx )
-target_link_libraries(itkHighPriorityRealTimeProbeTest
-                      ${ITK_LIBRARIES} PerformanceBenchmarking)
-add_test(NAME itkHighPriorityRealTimeProbeTest
-         COMMAND itkHighPriorityRealTimeProbeTest )
+set(PerformanceBenchmarkingTests_SRCS
+  itkHighPriorityRealTimeProbesCollectorTest.cxx
+  itkHighPriorityRealTimeProbeTest.cxx
+  itkTimeProbeTest2.cxx
+  itkTimeProbesTest2.cxx
+  )
 
+CreateTestDriver(PerformanceBenchmarking "${PerformanceBenchmarking-Test_LIBRARIES}" "${PerformanceBenchmarkingTests_SRCS}")
 
-add_executable(itkTimeProbeTest2
-               itkTimeProbeTest2.cxx )
-target_link_libraries(itkTimeProbeTest2
-                      ${ITK_LIBRARIES} PerformanceBenchmarking)
-add_test(NAME itkTimeProbeTest2
-         COMMAND itkTimeProbeTest2 )
+itk_add_test(NAME itkHighPriorityRealTimeProbeTest
+  COMMAND PerformanceBenchmarkingTestDriver
+    itkHighPriorityRealTimeProbeTest
+  )
 
+itk_add_test(NAME itkTimeProbeTest2
+  COMMAND PerformanceBenchmarkingTestDriver
+    itkTimeProbeTest2
+  )
 
-add_executable(itkHighPriorityRealTimeProbesCollectorTest
-               itkHighPriorityRealTimeProbesCollectorTest.cxx )
-target_link_libraries(itkHighPriorityRealTimeProbesCollectorTest
-                      ${ITK_LIBRARIES} PerformanceBenchmarking)
-add_test(NAME itkHighPriorityRealTimeProbesCollectorTest
-         COMMAND itkHighPriorityRealTimeProbesCollectorTest )
+itk_add_test(NAME itkHighPriorityRealTimeProbesCollectorTest
+  COMMAND PerformanceBenchmarkingTestDriver
+    itkHighPriorityRealTimeProbesCollectorTest
+  )
 
-
-add_executable(itkTimeProbesTest2
-               itkTimeProbesTest2.cxx )
-target_link_libraries(itkTimeProbesTest2
-                      ${ITK_LIBRARIES} PerformanceBenchmarking)
-add_test(NAME itkTimeProbesTest2
-         COMMAND itkTimeProbesTest2 )
-
+itk_add_test(NAME itkTimeProbesTest2
+  COMMAND PerformanceBenchmarkingTestDriver
+    itkTimeProbesTest2
+  )

@@ -70,7 +70,7 @@ void TestTransformPhysicalPointToIndex(T * image)
 //   This file test the interface to the TimeProbe classes
 //
 //-------------------------
-int main(int, char* [] )
+int itkTimeProbesTest2(int, char* [] )
 {
 
   itk::TimeProbesCollectorBase   collector;

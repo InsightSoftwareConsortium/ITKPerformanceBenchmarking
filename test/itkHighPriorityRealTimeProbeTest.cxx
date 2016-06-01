@@ -36,7 +36,7 @@ bool CheckTimeProbe(itk::HighPriorityRealTimeProbe& probe)
 
   return check;
 }
-int main( int, char * [] )
+int itkHighPriorityRealTimeProbeTest( int, char * [] )
 {
   // Create an ITK time probe
   itk::HighPriorityRealTimeProbe localTimer;

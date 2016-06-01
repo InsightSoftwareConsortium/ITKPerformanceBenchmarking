@@ -71,7 +71,7 @@ void TestTransformPhysicalPointToIndex(T * image)
 //   This file test the interface to the TimeProbe classes
 //
 //-------------------------
-int main(int, char* [] )
+int itkHighPriorityRealTimeProbesCollectorTest(int, char* [] )
 {
   itk::HighPriorityRealTimeProbesCollector    collector;
 

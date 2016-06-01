@@ -49,7 +49,7 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
         -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
         -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
         -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF
-        -DModule_TestKernel:BOOL=ON
+        -DModule_ITKTestKernel:BOOL=ON
         -DModule_ITKIOImageBase:BOOL=ON
         -DModule_ITKIOMeta:BOOL=ON
         -DModule_ITKSmoothing:BOOL=ON
@@ -57,7 +57,6 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
         -DModule_ITKCurvatureFlow:BOOL=ON
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
-        -DITK_USE_BRAINWEB_DATA:BOOL=ON
       INSTALL_COMMAND ""
       )
     set(ITK_DIR ${ITK_BUILD_DIR})
