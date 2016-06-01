@@ -59,9 +59,12 @@ RUN git clone https://itk.org/ITK.git && \
     -DModule_ITKTestKernel:BOOL=ON \
     -DModule_ITKIOImageBase:BOOL=ON \
     -DModule_ITKIOMeta:BOOL=ON \
+    -DModule_ITKIONRRD:BOOL=ON \
     -DModule_ITKSmoothing:BOOL=ON \
     -DModule_ITKImageGradient:BOOL=ON \
     -DModule_ITKCurvatureFlow:BOOL=ON \
+    -DModule_ITKRegistrationMethodsv4:BOOL=ON \
+    -DModule_ITKMetricsv4:BOOL=ON \
   ../ITK && \
   ninja && \
   find . -name '*.o' -delete

@@ -52,9 +52,12 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
         -DModule_TestKernel:BOOL=ON
         -DModule_ITKIOImageBase:BOOL=ON
         -DModule_ITKIOMeta:BOOL=ON
+        -DModule_ITKIONRRD:BOOL=ON
         -DModule_ITKSmoothing:BOOL=ON
         -DModule_ITKImageGradient:BOOL=ON
         -DModule_ITKCurvatureFlow:BOOL=ON
+        -DModule_ITKRegistrationMethodsv4:BOOL=ON
+        -DModule_ITKMetricsv4:BOOL=ON
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
         -DITK_USE_BRAINWEB_DATA:BOOL=ON

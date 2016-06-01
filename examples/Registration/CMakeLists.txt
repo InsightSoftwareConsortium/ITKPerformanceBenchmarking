@@ -1,4 +1,24 @@
 project(ITKBenchmarkRegistration)
 
-#add_executable(FourierDescriptors1 FourierDescriptors1.cxx )
-#target_link_libraries(FourierDescriptors1 ${ITK_LIBRARIES})
+find_package(ITK REQUIRED
+  COMPONENTS
+    PerformanceBenchmarking
+    ITKIOImageBase
+    ITKIOMeta
+    ITKIONRRD
+    ITKRegistrationMethodsv4
+    ITKMetricsv4
+  )
+include(${ITK_USE_FILE})
+
+add_executable(RegistrationFrameworkBenchmark RegistrationFrameworkBenchmark.cxx)
+target_link_libraries(RegistrationFrameworkBenchmark ${ITK_LIBRARIES})
+ExternalData_Add_Test(ITKBenchmarksData
+  NAME RegistrationFrameworkBenchmark
+  COMMAND RegistrationFrameworkBenchmark
+    ${BRAIN_IMAGE}
+    DATA{../Data/Input/brainweb165a10f17translated7x8y9z.nrrd}
+    ${TEST_OUTPUT_DIR}/RegistrationFrameworkBenchmark.mha
+    ${TEST_OUTPUT_DIR}/RegistrationFrameworkBenchmark.tsv
+  )
+set_property(TEST RegistrationFrameworkBenchmark APPEND PROPERTY LABELS Filtering)
