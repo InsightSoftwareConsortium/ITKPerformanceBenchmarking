@@ -57,7 +57,6 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
         -DModule_ITKCurvatureFlow:BOOL=ON
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
-        -DITK_USE_BRAINWEB_DATA:BOOL=ON
       INSTALL_COMMAND ""
       )
     set(ITK_DIR ${ITK_BUILD_DIR})

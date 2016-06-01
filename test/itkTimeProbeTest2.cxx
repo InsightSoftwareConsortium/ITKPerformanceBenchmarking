@@ -37,7 +37,7 @@ bool CheckTimeProbe(itk::TimeProbe& probe)
   return check;
 }
 
-int main( int, char * [] )
+int itkTimeProbeTest2( int, char * [] )
 {
   // Create an ITK time probe
   itk::TimeProbe localTimer;
