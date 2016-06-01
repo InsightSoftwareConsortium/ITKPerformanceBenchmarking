@@ -18,7 +18,7 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkGradientMagnitudeRecursiveGaussianImageFilter.h"
+#include "itkMinMaxCurvatureFlowImageFilter.h"
 
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
@@ -37,11 +37,13 @@ int main( int argc, char * argv[] )
   const char * timingsFileName = argv[3];
 
   const unsigned int Dimension = 3;
-  typedef unsigned char PixelType;
+  typedef unsigned char InputPixelType;
+  typedef float         OutputPixelType;
 
-  typedef itk::Image< PixelType, 3 > ImageType;
+  typedef itk::Image< InputPixelType, 3 > InputImageType;
+  typedef itk::Image< OutputPixelType, 3 > OutputImageType;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  typedef itk::ImageFileReader< InputImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
@@ -53,11 +55,13 @@ int main( int argc, char * argv[] )
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
     }
-  ImageType::Pointer inputImage = reader->GetOutput();
+  InputImageType::Pointer inputImage = reader->GetOutput();
 
-  typedef itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType, ImageType >  FilterType;
+  typedef itk::MinMaxCurvatureFlowImageFilter< InputImageType, OutputImageType >  FilterType;
   FilterType::Pointer filter = FilterType::New();
-  filter->SetSigma( 2.0 );
+  filter->SetStencilRadius( 1 );
+  filter->SetTimeStep( 0.0625 );
+  filter->SetNumberOfIterations( 3 );
   filter->SetInput( inputImage );
   // Cache disk IO
   filter->UpdateLargestPossibleRegion();
@@ -67,9 +71,9 @@ int main( int argc, char * argv[] )
   for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
     {
     inputImage->Modified();
-    collector.Start("GradientMagnitude");
+    collector.Start("MinMaxCurvatureFlow");
     filter->UpdateLargestPossibleRegion();
-    collector.Stop("GradientMagnitude");
+    collector.Stop("MinMaxCurvatureFlow");
     }
   bool printSystemInfo = true;
   bool printReportHead = true;
@@ -81,7 +85,7 @@ int main( int argc, char * argv[] )
   useTabs = true;
   collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
-  typedef itk::ImageFileWriter< ImageType >  WriterType;
+  typedef itk::ImageFileWriter< OutputImageType >  WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( filter->GetOutput() );

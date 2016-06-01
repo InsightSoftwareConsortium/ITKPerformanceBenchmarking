@@ -6,6 +6,7 @@ find_package(ITK REQUIRED
     ITKIOImageBase
     ITKSmoothing
     ITKImageGradient
+    ITKCurvatureFlow
     ITKIOMeta
   )
 include(${ITK_USE_FILE})
@@ -31,3 +32,14 @@ ExternalData_Add_Test(ITKBenchmarkData
     ${TEST_OUTPUT_DIR}/GradientMagnitudeRecursiveGaussianImageFilterBenchmark.tsv
   )
 set_property(TEST GradientMagnitudeRecursiveGaussianImageFilterBenchmarkTest APPEND PROPERTY LABELS Filtering)
+
+add_executable(MinMaxCurvatureFlowImageFilterBenchmark MinMaxCurvatureFlowImageFilterBenchmark.cxx )
+target_link_libraries(MinMaxCurvatureFlowImageFilterBenchmark ${ITK_LIBRARIES})
+ExternalData_Add_Test(ITKBenchmarkData
+  NAME MinMaxCurvatureFlowImageFilterBenchmarkTest
+  COMMAND MinMaxCurvatureFlowImageFilterBenchmark
+    ${BRAIN_IMAGE}
+    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowImageFilterBenchmark.mha
+    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowImageFilterBenchmark.tsv
+  )
+set_property(TEST MinMaxCurvatureFlowImageFilterBenchmarkTest APPEND PROPERTY LABELS Filtering)
