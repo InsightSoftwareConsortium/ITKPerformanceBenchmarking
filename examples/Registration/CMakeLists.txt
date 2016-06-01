@@ -17,8 +17,8 @@ ExternalData_Add_Test(ITKBenchmarksData
   NAME RegistrationFrameworkBenchmark
   COMMAND RegistrationFrameworkBenchmark
     ${BRAIN_IMAGE}
-    DATA{../Data/Input/brainweb165a10f17translated7x8y9z.nrrd}
+    DATA{../Data/Input/brainweb165a10f17translated-7x-8y9z.nrrd}
     ${TEST_OUTPUT_DIR}/RegistrationFrameworkBenchmark.mha
     ${TEST_OUTPUT_DIR}/RegistrationFrameworkBenchmark.tsv
   )
-set_property(TEST RegistrationFrameworkBenchmark APPEND PROPERTY LABELS Filtering)
+set_property(TEST RegistrationFrameworkBenchmark APPEND PROPERTY LABELS Registration)
