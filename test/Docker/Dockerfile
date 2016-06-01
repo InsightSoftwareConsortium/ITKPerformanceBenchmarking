@@ -60,6 +60,8 @@ RUN git clone https://itk.org/ITK.git && \
     -DModule_ITKIOImageBase:BOOL=ON \
     -DModule_ITKIOMeta:BOOL=ON \
     -DModule_ITKIONRRD:BOOL=ON \
+    -DModule_ITKIOTransformBase:BOOL=ON
+    -DModule_ITKIOTransformHDF5:BOOL=ON
     -DModule_ITKSmoothing:BOOL=ON \
     -DModule_ITKImageGradient:BOOL=ON \
     -DModule_ITKCurvatureFlow:BOOL=ON \

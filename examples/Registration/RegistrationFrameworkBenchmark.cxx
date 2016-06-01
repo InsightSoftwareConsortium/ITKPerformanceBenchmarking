@@ -17,6 +17,7 @@
  *=========================================================================*/
 
 #include "itkImageFileReader.h"
+#include "itkTransformFileWriter.h"
 #include "itkImageRegistrationMethodv4.h"
 #include "itkTranslationTransform.h"
 #include "itkMeanSquaresImageToImageMetricv4.h"
@@ -66,7 +67,7 @@ public:
 
 int main( int argc, char * argv[] )
 {
-  if( argc < 4 )
+  if( argc < 5 )
     {
     std::cerr << "Usage: " << std::endl;
     std::cerr << argv[0] << " fixedImageFile movingImageFile timingsFile" << std::endl;
@@ -74,7 +75,8 @@ int main( int argc, char * argv[] )
     }
   const char * fixedImageFileName = argv[1];
   const char * movingImageFileName = argv[2];
-  const char * timingsFileName = argv[3];
+  const char * outputTransformFileName = argv[3];
+  const char * timingsFileName = argv[4];
 
   const unsigned int Dimension = 3;
   typedef float  PixelType;
@@ -196,11 +198,11 @@ int main( int argc, char * argv[] )
   TransformType::ConstPointer transform = registration->GetTransform();
   std::cout << "Final parameteters: " << transform->GetParameters() << std::endl;
 
-  //typedef itk::ImageFileWriter< ImageType >  WriterType;
-  //WriterType::Pointer writer = WriterType::New();
-  //writer->SetFileName( outputImageFileName );
-  //writer->SetInput( filter->GetOutput() );
-  //writer->Update();
+  typedef itk::TransformFileWriterTemplate< ParametersValueType > WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetFileName( outputTransformFileName );
+  writer->SetInput( transform );
+  writer->Update();
 
   return EXIT_SUCCESS;
 }
