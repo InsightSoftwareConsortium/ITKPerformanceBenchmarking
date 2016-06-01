@@ -2,7 +2,7 @@ project(ITKBenchmarkFiltering)
 
 find_package(ITK REQUIRED
   COMPONENTS
-    PerformanceBenchmarks
+    PerformanceBenchmarking
     ITKIOImageBase
     ITKSmoothing
     ITKImageGradient

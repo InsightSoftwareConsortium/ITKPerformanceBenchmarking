@@ -5,16 +5,16 @@ machine:
 dependencies:
   override:
     - docker info
-    - docker pull insighttoolkit/performancebenchmarks-test
-    - ~/ITKPerformanceBenchmarks/test/Docker/build.sh
+    - docker pull insighttoolkit/performancebenchmarking-test
+    - ~/ITKPerformanceBenchmarking/test/Docker/build.sh
 
 test:
   override:
-    - ~/ITKPerformanceBenchmarks/test/Docker/run.sh
+    - ~/ITKPerformanceBenchmarking/test/Docker/run.sh
 
 deployment:
   hub:
     branch: master
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push insighttoolkit/performancebenchmarks-test
+      - docker push insighttoolkit/performancebenchmarking-test

@@ -4,6 +4,6 @@ script_dir="`cd $(dirname $0); pwd`"
 
 docker run \
   --rm \
-  -v $script_dir/../..:/usr/src/ITKPerformanceBenchmarks \
-    insighttoolkit/performancebenchmarks-test \
-      /usr/src/ITKPerformanceBenchmarks/test/Docker/test.sh
+  -v $script_dir/../..:/usr/src/ITKPerformanceBenchmarking \
+    insighttoolkit/performancebenchmarking-test \
+      /usr/src/ITKPerformanceBenchmarking/test/Docker/test.sh

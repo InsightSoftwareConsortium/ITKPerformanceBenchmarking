@@ -1,6 +1,6 @@
 set(DOCUMENTATION "ITK Performance Benchmarks")
 
-itk_module(PerformanceBenchmarks
+itk_module(PerformanceBenchmarking
   ENABLE_SHARED
   PRIVATE_DEPENDS
     ITKCommon

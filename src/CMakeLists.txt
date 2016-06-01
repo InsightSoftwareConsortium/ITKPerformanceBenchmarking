@@ -1,9 +1,9 @@
-set( PerformanceBenchmarks_SRCS
+set( PerformanceBenchmarking_SRCS
 itkHighPriorityRealTimeClock.cxx
 itkHighPriorityRealTimeProbe.cxx
 itkHighPriorityRealTimeProbesCollector.cxx
 )
 
-add_library( PerformanceBenchmarks ${ITK_LIBRARY_BUILD_TYPE} ${PerformanceBenchmarks_SRCS})
+add_library( PerformanceBenchmarking ${ITK_LIBRARY_BUILD_TYPE} ${PerformanceBenchmarking_SRCS})
 itk_module_link_dependencies()
-itk_module_target(PerformanceBenchmarks)
+itk_module_target(PerformanceBenchmarking)

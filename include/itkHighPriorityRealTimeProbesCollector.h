@@ -36,10 +36,10 @@ namespace itk
  *   HighPriorityRealTimeClock.
  *
  * \sa HighPriorityRealTimeClock
- * \ingroup PerformanceBenchmarks
+ * \ingroup PerformanceBenchmarking
  *
  */
-class PerformanceBenchmarks_EXPORT HighPriorityRealTimeProbesCollector:
+class PerformanceBenchmarking_EXPORT HighPriorityRealTimeProbesCollector:
   public ResourceProbesCollectorBase< HighPriorityRealTimeProbe >
 {
 public:
