@@ -54,13 +54,12 @@ int main( int argc, char * argv[] )
     return EXIT_FAILURE;
     }
   ImageType::Pointer inputImage = reader->GetOutput();
+  inputImage->DisconnectPipeline();
 
   typedef itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType, ImageType >  FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetSigma( 2.0 );
   filter->SetInput( inputImage );
-  // Cache disk IO
-  filter->UpdateLargestPossibleRegion();
 
   itk::HighPriorityRealTimeProbesCollector collector;
   const unsigned int numberOfIterations = 3;

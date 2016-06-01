@@ -56,6 +56,7 @@ int main( int argc, char * argv[] )
     return EXIT_FAILURE;
     }
   InputImageType::Pointer inputImage = reader->GetOutput();
+  inputImage->DisconnectPipeline();
 
   typedef itk::MinMaxCurvatureFlowImageFilter< InputImageType, OutputImageType >  FilterType;
   FilterType::Pointer filter = FilterType::New();
@@ -63,8 +64,6 @@ int main( int argc, char * argv[] )
   filter->SetTimeStep( 0.0625 );
   filter->SetNumberOfIterations( 3 );
   filter->SetInput( inputImage );
-  // Cache disk IO
-  filter->UpdateLargestPossibleRegion();
 
   itk::HighPriorityRealTimeProbesCollector collector;
   const unsigned int numberOfIterations = 3;
