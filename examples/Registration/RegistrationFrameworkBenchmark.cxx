@@ -61,9 +61,7 @@ public:
     std::cout << optimizer->GetValue() << " : ";
     std::cout << optimizer->GetCurrentPosition() << std::endl;
   }
-
 };
-
 
 
 int main( int argc, char * argv[] )
@@ -175,30 +173,28 @@ int main( int argc, char * argv[] )
   optimizer->SetScalesEstimator( scalesEstimator );
   optimizer->SetDoEstimateLearningRateOnce( true );
 
-    registration->Update();
-    std::cout << "Optimizer stop condition: "
-    << registration->GetOptimizer()->GetStopConditionDescription()
-    << std::endl;
-  //itk::HighPriorityRealTimeProbesCollector collector;
-  //const unsigned int numberOfIterations = 3;
-  //for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
-    //{
+  itk::HighPriorityRealTimeProbesCollector collector;
+  const unsigned int numberOfIterations = 3;
+  for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
+    {
+    collector.Start("RegistrationFramework");
     optimizedTransform->SetParameters( initialParameters );
     registration->SetInitialTransform( optimizedTransform );
-    //inputImage->Modified();
-    //collector.Start("MedianFilter");
-    //filter->UpdateLargestPossibleRegion();
-    //collector.Stop("MedianFilter");
-    //}
-  //bool printSystemInfo = true;
-  //bool printReportHead = true;
-  //bool useTabs = false;
-  //collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
+    registration->Update();
+    collector.Stop("RegistrationFramework");
+    }
+  bool printSystemInfo = true;
+  bool printReportHead = true;
+  bool useTabs = false;
+  collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
 
-  //std::ofstream timingsFile( timingsFileName, std::ios::out );
-  //printSystemInfo = false;
-  //useTabs = true;
-  //collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
+  std::ofstream timingsFile( timingsFileName, std::ios::out );
+  printSystemInfo = false;
+  useTabs = true;
+  collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
+
+  TransformType::ConstPointer transform = registration->GetTransform();
+  std::cout << "Final parameteters: " << transform->GetParameters() << std::endl;
 
   //typedef itk::ImageFileWriter< ImageType >  WriterType;
   //WriterType::Pointer writer = WriterType::New();
