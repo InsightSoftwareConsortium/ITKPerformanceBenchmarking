@@ -70,7 +70,7 @@ int main( int argc, char * argv[] )
   if( argc < 5 )
     {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " fixedImageFile movingImageFile timingsFile" << std::endl;
+    std::cerr << argv[0] << " fixedImageFile movingImageFile outputTransformFileName timingsFile" << std::endl;
     return EXIT_FAILURE;
     }
   const char * fixedImageFileName = argv[1];
