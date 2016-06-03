@@ -11,16 +11,16 @@ find_package(ITK REQUIRED
   )
 include(${ITK_USE_FILE})
 
-add_executable(MedianImageFilterBenchmark MedianImageFilterBenchmark.cxx )
-target_link_libraries(MedianImageFilterBenchmark ${ITK_LIBRARIES})
+add_executable(MedianBenchmark MedianBenchmark.cxx )
+target_link_libraries(MedianBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
-  NAME MedianImageFilterBenchmark
-  COMMAND MedianImageFilterBenchmark
+  NAME MedianBenchmark
+  COMMAND MedianBenchmark
     ${BRAIN_IMAGE}
-    ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.mha
-    ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/MedianBenchmark.mha
+    ${TEST_OUTPUT_DIR}/MedianBenchmark.tsv
   )
-set_property(TEST MedianImageFilterBenchmark APPEND PROPERTY LABELS Filtering)
+set_property(TEST MedianBenchmark APPEND PROPERTY LABELS Filtering)
 
 add_executable(GradientMagnitudeBenchmark GradientMagnitudeBenchmark.cxx )
 target_link_libraries(GradientMagnitudeBenchmark ${ITK_LIBRARIES})

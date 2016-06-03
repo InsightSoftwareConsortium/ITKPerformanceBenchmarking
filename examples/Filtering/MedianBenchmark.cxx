@@ -68,9 +68,9 @@ int main( int argc, char * argv[] )
   for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
     {
     inputImage->Modified();
-    collector.Start("MedianFilter");
+    collector.Start("Median");
     filter->UpdateLargestPossibleRegion();
-    collector.Stop("MedianFilter");
+    collector.Stop("Median");
     }
   bool printSystemInfo = true;
   bool printReportHead = true;
