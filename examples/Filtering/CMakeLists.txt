@@ -33,13 +33,13 @@ ExternalData_Add_Test(ITKBenchmarksData
   )
 set_property(TEST GradientMagnitudeBenchmark APPEND PROPERTY LABELS Filtering)
 
-add_executable(MinMaxCurvatureFlowImageFilterBenchmark MinMaxCurvatureFlowImageFilterBenchmark.cxx )
-target_link_libraries(MinMaxCurvatureFlowImageFilterBenchmark ${ITK_LIBRARIES})
+add_executable(MinMaxCurvatureFlowBenchmark MinMaxCurvatureFlowBenchmark.cxx )
+target_link_libraries(MinMaxCurvatureFlowBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
-  NAME MinMaxCurvatureFlowImageFilterBenchmark
-  COMMAND MinMaxCurvatureFlowImageFilterBenchmark
+  NAME MinMaxCurvatureFlowBenchmark
+  COMMAND MinMaxCurvatureFlowBenchmark
     ${BRAIN_IMAGE}
-    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowImageFilterBenchmark.mha
-    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowImageFilterBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowBenchmark.mha
+    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowBenchmark.tsv
   )
-set_property(TEST MinMaxCurvatureFlowImageFilterBenchmark APPEND PROPERTY LABELS Filtering)
+set_property(TEST MinMaxCurvatureFlowBenchmark APPEND PROPERTY LABELS Filtering)
