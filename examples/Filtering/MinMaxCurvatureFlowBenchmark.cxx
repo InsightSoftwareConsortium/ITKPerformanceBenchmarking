@@ -26,15 +26,21 @@
 
 int main( int argc, char * argv[] )
 {
-  if( argc < 4 )
+  if( argc < 5 )
     {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " inputImageFile outputImageFile timingsFile" << std::endl;
+    std::cerr << argv[0] << " timingsFile threads inputImageFile outputImageFile" << std::endl;
     return EXIT_FAILURE;
     }
-  const char * inputImageFileName = argv[1];
-  const char * outputImageFileName = argv[2];
-  const char * timingsFileName = argv[3];
+  const char * timingsFileName = argv[1];
+  int threads = atoi( argv[2] );
+  const char * inputImageFileName = argv[3];
+  const char * outputImageFileName = argv[4];
+
+  if( threads > 0 )
+    {
+    itk::MultiThreader::SetGlobalDefaultNumberOfThreads( threads );
+    }
 
   const unsigned int Dimension = 3;
   typedef unsigned char InputPixelType;

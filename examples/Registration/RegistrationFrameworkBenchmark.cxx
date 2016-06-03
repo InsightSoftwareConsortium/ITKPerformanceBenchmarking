@@ -67,16 +67,22 @@ public:
 
 int main( int argc, char * argv[] )
 {
-  if( argc < 5 )
+  if( argc < 6 )
     {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " fixedImageFile movingImageFile outputTransformFileName timingsFile" << std::endl;
+    std::cerr << argv[0] << " timingsFile threads fixedImageFile movingImageFile outputTransformFileName" << std::endl;
     return EXIT_FAILURE;
     }
-  const char * fixedImageFileName = argv[1];
-  const char * movingImageFileName = argv[2];
-  const char * outputTransformFileName = argv[3];
-  const char * timingsFileName = argv[4];
+  const char * timingsFileName = argv[1];
+  int threads = atoi( argv[2] );
+  const char * fixedImageFileName = argv[3];
+  const char * movingImageFileName = argv[4];
+  const char * outputTransformFileName = argv[5];
+
+  if( threads > 0 )
+    {
+    itk::MultiThreader::SetGlobalDefaultNumberOfThreads( threads );
+    }
 
   const unsigned int Dimension = 3;
   typedef float  PixelType;
