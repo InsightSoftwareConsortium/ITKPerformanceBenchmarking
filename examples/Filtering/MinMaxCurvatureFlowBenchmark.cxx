@@ -18,7 +18,7 @@
 
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkMedianImageFilter.h"
+#include "itkMinMaxCurvatureFlowImageFilter.h"
 
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
@@ -26,22 +26,30 @@
 
 int main( int argc, char * argv[] )
 {
-  if( argc < 4 )
+  if( argc < 5 )
     {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " inputImageFile outputImageFile timingsFile" << std::endl;
+    std::cerr << argv[0] << " timingsFile threads inputImageFile outputImageFile" << std::endl;
     return EXIT_FAILURE;
     }
-  const char * inputImageFileName = argv[1];
-  const char * outputImageFileName = argv[2];
-  const char * timingsFileName = argv[3];
+  const char * timingsFileName = argv[1];
+  int threads = atoi( argv[2] );
+  const char * inputImageFileName = argv[3];
+  const char * outputImageFileName = argv[4];
+
+  if( threads > 0 )
+    {
+    itk::MultiThreader::SetGlobalDefaultNumberOfThreads( threads );
+    }
 
   const unsigned int Dimension = 3;
-  typedef unsigned char PixelType;
+  typedef unsigned char InputPixelType;
+  typedef float         OutputPixelType;
 
-  typedef itk::Image< PixelType, 3 > ImageType;
+  typedef itk::Image< InputPixelType, 3 > InputImageType;
+  typedef itk::Image< OutputPixelType, 3 > OutputImageType;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  typedef itk::ImageFileReader< InputImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
@@ -53,14 +61,14 @@ int main( int argc, char * argv[] )
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
     }
-  ImageType::Pointer inputImage = reader->GetOutput();
+  InputImageType::Pointer inputImage = reader->GetOutput();
   inputImage->DisconnectPipeline();
 
-  typedef itk::MedianImageFilter< ImageType, ImageType >  FilterType;
+  typedef itk::MinMaxCurvatureFlowImageFilter< InputImageType, OutputImageType >  FilterType;
   FilterType::Pointer filter = FilterType::New();
-  ImageType::SizeType radius;
-  radius.Fill( 2 );
-  filter->SetRadius( radius );
+  filter->SetStencilRadius( 1 );
+  filter->SetTimeStep( 0.0625 );
+  filter->SetNumberOfIterations( 3 );
   filter->SetInput( inputImage );
 
   itk::HighPriorityRealTimeProbesCollector collector;
@@ -68,9 +76,9 @@ int main( int argc, char * argv[] )
   for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
     {
     inputImage->Modified();
-    collector.Start("MedianFilter");
+    collector.Start("MinMaxCurvatureFlow");
     filter->UpdateLargestPossibleRegion();
-    collector.Stop("MedianFilter");
+    collector.Stop("MinMaxCurvatureFlow");
     }
   bool printSystemInfo = true;
   bool printReportHead = true;
@@ -82,7 +90,7 @@ int main( int argc, char * argv[] )
   useTabs = true;
   collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
-  typedef itk::ImageFileWriter< ImageType >  WriterType;
+  typedef itk::ImageFileWriter< OutputImageType >  WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( filter->GetOutput() );

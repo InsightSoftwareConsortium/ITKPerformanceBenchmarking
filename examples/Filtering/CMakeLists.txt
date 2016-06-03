@@ -11,35 +11,48 @@ find_package(ITK REQUIRED
   )
 include(${ITK_USE_FILE})
 
-add_executable(MedianImageFilterBenchmark MedianImageFilterBenchmark.cxx )
-target_link_libraries(MedianImageFilterBenchmark ${ITK_LIBRARIES})
+add_executable(MedianBenchmark MedianBenchmark.cxx )
+target_link_libraries(MedianBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
-  NAME MedianImageFilterBenchmark
-  COMMAND MedianImageFilterBenchmark
+  NAME MedianBenchmark
+  COMMAND MedianBenchmark
+    ${TEST_OUTPUT_DIR}/MedianBenchmark.tsv
+    -1
     ${BRAIN_IMAGE}
-    ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.mha
-    ${TEST_OUTPUT_DIR}/MedianImageFilterBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/MedianBenchmark.mha
   )
-set_property(TEST MedianImageFilterBenchmark APPEND PROPERTY LABELS Filtering)
+set_property(TEST MedianBenchmark APPEND PROPERTY LABELS Filtering)
 
-add_executable(GradientMagnitudeRecursiveGaussianImageFilterBenchmark GradientMagnitudeRecursiveGaussianImageFilterBenchmark.cxx )
-target_link_libraries(GradientMagnitudeRecursiveGaussianImageFilterBenchmark ${ITK_LIBRARIES})
+add_executable(GradientMagnitudeBenchmark GradientMagnitudeBenchmark.cxx )
+target_link_libraries(GradientMagnitudeBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
-  NAME GradientMagnitudeRecursiveGaussianImageFilterBenchmark
-  COMMAND GradientMagnitudeRecursiveGaussianImageFilterBenchmark
+  NAME GradientMagnitudeBenchmark
+  COMMAND GradientMagnitudeBenchmark
+    ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark.tsv
+    -1
     ${BRAIN_IMAGE}
-    ${TEST_OUTPUT_DIR}/GradientMagnitudeRecursiveGaussianImageFilterBenchmark.mha
-    ${TEST_OUTPUT_DIR}/GradientMagnitudeRecursiveGaussianImageFilterBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark.mha
   )
-set_property(TEST GradientMagnitudeRecursiveGaussianImageFilterBenchmark APPEND PROPERTY LABELS Filtering)
+set_property(TEST GradientMagnitudeBenchmark APPEND PROPERTY LABELS Filtering)
 
-add_executable(MinMaxCurvatureFlowImageFilterBenchmark MinMaxCurvatureFlowImageFilterBenchmark.cxx )
-target_link_libraries(MinMaxCurvatureFlowImageFilterBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
-  NAME MinMaxCurvatureFlowImageFilterBenchmark
-  COMMAND MinMaxCurvatureFlowImageFilterBenchmark
+  NAME GradientMagnitudeBenchmark1Thread
+  COMMAND GradientMagnitudeBenchmark
+    ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark1Thread.tsv
+    1
     ${BRAIN_IMAGE}
-    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowImageFilterBenchmark.mha
-    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowImageFilterBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark1Thread.mha
   )
-set_property(TEST MinMaxCurvatureFlowImageFilterBenchmark APPEND PROPERTY LABELS Filtering)
+set_property(TEST GradientMagnitudeBenchmark APPEND PROPERTY LABELS Filtering)
+
+add_executable(MinMaxCurvatureFlowBenchmark MinMaxCurvatureFlowBenchmark.cxx )
+target_link_libraries(MinMaxCurvatureFlowBenchmark ${ITK_LIBRARIES})
+ExternalData_Add_Test(ITKBenchmarksData
+  NAME MinMaxCurvatureFlowBenchmark
+  COMMAND MinMaxCurvatureFlowBenchmark
+    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowBenchmark.tsv
+    -1
+    ${BRAIN_IMAGE}
+    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowBenchmark.mha
+  )
+set_property(TEST MinMaxCurvatureFlowBenchmark APPEND PROPERTY LABELS Filtering)
