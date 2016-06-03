@@ -10,6 +10,7 @@ find_package(ITK REQUIRED
     ITKIOTransformHDF5
     ITKRegistrationMethodsv4
     ITKMetricsv4
+    ITKPDEDeformableRegistration
   )
 include(${ITK_USE_FILE})
 
@@ -24,3 +25,15 @@ ExternalData_Add_Test(ITKBenchmarksData
     ${TEST_OUTPUT_DIR}/RegistrationFrameworkBenchmark.tsv
   )
 set_property(TEST RegistrationFrameworkBenchmark APPEND PROPERTY LABELS Registration)
+
+add_executable(DemonsRegistrationBenchmark DemonsRegistrationBenchmark.cxx)
+target_link_libraries(DemonsRegistrationBenchmark ${ITK_LIBRARIES})
+ExternalData_Add_Test(ITKBenchmarksData
+  NAME DemonsRegistrationBenchmark
+  COMMAND DemonsRegistrationBenchmark
+    ${BRAIN_IMAGE}
+    DATA{../Data/Input/brainweb165a10f17translated-1x-1y1z.nrrd}
+    ${TEST_OUTPUT_DIR}/DemonsRegistrationBenchmark.mha
+    ${TEST_OUTPUT_DIR}/DemonsRegistrationBenchmark.tsv
+  )
+set_property(TEST DemonsRegistrationBenchmark APPEND PROPERTY LABELS Registration)
