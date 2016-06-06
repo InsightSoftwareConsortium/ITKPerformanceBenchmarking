@@ -69,6 +69,7 @@ RUN git clone https://itk.org/ITK.git && \
     -DModule_ITKMetricsv4:BOOL=ON \
     -DModule_ITKPDEDeformableRegistration:BOOL=ON \
     -DModule_ITKConvolution:BOOL=ON \
+    -DModule_ITKRegionGrowing:BOOL=ON \
   ../ITK && \
   ninja && \
   find . -name '*.o' -delete
