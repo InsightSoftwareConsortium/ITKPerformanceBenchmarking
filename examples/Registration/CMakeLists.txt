@@ -11,6 +11,7 @@ find_package(ITK REQUIRED
     ITKRegistrationMethodsv4
     ITKMetricsv4
     ITKPDEDeformableRegistration
+    ITKConvolution
   )
 include(${ITK_USE_FILE})
 
@@ -39,3 +40,15 @@ ExternalData_Add_Test(ITKBenchmarksData
     ${TEST_OUTPUT_DIR}/DemonsRegistrationBenchmark.mha
   )
 set_property(TEST DemonsRegistrationBenchmark APPEND PROPERTY LABELS Registration)
+
+add_executable(NormalizedCorrelationBenchmark NormalizedCorrelationBenchmark.cxx)
+target_link_libraries(NormalizedCorrelationBenchmark ${ITK_LIBRARIES})
+ExternalData_Add_Test(ITKBenchmarksData
+  NAME NormalizedCorrelationBenchmark
+  COMMAND NormalizedCorrelationBenchmark
+    ${TEST_OUTPUT_DIR}/NormalizedCorrelationBenchmark.tsv
+    -1
+    DATA{../Data/Input/brainweb165a10f17extract88i5z.mha}
+    DATA{../Data/Input/brainweb165a10f17translated-1x-1y1zextract88i5z.mha}
+  )
+set_property(TEST NormalizedCorrelationBenchmark APPEND PROPERTY LABELS Registration)

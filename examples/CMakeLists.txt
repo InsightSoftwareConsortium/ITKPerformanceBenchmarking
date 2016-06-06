@@ -61,6 +61,7 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
         -DModule_ITKRegistrationMethodsv4:BOOL=ON
         -DModule_ITKMetricsv4:BOOL=ON
         -DModule_ITKPDEDeformableRegistration:BOOL=ON
+        -DModule_ITKConvolution:BOOL=ON
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
       INSTALL_COMMAND ""
