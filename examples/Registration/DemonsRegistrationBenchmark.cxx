@@ -124,10 +124,7 @@ int main( int argc, char * argv[] )
                                 ImageType,
                                 DisplacementFieldType > RegistrationFilterType;
   RegistrationFilterType::Pointer filter = RegistrationFilterType::New();
-  // Software Guide : EndCodeSnippet
 
-  // Create the Command observer and register it with the registration filter.
-  //
   CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
   filter->AddObserver( itk::IterationEvent(), observer );
   filter->SetFixedImage( fixedImage );
