@@ -63,6 +63,8 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
         -DModule_ITKPDEDeformableRegistration:BOOL=ON
         -DModule_ITKConvolution:BOOL=ON
         -DModule_ITKRegionGrowing:BOOL=ON
+        -DModule_ITKWatersheds:BOOL=ON
+        -DModule_ITKConnectedComponents:BOOL=ON
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
       INSTALL_COMMAND ""
