@@ -28,16 +28,17 @@
 
 int main( int argc, char * argv[] )
 {
-  if( argc < 5 )
+  if( argc < 6 )
     {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " timingsFile threads fixedImageFile movingImageFile" << std::endl;
+    std::cerr << argv[0] << " timingsFile iterations threads fixedImageFile movingImageFile" << std::endl;
     return EXIT_FAILURE;
     }
   const char * timingsFileName = argv[1];
-  int threads = atoi( argv[2] );
-  const char * fixedImageFileName = argv[3];
-  const char * movingImageFileName = argv[4];
+  const int iterations = atoi( argv[2] );
+  int threads = atoi( argv[3] );
+  const char * fixedImageFileName = argv[4];
+  const char * movingImageFileName = argv[5];
 
   if( threads > 0 )
     {
@@ -95,8 +96,7 @@ int main( int argc, char * argv[] )
   maximumCalculator->SetImage( padFilter->GetOutput() );
 
   itk::HighPriorityRealTimeProbesCollector collector;
-  const unsigned int numberOfIterations = 3;
-  for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
+  for( int ii = 0; ii < iterations; ++ii )
     {
     fixedImage->Modified();
     movingImage->Modified();

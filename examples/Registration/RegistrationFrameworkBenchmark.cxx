@@ -67,17 +67,18 @@ public:
 
 int main( int argc, char * argv[] )
 {
-  if( argc < 6 )
+  if( argc < 7 )
     {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " timingsFile threads fixedImageFile movingImageFile outputTransformFileName" << std::endl;
+    std::cerr << argv[0] << " timingsFile iterations threads fixedImageFile movingImageFile outputTransformFileName" << std::endl;
     return EXIT_FAILURE;
     }
   const char * timingsFileName = argv[1];
-  int threads = atoi( argv[2] );
-  const char * fixedImageFileName = argv[3];
-  const char * movingImageFileName = argv[4];
-  const char * outputTransformFileName = argv[5];
+  const int iterations = atoi( argv[2] );
+  int threads = atoi( argv[3] );
+  const char * fixedImageFileName = argv[4];
+  const char * movingImageFileName = argv[5];
+  const char * outputTransformFileName = argv[6];
 
   if( threads > 0 )
     {
@@ -182,8 +183,7 @@ int main( int argc, char * argv[] )
   optimizer->SetDoEstimateLearningRateOnce( true );
 
   itk::HighPriorityRealTimeProbesCollector collector;
-  const unsigned int numberOfIterations = 3;
-  for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
+  for( int ii = 0; ii < iterations; ++ii )
     {
     collector.Start("RegistrationFramework");
     optimizedTransform->SetParameters( initialParameters );
