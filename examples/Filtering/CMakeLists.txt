@@ -30,7 +30,7 @@ ExternalData_Add_Test(ITKBenchmarksData
   NAME GradientMagnitudeBenchmark
   COMMAND GradientMagnitudeBenchmark
     ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark.tsv
-    3
+    16
     -1
     ${BRAIN_IMAGE}
     ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark.mha
