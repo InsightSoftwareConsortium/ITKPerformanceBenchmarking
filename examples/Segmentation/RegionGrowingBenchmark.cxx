@@ -20,6 +20,7 @@
 #include "itkImageFileWriter.h"
 #include "itkConfidenceConnectedImageFilter.h"
 #include "itkCurvatureFlowImageFilter.h"
+#include "itkBinaryFillholeImageFilter.h"
 
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
@@ -45,9 +46,11 @@ int main( int argc, char * argv[] )
     }
 
   const unsigned int Dimension = 3;
-  typedef float  PixelType;
+  typedef float                                   PixelType;
+  typedef itk::Image< PixelType, Dimension >      ImageType;
+  typedef unsigned char                           LabelPixelType;
+  typedef itk::Image< LabelPixelType, Dimension > LabelImageType;
 
-  typedef itk::Image< PixelType, 3 > ImageType;
 
   typedef itk::ImageFileReader< ImageType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
@@ -70,13 +73,13 @@ int main( int argc, char * argv[] )
   smoothingFilter->SetNumberOfIterations( 2 );
   smoothingFilter->SetTimeStep( 0.05 );
 
-  typedef itk::ConfidenceConnectedImageFilter< ImageType, ImageType > ConfidenceConnectedFilterType;
+  typedef itk::ConfidenceConnectedImageFilter< ImageType, LabelImageType > ConfidenceConnectedFilterType;
   ConfidenceConnectedFilterType::Pointer confidenceConnectedFilter = ConfidenceConnectedFilterType::New();
   confidenceConnectedFilter->SetInput( smoothingFilter->GetOutput() );
   confidenceConnectedFilter->SetMultiplier( 2.2 );
   confidenceConnectedFilter->SetNumberOfIterations( 10 );
   confidenceConnectedFilter->SetInitialNeighborhoodRadius( 2 );
-  confidenceConnectedFilter->SetReplaceValue( 255 );
+  confidenceConnectedFilter->SetReplaceValue( itk::NumericTraits< LabelPixelType >::max() );
 
   ImageType::IndexType index1;
   index1[0] = 118;
@@ -108,13 +111,18 @@ int main( int argc, char * argv[] )
   index5[2] = 88;
   confidenceConnectedFilter->AddSeed( index5 );
 
+  typedef itk::BinaryFillholeImageFilter< LabelImageType > FillholeFilterType;
+  FillholeFilterType::Pointer fillholeFilter = FillholeFilterType::New();
+  fillholeFilter->SetInput( confidenceConnectedFilter->GetOutput() );
+  fillholeFilter->SetForegroundValue( confidenceConnectedFilter->GetReplaceValue() );
+
   itk::HighPriorityRealTimeProbesCollector collector;
   const unsigned int numberOfIterations = 3;
   for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
     {
     inputImage->Modified();
     collector.Start("RegionGrowing");
-    confidenceConnectedFilter->UpdateLargestPossibleRegion();
+    fillholeFilter->UpdateLargestPossibleRegion();
     collector.Stop("RegionGrowing");
     }
   bool printSystemInfo = true;
@@ -127,10 +135,10 @@ int main( int argc, char * argv[] )
   useTabs = true;
   collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
-  typedef itk::ImageFileWriter< ImageType > WriterType;
+  typedef itk::ImageFileWriter< LabelImageType > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
-  writer->SetInput( confidenceConnectedFilter->GetOutput() );
+  writer->SetInput( fillholeFilter->GetOutput() );
   writer->Update();
 
   return EXIT_SUCCESS;
