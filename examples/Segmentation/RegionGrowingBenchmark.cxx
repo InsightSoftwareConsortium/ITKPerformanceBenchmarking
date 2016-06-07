@@ -29,16 +29,17 @@
 
 int main( int argc, char * argv[] )
 {
-  if( argc < 5 )
+  if( argc < 6 )
     {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " timingsFile threads inputImageFile outputImageFile" << std::endl;
+    std::cerr << argv[0] << " timingsFile iterations threads inputImageFile outputImageFile" << std::endl;
     return EXIT_FAILURE;
     }
   const char * timingsFileName = argv[1];
-  int threads = atoi( argv[2] );
-  const char * inputImageFileName = argv[3];
-  const char * outputImageFileName = argv[4];
+  const int iterations = atoi( argv[2] );
+  int threads = atoi( argv[3] );
+  const char * inputImageFileName = argv[4];
+  const char * outputImageFileName = argv[5];
 
   if( threads > 0 )
     {
@@ -117,8 +118,7 @@ int main( int argc, char * argv[] )
   fillholeFilter->SetForegroundValue( confidenceConnectedFilter->GetReplaceValue() );
 
   itk::HighPriorityRealTimeProbesCollector collector;
-  const unsigned int numberOfIterations = 3;
-  for( unsigned int ii = 0; ii < numberOfIterations; ++ii )
+  for( int ii = 0; ii < iterations; ++ii )
     {
     inputImage->Modified();
     collector.Start("RegionGrowing");

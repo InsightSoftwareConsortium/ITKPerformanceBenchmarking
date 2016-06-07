@@ -17,6 +17,7 @@ ExternalData_Add_Test(ITKBenchmarksData
   NAME MedianBenchmark
   COMMAND MedianBenchmark
     ${TEST_OUTPUT_DIR}/MedianBenchmark.tsv
+    3
     -1
     ${BRAIN_IMAGE}
     ${TEST_OUTPUT_DIR}/MedianBenchmark.mha
@@ -29,6 +30,7 @@ ExternalData_Add_Test(ITKBenchmarksData
   NAME GradientMagnitudeBenchmark
   COMMAND GradientMagnitudeBenchmark
     ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark.tsv
+    3
     -1
     ${BRAIN_IMAGE}
     ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark.mha
@@ -39,6 +41,7 @@ ExternalData_Add_Test(ITKBenchmarksData
   NAME GradientMagnitudeBenchmark1Thread
   COMMAND GradientMagnitudeBenchmark
     ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark1Thread.tsv
+    3
     1
     ${BRAIN_IMAGE}
     ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark1Thread.mha
@@ -51,6 +54,7 @@ ExternalData_Add_Test(ITKBenchmarksData
   NAME MinMaxCurvatureFlowBenchmark
   COMMAND MinMaxCurvatureFlowBenchmark
     ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowBenchmark.tsv
+    3
     -1
     ${BRAIN_IMAGE}
     ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowBenchmark.mha
