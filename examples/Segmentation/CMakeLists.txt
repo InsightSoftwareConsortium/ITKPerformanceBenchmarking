@@ -9,6 +9,9 @@ find_package(ITK REQUIRED
     ITKRegionGrowing
     ITKWatersheds
     ITKConnectedComponents
+    ITKAnisotropicSmoothing
+    ITKFastMarching
+    ITKLevelSets
   )
 include(${ITK_USE_FILE})
 
@@ -35,3 +38,15 @@ ExternalData_Add_Test(ITKBenchmarksData
     ${TEST_OUTPUT_DIR}/WatershedBenchmark.mha
   )
 set_property(TEST WatershedBenchmark APPEND PROPERTY LABELS Segmentation)
+
+add_executable(LevelSetBenchmark LevelSetBenchmark.cxx)
+target_link_libraries(LevelSetBenchmark ${ITK_LIBRARIES})
+ExternalData_Add_Test(ITKBenchmarksData
+  NAME LevelSetBenchmark
+  COMMAND LevelSetBenchmark
+    ${TEST_OUTPUT_DIR}/LevelSetBenchmark.tsv
+    -1
+    DATA{../Data/Input/brainweb165a10f17extract60i50z.mha}
+    ${TEST_OUTPUT_DIR}/LevelSetBenchmark.mha
+  )
+set_property(TEST LevelSetBenchmark APPEND PROPERTY LABELS Segmentation)

@@ -72,6 +72,9 @@ RUN git clone https://itk.org/ITK.git && \
     -DModule_ITKRegionGrowing:BOOL=ON \
     -DModule_ITKWatersheds:BOOL=ON \
     -DModule_ITKConnectedComponents:BOOL=ON \
+    -DModule_ITKAnisotropicDiffusion:BOOL=ON \
+    -DModule_ITKFastMarching:BOOL=ON \
+    -DModule_ITKLevelSets:BOOL=ON \
   ../ITK && \
   ninja && \
   find . -name '*.o' -delete

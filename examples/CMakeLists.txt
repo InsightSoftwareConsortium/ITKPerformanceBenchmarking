@@ -65,6 +65,9 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
         -DModule_ITKRegionGrowing:BOOL=ON
         -DModule_ITKWatersheds:BOOL=ON
         -DModule_ITKConnectedComponents:BOOL=ON
+        -DModule_ITKAnisotropicSmoothing:BOOL=ON
+        -DModule_ITKFastMarching:BOOL=ON
+        -DModule_ITKLevelSets:BOOL=ON
         -DBUILD_TESTING:BOOL=OFF
         -DBUILD_EXAMPLES:BOOL=OFF
       INSTALL_COMMAND ""
