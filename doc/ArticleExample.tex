@@ -78,16 +78,25 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 \chapter*{Front Matter\label{front}}
 \fi
 
+\begin{abstract} \noindent This document describes a module for the Insight
+Toolkit (ITK) \url{www.itk.org} to assist in performance benchmarking and a
+suite of benchmarks for the toolkit. These resources provide metrics to
+quantify software computational performance. This is a pre-requisite to
+improve performance either through algorithmic advancements or better
+utilization of hardware resources.
 
-% The abstract should be a paragraph or two long, and describe the
-% scope of the document.
-\begin{abstract}
-\noindent
-This document describes a new algorithm implemented using the Insight Toolkit
-ITK \url{www.itk.org}.  The code of the algorithm is written following the
-ITK CodingStyle as described in the directory
-
-\code{ITK/Documentation/Style.pdf}
+Computional performance is quantified by reducing factors that confound timing
+measurements and by estimating measurement variance. New classes are presented
+that increase operating system process affinity to minimize the impact of
+other processes running on the system. System hardware characteristics are
+extracted and displayed. The influence of hard disk input/output on runtime
+measurements is removed in the suite of benchmarks. Additionally, the number
+of threads used by each benchmark can be specified. These benchmarks consist
+of common analysis pipelines and run on 3D magnetic resonance brain image data
+so realistic performance is quantified. Benchmarks can be executed with
+multiple iterations, and timing statistics are recorded in tab separated value
+(.tsv) files, which are easily stored or processed for further analysis and
+visualization.
 
 This paper is accompanied with the source code, input data, parameters and
 output data that the authors used for validating the algorithm described in
