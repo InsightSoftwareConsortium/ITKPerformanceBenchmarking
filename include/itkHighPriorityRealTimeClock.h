@@ -32,7 +32,7 @@ namespace itk
 /** \class HighPriorityRealTimeClock
 * \brief The HighPriorityRealTimeClock provides a timestamp from a real-time clock.
 *
-* It subclasses from RealTimeClock to bump the thread priority and affinity.
+* It subclasses from RealTimeClock to bump the process priority.
 *
 * \ingroup PerformanceBenchmarking
 *
