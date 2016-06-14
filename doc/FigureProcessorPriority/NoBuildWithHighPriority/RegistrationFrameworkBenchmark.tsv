@@ -1,0 +1,2 @@
+	Name Of Probe (Time)	Iterations	Total (s)	Min (s)	Mean-Min (diff)	Mean/Min (%)	Mean (s)	Max-Mean (diff)	Max/Mean (%)	Max (s)	Total Diff (s)	StdDev (s)	StdErr (s)
+	RegistrationFramework	3	7.51338	2.44441	0.0600483	102.457	2.50446	0.0664867	102.655	2.57095	0.126535	0.0635127	0.0366691
