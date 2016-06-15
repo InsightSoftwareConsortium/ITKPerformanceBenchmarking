@@ -16,6 +16,7 @@
 \usepackage{multirow}
 \usepackage{array}
 \renewcommand{\arraystretch}{1.8}
+\usepackage{epstopdf}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -70,11 +71,6 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
    % Commands for including Graphics when using latex
    %
    \DeclareGraphicsExtensions{.eps,.jpg,.gif,.tiff,.bmp,.png}
-   \DeclareGraphicsRule{.jpg}{eps}{.jpg.bb}{`convert #1 eps:-}
-   \DeclareGraphicsRule{.gif}{eps}{.gif.bb}{`convert #1 eps:-}
-   \DeclareGraphicsRule{.tiff}{eps}{.tiff.bb}{`convert #1 eps:-}
-   \DeclareGraphicsRule{.bmp}{eps}{.bmp.bb}{`convert #1 eps:-}
-   \DeclareGraphicsRule{.png}{eps}{.png.bb}{`convert #1 eps:-}
 \fi
 
 
@@ -131,13 +127,12 @@ The behavior this article focuses on is the time required to execute software
 image analysis pipelines on realistic image datasets. Full pipelines are
 benchmarked since this is what impacts the experience of software users. Hard
 disk input/output (I/O) influence is removed from timings because it may not
-be present in applications in the same form as the benchmarks. Additionaly,
-data I/O is highly dependent on the I/O hardware and is relatively software
-independent. The data processed is based on a 3D magnetic resonance
+be present in applications in the same form as the benchmarks. The data
+processed is based on a 3D magnetic resonance
 BrainWeb\cite{BrainWeb1,BrainWeb2} image, which has realistic size and
-content. Benchmarks inputs and operations are also designed for a target runtime of
-approximately 1-2 seconds for a single iteration and approximately 5-10
-seconds for multiple iterations on current systems. These durations are
+content. Benchmarks inputs and operations are also designed for a target
+runtime of approximately 1-2 seconds for a single iteration and approximately
+5-10 seconds for multiple iterations on current systems. These durations are
 intended to be long enough for memory access and processing times to reach a
 steady state yet short enough for the benchmark suite to be executed in a
 reasonable amount of time.
@@ -340,146 +335,114 @@ Watershed segmentation &
 \itkcaption[Benchmarks]{Benchmarks in the example benchmark suite.}
 \label{tab:Benchmarks}
 \end{table}
+
+Image data used as input to the benchmarks was derived from the image shown in
+Figure~\ref{fig:InputBrainWeb}.
+
+\begin{figure}
+\center
+\includegraphics[width=0.6\textwidth]{InputBrainWeb}
+\itkcaption[Input data]{Input BrainWeb \cite{BrainWeb1,BrainWeb2} image data
+used in the benchmarks.}
+\label{fig:InputBrainWeb}
+\end{figure}
+
+When executed, each benchmark outputs system information and summary
+statistical information. For example,
+
+\scriptsize
+\begin{verbatim}
+System:              meyer
+Processor:           Unknown P6 family
+    Cache:           6144
+    Clock:           3212.72
+    Physical CPUs:   1
+    Logical CPUs:    8
+    Virtual Memory:  Total: 19322           Available: 19322
+    Physical Memory: Total: 16003           Available: 6674
+OSName:              Linux
+    Release:         3.16.0-4-amd64
+    Version:         #1 SMP Debian 3.16.7-ckt25-2 (2016-04-08)
+    Platform:        x86_64
+    Operating System is 64 bit
+ITK Version: 4.11.0
+Name Of Probe (Time)          Iterations     Total (s)      Min (s)        Mean (s)       Max (s)        StdDev (s)
+Median                        3              6.19352        2.05278        2.06451        2.08378        0.0168256
+\end{verbatim}
 \normalsize
 
+Additionally, extended summary statistics are recorded in a tab separated
+value file. For example,
 
-
-- input data
--- graph
-- outputs
--- text output
--- .tsv example
-
-\subsection{Removal of Disk I/O}
-- graph
+\tiny
+\begin{verbatim}
+	Name Of Probe (Time)	Iterations	Total (s)	Min (s)	Mean-Min (diff)	Mean/Min (%)	Mean (s)	Max-Mean (diff)	Max/Mean (%)	Max (s)	Total Diff (s)	StdDev (s)	StdErr (s)
+	Median	3	6.19352	2.05278	0.011723	100.571	2.06451	0.019279	100.934	2.08378	0.031002	0.0168256	0.00971427
+\end{verbatim}
+\normalsize
 
 \subsection{How to Build and Run}
-- requires ITK 4.11.0 or newer
-- build superbuild
-- run ctest
-- specify iterations and threads
 
-
-
-Using filters from the Insight Toolkit, we develop an algorithm for detecting
-and tracking thje movement of solar spots. As it is widely known, celestial
-objects such as the sun are ethereal and perfect, and therefore can not harbor
-artifacts such as spots. However, observations performed with our open source
-telescope have revealed the presence of such spots. The spots seems to continuously change positions on the solar surface.
-
-Automatic detection and tracking of the solar spot movements are of fundamental
-importance for allowing the authors to dedicate more time to perfectioning
-optical instruments and less time to the supervised acquisition of reliable
-data.
-
-The reader should be warned that direct observation of the sun without proper
-equipment may result in personal injury, loss of vision and burned brains.
-
-\section{Principles of Solar Spot Detection}
-
-Solar spots can be classified as the darkest objects present on an image of the
-solar surface. Algorithms such as watersheds, statistical classification and
-mathematical morphology are suitable for automatically detecting these features
-in images of the solar surface.
-
-
-\section{Why Image Processing Papers must include Source Code, Images and Parameters }
-
-Modern Image Processing is most of the time performed with computers. An
-attempt to replicate the results of an algorithm described in a paper entails
-to reimplement the algorithm into source code. This task is far from trivial
-and consumes months of work. The final result can not be guarranted to be
-equivalent to the actual code that was used for testing the algorithm when the
-paper was written, and therefore it cannot be considered a baseline for
-comparing the algoritm with other algorithms availble to the reader.
-
-Papers to the Insight Journal are written in the spirit of facilitating and
-encouraging readers to perform replication of work. In this sense, the Insight
-Journal is compliant with essential concepts of the scientific method.
-
-Since the code is included with the paper, less time has to be spent in
-describing the code, and more time can be used for describing how to use the
-algorithm in particular types of images.
-
-For questions on the basis of the scientific method the reader is refered to
-\cite{Popper2002,Popper1971}.
-
-
-
-\section{Pointing to other material}
-
-The format of this LaTeX file, allows authors to include code snippets, like
-the following
+The benchmark suite requires ITK 4.11.0 or newer and the
+PerformanceBenchmarking module. The repository \code{examples/CMakeLists.txt}
+file will configure and build both these dependencies by default. To build the
+benchmarks:
 
 \small
-\begin{verbatim}
-typedef itk::Image< unsigned char, 3 > ImageType;
-
-ImageType::Pointer image = ImageType::New();
-\end{verbatim}
+\begin{minted}[baselinestretch=1,fontsize=\footnotesize,linenos=false,bgcolor=ltgray]{bash}
+$ git clone https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking
+$ mkdir Benchmarks-build
+$ cd Benchmarks-build
+$ cmake ../ITKPerformanceBenchmarking/examples/
+$ make
+\end{minted}
 \normalsize
 
-and to cite the online documentation of the Insitght Toolkit, for example, the
-link to the doxygen documentation of the ImageToImageFilter
+The benchmarks can be executed by running the \code{ctest} executable. When
+the benchmark project is built, it also downloads required input data.
 
-\doxygen{ImageToImageFilter}
+\small
+\begin{minted}[baselinestretch=1,fontsize=\footnotesize,linenos=false,bgcolor=ltgray]{bash}
+$ cd ITKBenchmarks-build/
+$ ctest
+Test project /home/matt/Benchmarks-build/ITKBenchmarks-build
+      Start  1: MedianBenchmark
+ 1/10 Test  #1: MedianBenchmark .....................   Passed    6.24 sec
+      Start  2: GradientMagnitudeBenchmark
+ 2/10 Test  #2: GradientMagnitudeBenchmark ..........   Passed    4.10 sec
+      Start  3: GradientMagnitudeBenchmark1Thread
+ 3/10 Test  #3: GradientMagnitudeBenchmark1Thread ...   Passed    4.22 sec
+      Start  4: MinMaxCurvatureFlowBenchmark
+ 4/10 Test  #4: MinMaxCurvatureFlowBenchmark ........   Passed    7.63 sec
+      Start  5: RegistrationFrameworkBenchmark
+ 5/10 Test  #5: RegistrationFrameworkBenchmark ......   Passed    7.67 sec
+      Start  6: DemonsRegistrationBenchmark
+ 6/10 Test  #6: DemonsRegistrationBenchmark .........   Passed    8.50 sec
+      Start  7: NormalizedCorrelationBenchmark
+ 7/10 Test  #7: NormalizedCorrelationBenchmark ......   Passed    3.37 sec
+      Start  8: RegionGrowingBenchmark
+ 8/10 Test  #8: RegionGrowingBenchmark ..............   Passed    5.20 sec
+      Start  9: WatershedBenchmark
+ 9/10 Test  #9: WatershedBenchmark ..................   Passed    6.88 sec
+      Start 10: LevelSetBenchmark
+10/10 Test #10: LevelSetBenchmark ...................   Passed    9.26 sec
 
-LaTeX macros are also available for typesetting code in familiar courier fonts.
-Like the following method of an ITK class.
+100% tests passed, 0 tests failed out of 10
 
-\code{SetNumberOfIterations()}
+Label Time Summary:
+Filtering       =  22.06 sec (4 tests)
+Registration    =  19.55 sec (3 tests)
+Segmentation    =  21.34 sec (3 tests)
 
+Total Test time (real) =  63.08 sec
+\end{minted}
+\normalsize
 
-
-% The preceding sections will have been written in a gentler,
-% introductory style.  You may also wish to include a reference
-% section, documenting all the functions/exceptions/constants.
-% Often, these will be placed in separate files and input like this:
-
-
-
-\appendix
-
-\section{This is an Appendix}
-
-To create an appendix in a Insight HOWTO document, use markup like
-this:
-
-\begin{verbatim}
-\appendix
-
-\section{This is an Appendix}
-
-To create an appendix in a Insight HOWTO document, ....
-
-
-\section{This is another}
-
-Just add another \section{}, but don't say \appendix again.
-\end{verbatim}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-%  Example on how to insert an equation.
-%  Never forget to put an equation in your paper.
-%  They make them look professional and impress the reviewers.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-To support shape-guidance, the generic level set equation
-(Eqn(~\ref{eqn:ShapeInfluenceTerm})) is extended to incorporate a shape guidance
-term:
-
-\begin{equation}
-\label{eqn:ShapeInfluenceTerm}
-\xi \left(\psi^{*}(\mathbf{x}) - \psi(\mathbf{x})\right)
-\end{equation}
-
-
-
+To see how a benchmark is called, run \code{ctest} with the \code{-V} flag.
+The first argument is always the path to the output tab-separated-value file,
+the second argument is the number of iterations to run the benchmark pipeline,
+and the third argument is the number of threads to use; a value less than one
+will use as many threads as there are logical cores available on the system.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -492,4 +455,3 @@ term:
 
 
 \end{document}
-
