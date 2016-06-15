@@ -13,6 +13,9 @@
 \usepackage{minted}
 \definecolor{ltgray}{rgb}{0.93,0.93,0.93}
 \usemintedstyle{emacs}
+\usepackage{multirow}
+\usepackage{array}
+\renewcommand{\arraystretch}{1.8}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -215,7 +218,10 @@ ITK Version: 4.11.0
 Example usage of the high priority timing classes is shown in the code below,
 taken from the Median example benchmark. Note that this may effect other high
 priority applications running on the system like graphical user interfaces,
-network connections, etc. On Unix-like system, the process should be run as the \code{root} user so it has adequate permission to elevate the priority; running as a normal user will not result in a higher than normal process priority.
+network connections, etc. On Unix-like system, the process should be run as the
+\code{root} user so it has adequate permission to elevate the priority; running
+as a normal user will not result in a higher than normal process priority.
+
 \begin{minted}[baselinestretch=1,fontsize=\footnotesize,linenos=false,bgcolor=ltgray]{cpp}
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
@@ -247,13 +253,96 @@ collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs
 
 \subsection{The Benchmarks}
 
-- analysis pipelines
+The \code{examples} directory of the \code{ITKPerformanceBenchmarking}
+repository contains a suite of ITK image processing pipelines.  The purpose of
+these benchmarks is to be a timing metric for ITK processing pipelines.  They
+are intended to help monitor computational performance as changes are made to
+the toolkit and to measure the effect of internal changes to pipeline code.
+To apply these benchmarks for comparisons of different algorithmic approaches
+with the same analytic objective instead, greater care should be given to
+ensure parameters of the pipelines are optimal. Additionally, attention is
+required to establish that the results from competing algorithms are similar.
 
-The purpose of these benchmarks is to 
-To apply these benchmarks for comparisons of different algorithmic
-approaches to the same analytic objective, greater care should be given to ensure the parameters of
-the pipelines are optimal. Additionally, attention must the results from competing algorithms are
-similar.
+The benchmarks currently cover a variety of common processing pipelines that
+require different parts of the toolkit. Additional benchmarks could be added
+to benchmark other processing objectives and implementations in the toolkit.
+Table~\ref{tab:Benchmarks} describes the current benchmarks, their processing
+objective, the features of the toolkit they exercise.
+
+\begin{table}
+\scriptsize
+\centering
+\begin{tabular}{m{1.5cm}|m{2.5cm}|m{4cm}|m{6.5cm}}
+\hline
+\textbf{Type} & \textbf{Benchmark Name} & \textbf{Objective} & \textbf{Toolkit Features Exercised} \\
+\hline\hline
+\multirow{3}{4em}{Filtering} & GradientMagnitude &
+Emphasize image edges &
+\doxygen{GradientMagnitudeRecursiveGaussianImageFilter}, \doxygen{NeighborhoodInnerProduct},
+multi-threaded \doxygen{ImageToImageFilter}  \\
+
+& Median &
+Image denoising through median filtering &
+\doxygen{MedianImageFilter}, \doxygen{BoxImageFilter},
+multi-threaded \doxygen{ImageToImageFilter}  \\
+
+& MinMaxCurvatureFlow &
+Curvature driven image denoising &
+\doxygen{MinMaxFlowCurvatureImageFilter},
+\doxygen{DenseFiniteDifferenceImageFilter}  \\
+
+\hline
+
+\multirow{3}{4em}{Registration} & DemonsRegistration &
+Demons image registration &
+\doxygen{PDEDeformableRegistrationFilter},
+\doxygen{DemonsRegistrationFilter} \\
+
+& NormalizedCorrelation &
+Normalized cross correlation image registration &
+\doxygen{FFTNormalizedCorrelationImageFilter},
+\doxygen{FFTPadImageFilter},
+\doxygen{ForwardFFTImageFilter},
+\doxygen{InverseFFTImageFilter},
+\doxygen{MinimumMaximumImageCalculator} \\
+
+& RegistrationFramework &
+Optimized cost function image registration  &
+ITKv4 image registration framework,
+\doxygen{MeanSquaresImageToImageMetricv4} \\
+
+\hline
+
+\multirow{3}{4em}{Segmentation} & LevelSet &
+Level set segmentation with a propagation and curvature term &
+ITKv3 level set framework,
+\doxygen{ShapeDetectionLevelSetImageFilter},
+\doxygen{CurvatureAnisotropicDiffusionImageFilter},
+\doxygen{GradientMagnitudeRecursiveGaussianImageFilter},
+\doxygen{FastMarchingImageFilter},
+\doxygen{BinaryThresholdImageFilter} \\
+
+& RegionGrowing &
+Region growing segmentation &
+\doxygen{ConfidenceConnectedImageFilter},
+\doxygen{CurvatureFlowImageFilter},
+\doxygen{BinaryFillholeImageFilter} \\
+
+& Watershed &
+Watershed segmentation &
+\doxygen{WatershedImageFilter},
+\doxygen{CurvatureFlowImageFilter},
+\doxygen{GradientMagnitudeRecursiveGaussianImageFilter},
+\doxygen{RelabelComponentImageFilter} \\
+
+\hline
+\end{tabular}
+\itkcaption[Benchmarks]{Benchmarks in the example benchmark suite.}
+\label{tab:Benchmarks}
+\end{table}
+\normalsize
+
+
 
 - input data
 -- graph
