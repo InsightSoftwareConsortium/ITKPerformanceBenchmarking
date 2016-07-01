@@ -1,0 +1,2 @@
+	Name Of Probe (Time)	Iterations	Total (s)	Min (s)	Mean-Min (diff)	Mean/Min (%)	Mean (s)	Max-Mean (diff)	Max/Mean (%)	Max (s)	Total Diff (s)	StdDev (s)	StdErr (s)
+	MinMaxCurvatureFlow	3	8.14625	2.70709	0.00832415	100.307	2.71542	0.015377	100.566	2.73079	0.0237012	0.0133321	0.00769728

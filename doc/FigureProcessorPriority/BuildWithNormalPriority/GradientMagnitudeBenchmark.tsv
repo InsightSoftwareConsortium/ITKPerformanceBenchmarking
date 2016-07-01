@@ -1,0 +1,2 @@
+	Name Of Probe (Time)	Iterations	Total (s)	Min (s)	Mean-Min (diff)	Mean/Min (%)	Mean (s)	Max-Mean (diff)	Max/Mean (%)	Max (s)	Total Diff (s)	StdDev (s)	StdErr (s)
+	GradientMagnitude	16	17.9144	1.02976	0.0898887	108.729	1.11965	0.0460664	104.114	1.16572	0.135955	0.0358337	0.00895842

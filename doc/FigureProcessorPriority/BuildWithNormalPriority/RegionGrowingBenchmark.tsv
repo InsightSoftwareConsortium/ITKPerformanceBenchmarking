@@ -1,0 +1,2 @@
+	Name Of Probe (Time)	Iterations	Total (s)	Min (s)	Mean-Min (diff)	Mean/Min (%)	Mean (s)	Max-Mean (diff)	Max/Mean (%)	Max (s)	Total Diff (s)	StdDev (s)	StdErr (s)
+	RegionGrowing	3	32.763	10.7012	0.219777	102.054	10.921	0.250025	102.289	11.171	0.469802	0.236357	0.136461

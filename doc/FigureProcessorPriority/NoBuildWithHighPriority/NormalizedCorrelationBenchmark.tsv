@@ -1,0 +1,2 @@
+	Name Of Probe (Time)	Iterations	Total (s)	Min (s)	Mean-Min (diff)	Mean/Min (%)	Mean (s)	Max-Mean (diff)	Max/Mean (%)	Max (s)	Total Diff (s)	StdDev (s)	StdErr (s)
+	NormalizedCorrelation	3	3.32556	1.09721	0.0113068	101.031	1.10852	0.0113503	101.024	1.11987	0.0226572	0.0113286	0.00654059

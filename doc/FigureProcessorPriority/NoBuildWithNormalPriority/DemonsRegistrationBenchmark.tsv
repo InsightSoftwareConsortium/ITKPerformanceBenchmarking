@@ -1,0 +1,2 @@
+	Name Of Probe (Time)	Iterations	Total (s)	Min (s)	Mean-Min (diff)	Mean/Min (%)	Mean (s)	Max-Mean (diff)	Max/Mean (%)	Max (s)	Total Diff (s)	StdDev (s)	StdErr (s)
+	DemonsRegistration	3	8.32467	2.74489	0.0300037	101.093	2.77489	0.0156594	100.564	2.79055	0.0456631	0.0259923	0.0150067
