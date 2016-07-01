@@ -44,7 +44,7 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 % submission process. Please replace the number "1338" with
 % the actual handle number that you get assigned.
 %
-\newcommand{\IJhandlerIDnumber}{1338}
+\newcommand{\IJhandlerIDnumber}{3557}
 
 % Increment the release number whenever significant changes are made.
 % The author and/or editor can define 'significant' however they like.
@@ -84,11 +84,11 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 \begin{abstract} \noindent This document describes a module for the Insight
 Toolkit (ITK) \url{www.itk.org} to assist in performance benchmarking and a
 suite of benchmarks for the toolkit. These resources provide metrics to
-quantify software computational performance. This is a pre-requisite to
+quantify software computational performance. This is a prerequisite to
 improve performance either through algorithmic advancements or better
 utilization of hardware resources.
 
-Computional performance is quantified by reducing factors that confound timing
+Computational performance is quantified by reducing factors that confound timing
 measurements and by estimating measurement variance. New classes are presented
 that increase operating system process priority to minimize the impact of
 other processes running on the system. System hardware characteristics are
@@ -115,7 +115,7 @@ publications must facilitate reproducibility of the reported results.
 \section{Introduction}
 
 To make quantifiable improvements in computational software performance, the
-performance must be measureable. This article describes performance
+performance must be measurable. This article describes performance
 measurement tools in the Insight Toolkit (ITK,\url{www.itk.org}), and how they
 are applied to benchmark scientific image analysis code. In addition, the
 article also describes a suite of example benchmarks that quantify ITK image
@@ -179,7 +179,7 @@ system.
 \itkcaption[Processor Priority Influence]{The impact of an increased process
 priority when a parallel build of ITK is running in the background and when
 only a few system processes are running. Times are given with mean +/- two
-standard errors. In general, benchmark runtimes and their variability is more
+standard errors. In general, benchmark run times and their variability is more
 closer to low load system results when the process priority is increased.}
 \label{fig:ProcessorPriority}
 \end{figure}
