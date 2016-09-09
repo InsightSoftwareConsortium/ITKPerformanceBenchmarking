@@ -19,6 +19,7 @@ itk_module(PerformanceBenchmarking
     ITKCommon
   TEST_DEPENDS
     ITKTestKernel
+  EXCLUDE_FROM_DEFAULT
   DESCRIPTION
   "${DOCUMENTATION}"
 )
