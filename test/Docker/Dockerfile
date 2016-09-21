@@ -1,6 +1,9 @@
 FROM debian:8
 MAINTAINER Insight Software Consortium <community@itk.org>
 
+RUN apt-get update && apt-get install -y curl && \
+  sed -i "s/httpredir.debian.org/`curl -s -D - http://httpredir.debian.org/demo/debian/ | awk '/^Link:/ { print $2 }' | sed -e 's@<http://\(.*\)/debian/>;@\1@g'`/" /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y \
   build-essential \
   curl \

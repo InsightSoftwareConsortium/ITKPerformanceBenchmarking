@@ -3,10 +3,15 @@ machine:
     - docker
 
 dependencies:
+  cache_directories:
+    - "~/docker"
+
   override:
     - docker info
+    - if [[ -e ~/docker/image.tar ]]; then docker load -i ~/docker/image.tar; fi
     - docker pull insighttoolkit/performancebenchmarking-test
     - ~/ITKPerformanceBenchmarking/test/Docker/build.sh
+    - mkdir -p ~/docker; docker save insighttoolkit/performancebenchmarking-test > ~/docker/image.tar
 
 test:
   override:
