@@ -129,7 +129,7 @@ ExternalData_Expand_Arguments(ITKBenchmarksData
   )
 set(TEST_OUTPUT_DIR "${PROJECT_BINARY_DIR}/Testing")
 
-enable_testing()
+include(CTest)
 
 option(BENCHMARK_ITK_FILTERING "Test the performance of ITK Filters." ON)
 if(BENCHMARK_ITK_FILTERING)
