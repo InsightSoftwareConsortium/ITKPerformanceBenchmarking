@@ -131,6 +131,11 @@ set(TEST_OUTPUT_DIR "${PROJECT_BINARY_DIR}/Testing")
 
 include(CTest)
 
+option(BENCHMARK_ITK_CORE "Test the performance of ITK Core." ON)
+if(BENCHMARK_ITK_CORE)
+  add_subdirectory(Core)
+endif()
+
 option(BENCHMARK_ITK_FILTERING "Test the performance of ITK Filters." ON)
 if(BENCHMARK_ITK_FILTERING)
   add_subdirectory(Filtering)
