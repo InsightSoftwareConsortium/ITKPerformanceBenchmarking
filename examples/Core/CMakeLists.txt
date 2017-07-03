@@ -12,5 +12,7 @@ add_executable(ThreadOverheadBenchmark ThreadOverhead.cxx )
 target_link_libraries(ThreadOverheadBenchmark ${ITK_LIBRARIES})
 add_test(
   NAME ThreadOverheadBenchmark
-  COMMAND ThreadOverheadBenchmark 1000 )
+  COMMAND ThreadOverheadBenchmark
+  ${TEST_OUTPUT_DIR}/ThreadOverheadBenchmark.tsv
+  1000 )
 set_property(TEST ThreadOverheadBenchmark APPEND PROPERTY LABELS Core)

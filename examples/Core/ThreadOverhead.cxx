@@ -18,11 +18,12 @@
 
 #include "itkImage.h"
 #include "itkUnaryFunctorImageFilter.h"
-#include "itkTimeProbe.h"
+#include "itkTimeProbesCollectorBase.h"
 #include "itkHighPriorityRealTimeProbe.h"
+#include "itkHighPriorityRealTimeProbesCollector.h"
 
 #include <sstream>
-
+#include <fstream>
 
 // This benchmark estimate the overhead for using an additional thread
 // in an ImageFilter a.k.a the time it takes to "spawn" a thread.
@@ -35,12 +36,19 @@
 // threads. Dividing by the number of additional threads gives us the
 // overhead cost of “spawning” or dispatching a single thread.
 
-//typedef itk::TimeProbe    ProbeType;
 
 typedef itk::HighPriorityRealTimeProbe    ProbeType;
+typedef itk::HighPriorityRealTimeProbesCollector CollectorType;
+
+//typedef itk::TimeProbesCollectorBase CollectorType;
+//typedef itk::TimeProbe               ProbeType;
+
 
 namespace
 {
+
+CollectorType collector;
+
 template< typename TInput, typename TOutput >
 class Op
 {
@@ -94,24 +102,17 @@ ProbeType time_it(unsigned int threads, unsigned int iterations, bool realtime =
   std::ostringstream ss;
   ss << "FilterWithThreads-" << threads;
 
-  std::string name = ss.str();
+  const std::string name = ss.str();
 
-  ProbeType timer;
-  timer.SetNameOfProbe(name.c_str());
   for( int ii = 0; ii < iterations; ++ii )
     {
     image->Modified();
-    timer.Start();
+    collector.Start(name.c_str());
     filter->UpdateLargestPossibleRegion();
-    timer.Stop();
+    collector.Stop(name.c_str());
     }
-  static bool printReportHead = true;
-  bool printSystemInfo = false;
-  bool useTabs = false;
-  timer.Report( std::cout, printSystemInfo, printReportHead, useTabs );
-  printReportHead = false;
 
-  return timer;
+  return collector.GetProbe(name.c_str());
 }
 
 
@@ -120,11 +121,13 @@ int main( int argc, char * argv[] )
   if( argc > 3 )
     {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << "[iterations [threads]]" << std::endl;
+    std::cerr << argv[0] << " timingsFile [iterations [threads]]" << std::endl;
     return EXIT_FAILURE;
     }
-  const int iterations = (argc>1) ? atoi( argv[1] ): 1000;
-  const int threads = (argc>2) ? atoi( argv[2] ) : itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
+
+  const char * timingsFileName = argv[1];
+  const int iterations = (argc>2) ? atoi( argv[2] ): 500;
+  const int threads = (argc>3) ? atoi( argv[3] ) : itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
 
   if (threads == 1)
     {
@@ -136,9 +139,20 @@ int main( int argc, char * argv[] )
 
   ProbeType t2 = time_it(threads,iterations);
 
+
+  bool printReportHead = true;
+  bool printSystemInfo = true;
+  bool useTabs = false;
+  collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
+
+  std::ofstream timingsFile( timingsFileName, std::ios::out );
+  printSystemInfo = false;
+  useTabs = true;
+  collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
+
   double cost = (t2.GetMinimum() - t1.GetMinimum())/(threads-1.0);
 
-  std::cout << "Estimated overhead cost per thread: " << cost * 1e6 << " micro-seconds" << std::endl;
+  std::cout << "\n\nEstimated overhead cost per thread: " << cost * 1e6 << " micro-seconds\n\n";
 
   return EXIT_SUCCESS;
 }
