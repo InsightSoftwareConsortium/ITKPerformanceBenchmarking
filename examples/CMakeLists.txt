@@ -28,10 +28,10 @@ if(ITKBenchmarks_SUPERBUILD AND NOT ITK_DIR)
     set(ITK_BUILD_DIR ${CMAKE_BINARY_DIR}/ITK-build CACHE INTERNAL "Path to store itk binaries")
     set(ITK_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/ITK-install CACHE INTERNAL "Path to store itk install")
 
-    # ITK master 2016-05-30
+    # ITK master 2017-07-03
     ExternalProject_Add(ITK
       GIT_REPOSITORY "https://itk.org/ITK.git"
-      GIT_TAG 1257b0468c147ba2b1a65bae67169bdf35f4fa50
+      GIT_TAG 07cb23f9866768b5f4ee48ebec8766b6e19efc69
       UPDATE_COMMAND ""
       DOWNLOAD_DIR ${ITK_SOURCE_DIR}
       SOURCE_DIR ${ITK_SOURCE_DIR}
@@ -130,6 +130,11 @@ ExternalData_Expand_Arguments(ITKBenchmarksData
 set(TEST_OUTPUT_DIR "${PROJECT_BINARY_DIR}/Testing")
 
 include(CTest)
+
+option(BENCHMARK_ITK_CORE "Test the performance of ITK Core." ON)
+if(BENCHMARK_ITK_CORE)
+  add_subdirectory(Core)
+endif()
 
 option(BENCHMARK_ITK_FILTERING "Test the performance of ITK Filters." ON)
 if(BENCHMARK_ITK_FILTERING)
