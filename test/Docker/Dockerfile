@@ -29,7 +29,7 @@ WORKDIR /usr/src
 
 # ITK master 2017-07-18
 ENV ITK_GIT_TAG 72e9386064c583701a35502f661c94d9f4d5884a
-RUN git clone https://itk.org/ITK.git && \
+RUN git clone https://github.com/InsightSoftwareConsortium/ITK.git && \
   cd ITK && \
   git checkout ${ITK_GIT_TAG} && \
   cd ../ && \
