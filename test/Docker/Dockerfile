@@ -13,12 +13,7 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   libhdf5-dev \
   libjpeg-dev \
-<<<<<<< Updated upstream
-  libpng12-dev \
-  libpython3-dev \
-=======
   libpng-dev \
->>>>>>> Stashed changes
   libtiff5-dev \
   python \
   ninja-build \
