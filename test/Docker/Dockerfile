@@ -1,8 +1,8 @@
-FROM debian:8
+FROM debian:9
 MAINTAINER Insight Software Consortium <community@itk.org>
 
 RUN REPO=http://cdn-fastly.deb.debian.org && \
-  echo "deb $REPO/debian jessie main\ndeb $REPO/debian jessie-updates main\ndeb $REPO/debian-security jessie/updates main" > /etc/apt/sources.list
+  echo "deb $REPO/debian stretch main\ndeb $REPO/debian stretch-updates main\ndeb $REPO/debian-security stretch/updates main" > /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y \
   build-essential \
@@ -13,14 +13,19 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   libhdf5-dev \
   libjpeg-dev \
+<<<<<<< Updated upstream
   libpng12-dev \
   libpython3-dev \
+=======
+  libpng-dev \
+>>>>>>> Stashed changes
   libtiff5-dev \
   python \
   ninja-build \
   wget \
   vim \
-  zlib1g-dev
+  zlib1g-dev \
+  && apt-get clean
 
 RUN mkdir -p /usr/src/ITKPerformanceBenchmarking-build && \
   mkdir -p /usr/src/ITKBenchmarks-build
@@ -41,8 +46,8 @@ RUN git clone git://cmake.org/cmake.git CMake && \
   cd .. && \
   rm -rf CMake*
 
-# ITK master 2016-05-30
-ENV ITK_GIT_TAG 1257b0468c147ba2b1a65bae67169bdf35f4fa50
+# ITK master 2017-07-18
+ENV ITK_GIT_TAG 72e9386064c583701a35502f661c94d9f4d5884a
 RUN git clone https://itk.org/ITK.git && \
   cd ITK && \
   git checkout ${ITK_GIT_TAG} && \
