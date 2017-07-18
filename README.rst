@@ -9,8 +9,8 @@ Real-world tests to benchmark ITK performance.
 New classes increase operating system process priority to
 minimize the impact of other processes running on the system.
 
-These classes are used by a used by a suite of example ITK benchmarks to
-quantify toolkit performance.
+These classes are used by a suite of example ITK benchmarks to quantify toolkit
+performance.
 
 For more information, see the `Insight Journal article <http://hdl.handle.net/10380/3557>`_::
 
