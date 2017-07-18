@@ -6,6 +6,7 @@ RUN REPO=http://cdn-fastly.deb.debian.org && \
 
 RUN apt-get update && apt-get install -y \
   build-essential \
+  cmake \
   curl \
   git \
   libexpat1-dev \
@@ -25,21 +26,6 @@ RUN apt-get update && apt-get install -y \
 RUN mkdir -p /usr/src/ITKPerformanceBenchmarking-build && \
   mkdir -p /usr/src/ITKBenchmarks-build
 WORKDIR /usr/src
-
-RUN git clone git://cmake.org/cmake.git CMake && \
-  cd CMake && \
-  git checkout v3.8.0 && \
-  cd .. && mkdir CMake-build && cd CMake-build && \
-  /usr/src/CMake/bootstrap \
-    --parallel=$(nproc) \
-    --prefix=/usr && \
-  make -j$(nproc) && \
-  ./bin/cmake -DCMAKE_USE_SYSTEM_CURL:BOOL=ON \
-    -DCMAKE_BUILD_TYPE:STRING=Release \
-    -DCMAKE_USE_OPENSSL:BOOL=ON . && \
-  make install && \
-  cd .. && \
-  rm -rf CMake*
 
 # ITK master 2017-07-18
 ENV ITK_GIT_TAG 72e9386064c583701a35502f661c94d9f4d5884a
