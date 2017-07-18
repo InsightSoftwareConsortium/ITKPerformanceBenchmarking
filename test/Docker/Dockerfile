@@ -7,19 +7,14 @@ RUN REPO=http://cdn-fastly.deb.debian.org && \
 RUN apt-get update && apt-get install -y \
   build-essential \
   cmake \
-  curl \
   git \
   libexpat1-dev \
-  libcurl4-openssl-dev \
-  libssl-dev \
   libhdf5-dev \
   libjpeg-dev \
   libpng-dev \
   libtiff5-dev \
   python \
   ninja-build \
-  wget \
-  vim \
   zlib1g-dev \
   && apt-get clean
 
