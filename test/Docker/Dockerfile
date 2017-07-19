@@ -1,49 +1,30 @@
-FROM debian:8
+FROM debian:9
 MAINTAINER Insight Software Consortium <community@itk.org>
 
-RUN apt-get update && apt-get install -y curl && \
-  sed -i "s/httpredir.debian.org/`curl -s -D - http://httpredir.debian.org/demo/debian/ | awk '/^Link:/ { print $2 }' | sed -e 's@<http://\(.*\)/debian/>;@\1@g'`/" /etc/apt/sources.list
+RUN REPO=http://cdn-fastly.deb.debian.org && \
+  echo "deb $REPO/debian stretch main\ndeb $REPO/debian stretch-updates main\ndeb $REPO/debian-security stretch/updates main" > /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y \
   build-essential \
-  curl \
+  cmake \
   git \
   libexpat1-dev \
-  libcurl4-openssl-dev \
-  libssl-dev \
   libhdf5-dev \
   libjpeg-dev \
-  libpng12-dev \
-  libpython3-dev \
+  libpng-dev \
   libtiff5-dev \
   python \
   ninja-build \
-  wget \
-  vim \
-  zlib1g-dev
+  zlib1g-dev \
+  && apt-get clean
 
 RUN mkdir -p /usr/src/ITKPerformanceBenchmarking-build && \
   mkdir -p /usr/src/ITKBenchmarks-build
 WORKDIR /usr/src
 
-RUN git clone git://cmake.org/cmake.git CMake && \
-  cd CMake && \
-  git checkout v3.5.2 && \
-  cd .. && mkdir CMake-build && cd CMake-build && \
-  /usr/src/CMake/bootstrap \
-    --parallel=$(nproc) \
-    --prefix=/usr && \
-  make -j$(nproc) && \
-  ./bin/cmake -DCMAKE_USE_SYSTEM_CURL:BOOL=ON \
-    -DCMAKE_BUILD_TYPE:STRING=Release \
-    -DCMAKE_USE_OPENSSL:BOOL=ON . && \
-  make install && \
-  cd .. && \
-  rm -rf CMake*
-
-# ITK master 2016-05-30
-ENV ITK_GIT_TAG 1257b0468c147ba2b1a65bae67169bdf35f4fa50
-RUN git clone https://itk.org/ITK.git && \
+# ITK master 2017-07-18
+ENV ITK_GIT_TAG 72e9386064c583701a35502f661c94d9f4d5884a
+RUN git clone https://github.com/InsightSoftwareConsortium/ITK.git && \
   cd ITK && \
   git checkout ${ITK_GIT_TAG} && \
   cd ../ && \
