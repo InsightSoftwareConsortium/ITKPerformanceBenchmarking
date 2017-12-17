@@ -52,10 +52,10 @@ public:
   HighPriorityRealTimeProbe();
 
   /** Destructor */
-  ~HighPriorityRealTimeProbe() ITK_OVERRIDE;
+  ~HighPriorityRealTimeProbe() override;
 
   /** Get the current time. */
-  TimeStampType GetInstantValue() const ITK_OVERRIDE;
+  TimeStampType GetInstantValue() const override;
 
   /** Get a handle to m_RealTimeClock. */
   itkGetConstObjectMacro( HighPriorityRealTimeClock, HighPriorityRealTimeClock );

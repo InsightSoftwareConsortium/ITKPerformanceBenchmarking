@@ -47,7 +47,7 @@ public:
   HighPriorityRealTimeProbesCollector();
 
   /** Destructor */
-  ~HighPriorityRealTimeProbesCollector() ITK_OVERRIDE;
+  ~HighPriorityRealTimeProbesCollector() override;
 
 private:
 
