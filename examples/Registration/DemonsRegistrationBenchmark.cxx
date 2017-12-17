@@ -46,12 +46,12 @@ protected:
                               DisplacementFieldType>   RegistrationFilterType;
 
 public:
-  virtual void Execute(itk::Object *caller, const itk::EventObject & event) ITK_OVERRIDE
+  virtual void Execute(itk::Object *caller, const itk::EventObject & event) override
   {
     Execute( (const itk::Object *)caller, event);
   }
 
-  virtual void Execute(const itk::Object * object, const itk::EventObject & event) ITK_OVERRIDE
+  virtual void Execute(const itk::Object * object, const itk::EventObject & event) override
   {
     const RegistrationFilterType * filter = static_cast< const RegistrationFilterType * >( object );
     if( !(itk::IterationEvent().CheckEvent( &event )) )

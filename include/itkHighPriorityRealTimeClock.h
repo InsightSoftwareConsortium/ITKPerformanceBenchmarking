@@ -56,7 +56,7 @@ protected:
   HighPriorityRealTimeClock();
 
   /** Destructor */
-  ~HighPriorityRealTimeClock() ITK_OVERRIDE;
+  ~HighPriorityRealTimeClock() override;
 
   /** Method for raising and restoring the priority */
   virtual void RaisePriority();
