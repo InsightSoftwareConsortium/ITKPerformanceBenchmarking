@@ -47,7 +47,7 @@ public:
   HighPriorityRealTimeProbesCollector();
 
   /** Destructor */
-  virtual ~HighPriorityRealTimeProbesCollector();
+  ~HighPriorityRealTimeProbesCollector() ITK_OVERRIDE;
 
 private:
 
