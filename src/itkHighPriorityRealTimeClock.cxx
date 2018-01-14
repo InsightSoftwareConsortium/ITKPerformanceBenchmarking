@@ -24,7 +24,7 @@
 
 #include <sys/time.h>
 #include <sys/resource.h>
-#include <errno.h>
+#include <cerrno>
 
 #endif  // defined(WIN32) || defined(_WIN32)
 
