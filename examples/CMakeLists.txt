@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.9.5)
 
 project(ITKBenchmarks NONE)
 # Set a default build type if none was specified
