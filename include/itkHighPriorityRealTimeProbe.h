@@ -44,7 +44,7 @@ public:
 
   /** Type for measuring time. See the RealTimeClock class for details on the
    * precision and units of this clock signal */
-  typedef HighPriorityRealTimeClock::TimeStampType TimeStampType;
+  using TimeStampType = HighPriorityRealTimeClock::TimeStampType;
 
 public:
 

@@ -37,11 +37,11 @@
 // overhead cost of “spawning” or dispatching a single thread.
 
 
-typedef itk::HighPriorityRealTimeProbe    ProbeType;
-typedef itk::HighPriorityRealTimeProbesCollector CollectorType;
+using ProbeType = itk::HighPriorityRealTimeProbe;
+using CollectorType = itk::HighPriorityRealTimeProbesCollector;
 
-//typedef itk::TimeProbesCollectorBase CollectorType;
-//typedef itk::TimeProbe               ProbeType;
+//using CollectorType = itk::TimeProbesCollectorBase;
+//using ProbeType = itk::TimeProbe;
 
 
 namespace
@@ -76,9 +76,9 @@ ProbeType time_it(unsigned int threads, unsigned int iterations, bool realtime =
 {
 
   const unsigned int Dimension = 1;
-  typedef float PixelType;
+  using PixelType = float;
 
-  typedef itk::Image<PixelType,Dimension> ImageType;
+  using ImageType = itk::Image<PixelType,Dimension>;
 
   ImageType::Pointer image = ImageType::New();
 
@@ -88,9 +88,9 @@ ProbeType time_it(unsigned int threads, unsigned int iterations, bool realtime =
   image->FillBuffer(0);
 
 
-  typedef itk::UnaryFunctorImageFilter< ImageType,
+  using FilterType = itk::UnaryFunctorImageFilter< ImageType,
                                         ImageType,
-                                        Op<PixelType,PixelType > > FilterType;
+                                        Op<PixelType,PixelType > >;
 
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput(image);

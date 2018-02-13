@@ -44,13 +44,13 @@ int main( int argc, char * argv[] )
     }
 
   const unsigned int Dimension = 3;
-  typedef unsigned char InputPixelType;
-  typedef float         OutputPixelType;
+  using InputPixelType = unsigned char;
+  using OutputPixelType = float;
 
-  typedef itk::Image< InputPixelType, 3 > InputImageType;
-  typedef itk::Image< OutputPixelType, 3 > OutputImageType;
+  using InputImageType = itk::Image< InputPixelType, 3 >;
+  using OutputImageType = itk::Image< OutputPixelType, 3 >;
 
-  typedef itk::ImageFileReader< InputImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
@@ -65,7 +65,7 @@ int main( int argc, char * argv[] )
   InputImageType::Pointer inputImage = reader->GetOutput();
   inputImage->DisconnectPipeline();
 
-  typedef itk::MinMaxCurvatureFlowImageFilter< InputImageType, OutputImageType >  FilterType;
+  using FilterType = itk::MinMaxCurvatureFlowImageFilter< InputImageType, OutputImageType >;
   FilterType::Pointer filter = FilterType::New();
   filter->SetStencilRadius( 1 );
   filter->SetTimeStep( 0.0625 );
@@ -90,7 +90,7 @@ int main( int argc, char * argv[] )
   useTabs = true;
   collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
-  typedef itk::ImageFileWriter< OutputImageType >  WriterType;
+  using WriterType = itk::ImageFileWriter< OutputImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( filter->GetOutput() );

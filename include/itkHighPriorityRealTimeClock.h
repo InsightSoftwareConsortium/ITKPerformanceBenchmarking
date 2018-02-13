@@ -40,10 +40,10 @@ namespace itk
 class PerformanceBenchmarking_EXPORT HighPriorityRealTimeClock : public RealTimeClock
 {
 public:
-  typedef HighPriorityRealTimeClock   Self;
-  typedef RealTimeClock               Superclass;
-  typedef SmartPointer< Self >        Pointer;
-  typedef SmartPointer< const Self >  ConstPointer;
+  using Self = HighPriorityRealTimeClock;
+  using Superclass = RealTimeClock;
+  using Pointer = SmartPointer< Self >;
+  using ConstPointer = SmartPointer< const Self >;
 
   /** Method for defining the name of the class */
   itkTypeMacro(HighPriorityRealTimeClock, RealTimeClock);
