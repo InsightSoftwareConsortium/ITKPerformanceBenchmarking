@@ -78,7 +78,7 @@ int itkHighPriorityRealTimeProbesCollectorTest(int, char* [] )
   const unsigned int N =  1000L;
   const unsigned int M = 10000L;
 
-  const unsigned int iteration = 10;
+  constexpr unsigned int iteration = 10;
 
   for(unsigned int it=0; it<iteration; ++it)
    {
