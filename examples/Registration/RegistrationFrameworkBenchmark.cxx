@@ -31,9 +31,9 @@
 class CommandIterationUpdate : public itk::Command
 {
 public:
-  typedef CommandIterationUpdate   Self;
-  typedef itk::Command             Superclass;
-  typedef itk::SmartPointer<Self>  Pointer;
+  using Self = CommandIterationUpdate;
+  using Superclass = itk::Command;
+  using Pointer = itk::SmartPointer<Self>;
   itkNewMacro( Self );
 
 protected:
@@ -41,8 +41,8 @@ protected:
 
 public:
 
-  typedef itk::RegularStepGradientDescentOptimizerv4<double> OptimizerType;
-  typedef const OptimizerType*                               OptimizerPointer;
+  using OptimizerType = itk::RegularStepGradientDescentOptimizerv4<double>;
+  using OptimizerPointer = const OptimizerType*;
 
   void Execute(itk::Object *caller, const itk::EventObject & event) override
   {
@@ -86,12 +86,12 @@ int main( int argc, char * argv[] )
     }
 
   const unsigned int Dimension = 3;
-  typedef float  PixelType;
-  typedef double ParametersValueType;
+  using PixelType = float;
+  using ParametersValueType = double;
 
-  typedef itk::Image< PixelType, 3 > ImageType;
+  using ImageType = itk::Image< PixelType, 3 >;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( fixedImageFileName );
   try
@@ -120,7 +120,7 @@ int main( int argc, char * argv[] )
   movingImage->DisconnectPipeline();
 
 
-  typedef itk::RegularStepGradientDescentOptimizerv4< ParametersValueType > OptimizerType;
+  using OptimizerType = itk::RegularStepGradientDescentOptimizerv4< ParametersValueType >;
   OptimizerType::Pointer optimizer = OptimizerType::New();
   optimizer->SetLearningRate( 4.0 );
   optimizer->SetMinimumStepLength( 0.001 );
@@ -129,12 +129,12 @@ int main( int argc, char * argv[] )
   //CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
   //optimizer->AddObserver( itk::IterationEvent(), observer );
 
-  typedef itk::MeanSquaresImageToImageMetricv4< ImageType, ImageType > MetricType;
+  using MetricType = itk::MeanSquaresImageToImageMetricv4< ImageType, ImageType >;
   MetricType::Pointer metric = MetricType::New();
 
-  typedef itk::TranslationTransform< ParametersValueType, Dimension > TransformType;
+  using TransformType = itk::TranslationTransform< ParametersValueType, Dimension >;
 
-  typedef itk::ImageRegistrationMethodv4< ImageType, ImageType, TransformType > RegistrationType;
+  using RegistrationType = itk::ImageRegistrationMethodv4< ImageType, ImageType, TransformType >;
   RegistrationType::Pointer registration = RegistrationType::New();
   registration->SetMetric( metric );
   registration->SetOptimizer( optimizer );
@@ -175,7 +175,7 @@ int main( int argc, char * argv[] )
   registration->SetFixedImage( fixedImage );
   registration->SetMovingImage( movingImage );
 
-  typedef itk::RegistrationParameterScalesFromPhysicalShift<MetricType> ScalesEstimatorType;
+  using ScalesEstimatorType = itk::RegistrationParameterScalesFromPhysicalShift<MetricType>;
   ScalesEstimatorType::Pointer scalesEstimator = ScalesEstimatorType::New();
   scalesEstimator->SetMetric( metric );
   scalesEstimator->SetTransformForward( true );
@@ -203,7 +203,7 @@ int main( int argc, char * argv[] )
 
   TransformType::ConstPointer transform = registration->GetTransform();
 
-  typedef itk::TransformFileWriterTemplate< ParametersValueType > WriterType;
+  using WriterType = itk::TransformFileWriterTemplate< ParametersValueType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputTransformFileName );
   writer->SetInput( transform );

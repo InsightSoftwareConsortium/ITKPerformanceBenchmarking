@@ -29,21 +29,21 @@
 class CommandIterationUpdate : public itk::Command
 {
 public:
-  typedef CommandIterationUpdate                     Self;
-  typedef itk::Command                               Superclass;
-  typedef itk::SmartPointer<CommandIterationUpdate>  Pointer;
+  using Self = CommandIterationUpdate;
+  using Superclass = itk::Command;
+  using Pointer = itk::SmartPointer<CommandIterationUpdate>;
   itkNewMacro( CommandIterationUpdate );
 protected:
   CommandIterationUpdate() {};
 
-  typedef itk::Image< float, 2 >            ImageType;
-  typedef itk::Vector< float, 2 >           VectorPixelType;
-  typedef itk::Image<  VectorPixelType, 2 > DisplacementFieldType;
+  using ImageType = itk::Image< float, 2 >;
+  using VectorPixelType = itk::Vector< float, 2 >;
+  using DisplacementFieldType = itk::Image<  VectorPixelType, 2 >;
 
-  typedef itk::DemonsRegistrationFilter<
+  using RegistrationFilterType = itk::DemonsRegistrationFilter<
                               ImageType,
                               ImageType,
-                              DisplacementFieldType>   RegistrationFilterType;
+                              DisplacementFieldType>;
 
 public:
   virtual void Execute(itk::Object *caller, const itk::EventObject & event) override
@@ -84,12 +84,12 @@ int main( int argc, char * argv[] )
     }
 
   const unsigned int Dimension = 3;
-  typedef float  PixelType;
-  typedef double ParametersValueType;
+  using PixelType = float;
+  using ParametersValueType = double;
 
-  typedef itk::Image< PixelType, 3 > ImageType;
+  using ImageType = itk::Image< PixelType, 3 >;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( fixedImageFileName );
   try
@@ -118,12 +118,12 @@ int main( int argc, char * argv[] )
   movingImage->DisconnectPipeline();
 
 
-  typedef itk::Vector< float, Dimension >                VectorPixelType;
-  typedef itk::Image<  VectorPixelType, Dimension >      DisplacementFieldType;
-  typedef itk::DemonsRegistrationFilter<
+  using VectorPixelType = itk::Vector< float, Dimension >;
+  using DisplacementFieldType = itk::Image<  VectorPixelType, Dimension >;
+  using RegistrationFilterType = itk::DemonsRegistrationFilter<
                                 ImageType,
                                 ImageType,
-                                DisplacementFieldType > RegistrationFilterType;
+                                DisplacementFieldType >;
   RegistrationFilterType::Pointer filter = RegistrationFilterType::New();
 
   CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
@@ -156,7 +156,7 @@ int main( int argc, char * argv[] )
   useTabs = true;
   collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
-  typedef itk::ImageFileWriter< DisplacementFieldType > WriterType;
+  using WriterType = itk::ImageFileWriter< DisplacementFieldType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputFileName );
   writer->SetInput( filter->GetOutput() );

@@ -48,11 +48,11 @@ int main( int argc, char * argv[] )
     }
 
   const unsigned int Dimension = 3;
-  typedef float  PixelType;
+  using PixelType = float;
 
-  typedef itk::Image< PixelType, 3 > ImageType;
+  using ImageType = itk::Image< PixelType, 3 >;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
@@ -67,25 +67,25 @@ int main( int argc, char * argv[] )
   ImageType::Pointer inputImage = reader->GetOutput();
   inputImage->DisconnectPipeline();
 
-  typedef itk::CurvatureFlowImageFilter< ImageType, ImageType > SmoothingFilterType;
+  using SmoothingFilterType = itk::CurvatureFlowImageFilter< ImageType, ImageType >;
   SmoothingFilterType::Pointer smoothingFilter = SmoothingFilterType::New();
   smoothingFilter->SetInput( inputImage );
   smoothingFilter->SetNumberOfIterations( 2 );
   smoothingFilter->SetTimeStep( 0.05 );
 
-  typedef itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType, ImageType > GradientMagnitudeFilterType;
+  using GradientMagnitudeFilterType = itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType, ImageType >;
   GradientMagnitudeFilterType::Pointer gradientMagnitudeFilter = GradientMagnitudeFilterType::New();
   gradientMagnitudeFilter->SetInput( smoothingFilter->GetOutput() );
   gradientMagnitudeFilter->SetSigma( 5.0 );
 
-  typedef itk::WatershedImageFilter< ImageType > WatershedFilterType;
+  using WatershedFilterType = itk::WatershedImageFilter< ImageType >;
   WatershedFilterType::Pointer watershedFilter = WatershedFilterType::New();
   watershedFilter->SetInput( gradientMagnitudeFilter->GetOutput() );
   watershedFilter->SetThreshold( 0.0001 );
   watershedFilter->SetLevel( 0.3 );
 
-  typedef WatershedFilterType::OutputImageType LabelImageType;
-  typedef itk::RelabelComponentImageFilter< LabelImageType, LabelImageType > RelabelFilterType;
+  using LabelImageType = WatershedFilterType::OutputImageType;
+  using RelabelFilterType = itk::RelabelComponentImageFilter< LabelImageType, LabelImageType >;
   RelabelFilterType::Pointer relabelFilter = RelabelFilterType::New();
   relabelFilter->SetInput( watershedFilter->GetOutput() );
   relabelFilter->SetMinimumObjectSize( 200 );
@@ -108,7 +108,7 @@ int main( int argc, char * argv[] )
   useTabs = true;
   collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
-  typedef itk::ImageFileWriter< LabelImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< LabelImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( relabelFilter->GetOutput() );

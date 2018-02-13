@@ -46,12 +46,12 @@ int main( int argc, char * argv[] )
     }
 
   const unsigned int Dimension = 3;
-  typedef float  PixelType;
-  typedef double ParametersValueType;
+  using PixelType = float;
+  using ParametersValueType = double;
 
-  typedef itk::Image< PixelType, 3 > ImageType;
+  using ImageType = itk::Image< PixelType, 3 >;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( fixedImageFileName );
   try
@@ -80,18 +80,17 @@ int main( int argc, char * argv[] )
   movingImage->DisconnectPipeline();
 
 
-  typedef itk::FFTNormalizedCorrelationImageFilter< ImageType, ImageType >
-    CorrelationFilterType;
+  using CorrelationFilterType = itk::FFTNormalizedCorrelationImageFilter< ImageType, ImageType >;
   CorrelationFilterType::Pointer correlationFilter = CorrelationFilterType::New();
   correlationFilter->SetFixedImage( fixedImage );
   correlationFilter->SetMovingImage( movingImage );
 
-  typedef itk::FFTPadImageFilter< ImageType > PadFilterType;
+  using PadFilterType = itk::FFTPadImageFilter< ImageType >;
   PadFilterType::Pointer padFilter = PadFilterType::New();
   padFilter->SetInput( correlationFilter->GetOutput() );
   padFilter->SetSizeGreatestPrimeFactor( 2 );
 
-  typedef itk::MinimumMaximumImageCalculator< ImageType > MaximumCalculatorType;
+  using MaximumCalculatorType = itk::MinimumMaximumImageCalculator< ImageType >;
   MaximumCalculatorType::Pointer maximumCalculator = MaximumCalculatorType::New();
   maximumCalculator->SetImage( padFilter->GetOutput() );
 

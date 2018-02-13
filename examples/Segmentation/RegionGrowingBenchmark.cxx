@@ -47,13 +47,13 @@ int main( int argc, char * argv[] )
     }
 
   const unsigned int Dimension = 3;
-  typedef float                                   PixelType;
-  typedef itk::Image< PixelType, Dimension >      ImageType;
-  typedef unsigned char                           LabelPixelType;
-  typedef itk::Image< LabelPixelType, Dimension > LabelImageType;
+  using PixelType = float;
+  using ImageType = itk::Image< PixelType, Dimension >;
+  using LabelPixelType = unsigned char;
+  using LabelImageType = itk::Image< LabelPixelType, Dimension >;
 
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
@@ -68,13 +68,13 @@ int main( int argc, char * argv[] )
   ImageType::Pointer inputImage = reader->GetOutput();
   inputImage->DisconnectPipeline();
 
-  typedef itk::CurvatureFlowImageFilter< ImageType, ImageType > SmoothingFilterType;
+  using SmoothingFilterType = itk::CurvatureFlowImageFilter< ImageType, ImageType >;
   SmoothingFilterType::Pointer smoothingFilter = SmoothingFilterType::New();
   smoothingFilter->SetInput( inputImage );
   smoothingFilter->SetNumberOfIterations( 2 );
   smoothingFilter->SetTimeStep( 0.05 );
 
-  typedef itk::ConfidenceConnectedImageFilter< ImageType, LabelImageType > ConfidenceConnectedFilterType;
+  using ConfidenceConnectedFilterType = itk::ConfidenceConnectedImageFilter< ImageType, LabelImageType >;
   ConfidenceConnectedFilterType::Pointer confidenceConnectedFilter = ConfidenceConnectedFilterType::New();
   confidenceConnectedFilter->SetInput( smoothingFilter->GetOutput() );
   confidenceConnectedFilter->SetMultiplier( 2.2 );
@@ -112,7 +112,7 @@ int main( int argc, char * argv[] )
   index5[2] = 88;
   confidenceConnectedFilter->AddSeed( index5 );
 
-  typedef itk::BinaryFillholeImageFilter< LabelImageType > FillholeFilterType;
+  using FillholeFilterType = itk::BinaryFillholeImageFilter< LabelImageType >;
   FillholeFilterType::Pointer fillholeFilter = FillholeFilterType::New();
   fillholeFilter->SetInput( confidenceConnectedFilter->GetOutput() );
   fillholeFilter->SetForegroundValue( confidenceConnectedFilter->GetReplaceValue() );
@@ -135,7 +135,7 @@ int main( int argc, char * argv[] )
   useTabs = true;
   collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
-  typedef itk::ImageFileWriter< LabelImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< LabelImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( fillholeFilter->GetOutput() );

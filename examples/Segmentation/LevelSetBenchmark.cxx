@@ -50,11 +50,11 @@ int main( int argc, char * argv[] )
     }
 
   const unsigned int Dimension = 3;
-  typedef float  PixelType;
+  using PixelType = float;
 
-  typedef itk::Image< PixelType, 3 > ImageType;
+  using ImageType = itk::Image< PixelType, 3 >;
 
-  typedef itk::ImageFileReader< ImageType > ReaderType;
+  using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( inputImageFileName );
   try
@@ -69,19 +69,19 @@ int main( int argc, char * argv[] )
   ImageType::Pointer inputImage = reader->GetOutput();
   inputImage->DisconnectPipeline();
 
-  typedef itk::CurvatureAnisotropicDiffusionImageFilter< ImageType, ImageType >  SmoothingFilterType;
+  using SmoothingFilterType = itk::CurvatureAnisotropicDiffusionImageFilter< ImageType, ImageType >;
   SmoothingFilterType::Pointer smoothingFilter = SmoothingFilterType::New();
   smoothingFilter->SetInput( inputImage );
   smoothingFilter->SetNumberOfIterations( 5 );
   smoothingFilter->SetTimeStep( 0.0625 );
   smoothingFilter->SetConductanceParameter( 12.0 );
 
-  typedef itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType, ImageType > GradientMagnitudeFilterType;
+  using GradientMagnitudeFilterType = itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType, ImageType >;
   GradientMagnitudeFilterType::Pointer gradientMagnitudeFilter = GradientMagnitudeFilterType::New();
   gradientMagnitudeFilter->SetInput( smoothingFilter->GetOutput() );
   gradientMagnitudeFilter->SetSigma( 1.0 );
 
-  typedef itk::SigmoidImageFilter< ImageType, ImageType >  SigmoidFilterType;
+  using SigmoidFilterType = itk::SigmoidImageFilter< ImageType, ImageType >;
   SigmoidFilterType::Pointer sigmoidFilter = SigmoidFilterType::New();
   sigmoidFilter->SetInput( gradientMagnitudeFilter->GetOutput() );
   sigmoidFilter->SetOutputMinimum( 0.0 );
@@ -89,9 +89,9 @@ int main( int argc, char * argv[] )
   sigmoidFilter->SetAlpha( -0.5 );
   sigmoidFilter->SetBeta( 3.0 );
 
-  typedef itk::FastMarchingImageFilter< ImageType, ImageType > FastMarchingFilterType;
+  using FastMarchingFilterType = itk::FastMarchingImageFilter< ImageType, ImageType >;
   FastMarchingFilterType::Pointer fastMarchingFilter = FastMarchingFilterType::New();
-  typedef FastMarchingFilterType::NodeType NodeType;
+  using NodeType = FastMarchingFilterType::NodeType;
   NodeType node;
   ImageType::IndexType seedPosition;
   seedPosition[0] = 77;
@@ -99,7 +99,7 @@ int main( int argc, char * argv[] )
   seedPosition[2] = 35;
   node.SetIndex( seedPosition );
   node.SetValue( -5. );
-  typedef FastMarchingFilterType::NodeContainer NodeContainerType;
+  using NodeContainerType = FastMarchingFilterType::NodeContainer;
   NodeContainerType::Pointer seeds = NodeContainerType::New();
   seeds->Initialize();
   seeds->InsertElement( 0, node );
@@ -114,7 +114,7 @@ int main( int argc, char * argv[] )
   fastMarchingFilter->SetOutputSize( inputImage->GetLargestPossibleRegion().GetSize() );
   fastMarchingFilter->SetOutputOrigin( inputImage->GetOrigin() );
 
-  typedef itk::ShapeDetectionLevelSetImageFilter< ImageType, ImageType > ShapeDetectionFilterType;
+  using ShapeDetectionFilterType = itk::ShapeDetectionLevelSetImageFilter< ImageType, ImageType >;
   ShapeDetectionFilterType::Pointer shapeDetectionFilter = ShapeDetectionFilterType::New();
   shapeDetectionFilter->SetInput( fastMarchingFilter->GetOutput() );
   shapeDetectionFilter->SetPropagationScaling( 1.0 );
@@ -124,10 +124,9 @@ int main( int argc, char * argv[] )
   shapeDetectionFilter->SetInput( fastMarchingFilter->GetOutput() );
   shapeDetectionFilter->SetFeatureImage( sigmoidFilter->GetOutput() );
 
-  typedef unsigned char                           LabelPixelType;
-  typedef itk::Image< LabelPixelType, Dimension > LabelImageType;
-  typedef itk::BinaryThresholdImageFilter< ImageType, LabelImageType >
-    ThresholdingFilterType;
+  using LabelPixelType = unsigned char;
+  using LabelImageType = itk::Image< LabelPixelType, Dimension >;
+  using ThresholdingFilterType = itk::BinaryThresholdImageFilter< ImageType, LabelImageType >;
   ThresholdingFilterType::Pointer thresholdingFilter = ThresholdingFilterType::New();
   thresholdingFilter->SetInput( shapeDetectionFilter->GetOutput() );
   thresholdingFilter->SetLowerThreshold( itk::NumericTraits< PixelType >::NonpositiveMin() );
@@ -153,7 +152,7 @@ int main( int argc, char * argv[] )
   useTabs = true;
   collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
 
-  typedef itk::ImageFileWriter< LabelImageType > WriterType;
+  using WriterType = itk::ImageFileWriter< LabelImageType >;
   WriterType::Pointer writer = WriterType::New();
   writer->SetFileName( outputImageFileName );
   writer->SetInput( thresholdingFilter->GetOutput() );
