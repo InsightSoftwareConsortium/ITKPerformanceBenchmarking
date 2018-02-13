@@ -75,7 +75,7 @@ public:
 ProbeType time_it(unsigned int threads, unsigned int iterations, bool realtime = true)
 {
 
-  const unsigned int Dimension = 1;
+  constexpr unsigned int Dimension = 1;
   using PixelType = float;
 
   using ImageType = itk::Image<PixelType,Dimension>;
