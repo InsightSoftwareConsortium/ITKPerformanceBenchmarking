@@ -26,3 +26,8 @@ module.  To enable it, set::
   Module_PerformanceBenchmarking:BOOL=ON
 
 in ITK's CMake build configuration.
+
+
+# Driving performance benchmarks for a given ITK source tree
+
+  See ITK_PerformanceTestingDriver.sh in this directory

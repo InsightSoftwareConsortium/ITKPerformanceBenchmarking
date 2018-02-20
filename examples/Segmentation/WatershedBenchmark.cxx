@@ -24,6 +24,7 @@
 #include "itkRelabelComponentImageFilter.h"
 
 #include "itkHighPriorityRealTimeProbesCollector.h"
+#include "PerformanceBenchmarkingUtilities.h"
 
 #include <fstream>
 
@@ -36,7 +37,7 @@ int main( int argc, char * argv[] )
     std::cerr << argv[0] << " timingsFile iterations threads inputImageFile outputImageFile" << std::endl;
     return EXIT_FAILURE;
     }
-  const char * timingsFileName = argv[1];
+  const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
   const int iterations = atoi( argv[2] );
   int threads = atoi( argv[3] );
   const char * inputImageFileName = argv[4];
@@ -50,7 +51,7 @@ int main( int argc, char * argv[] )
   constexpr unsigned int Dimension = 3;
   using PixelType = float;
 
-  using ImageType = itk::Image< PixelType, 3 >;
+  using ImageType = itk::Image< PixelType, Dimension >;
 
   using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
@@ -98,15 +99,8 @@ int main( int argc, char * argv[] )
     relabelFilter->UpdateLargestPossibleRegion();
     collector.Stop("Watershed");
     }
-  bool printSystemInfo = true;
-  bool printReportHead = true;
-  bool useTabs = false;
-  collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
 
-  std::ofstream timingsFile( timingsFileName, std::ios::out );
-  printSystemInfo = false;
-  useTabs = true;
-  collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
+  WriteExpandedReport(timingsFileName, collector, true, true, false);
 
   using WriterType = itk::ImageFileWriter< LabelImageType >;
   WriterType::Pointer writer = WriterType::New();

@@ -34,7 +34,7 @@ CMakeLists.txt.user*
 
 # Clion editor internal project information
 .idea
-./cmake-build*
+cmake-build*/**
 
 # Mac System File
 .DS_Store
