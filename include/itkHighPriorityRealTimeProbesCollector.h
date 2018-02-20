@@ -18,7 +18,7 @@
 #ifndef itkHighPriorityRealTimeProbesCollector_h
 #define itkHighPriorityRealTimeProbesCollector_h
 
-#include "itkResourceProbesCollectorBase.h"
+#include "LOCAL_itkResourceProbesCollectorBase.h"
 #include "itkHighPriorityRealTimeProbe.h"
 #include <map>
 
@@ -40,7 +40,7 @@ namespace itk
  *
  */
 class PerformanceBenchmarking_EXPORT HighPriorityRealTimeProbesCollector:
-  public ResourceProbesCollectorBase< HighPriorityRealTimeProbe >
+  public LOCAL_ResourceProbesCollectorBase< HighPriorityRealTimeProbe >
 {
 public:
   /** Constructor */

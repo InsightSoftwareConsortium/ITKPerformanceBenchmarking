@@ -18,7 +18,7 @@
 #ifndef itkHighPriorityRealTimeProbe_h
 #define itkHighPriorityRealTimeProbe_h
 
-#include "itkResourceProbe.h"
+#include "LOCAL_itkResourceProbe.h"
 #include "itkHighPriorityRealTimeClock.h"
 
 namespace itk
@@ -38,7 +38,7 @@ namespace itk
  *
  */
 class PerformanceBenchmarking_EXPORT HighPriorityRealTimeProbe: public
-  ResourceProbe< HighPriorityRealTimeClock::TimeStampType, HighPriorityRealTimeClock::TimeStampType >
+  LOCAL_ResourceProbe< HighPriorityRealTimeClock::TimeStampType, HighPriorityRealTimeClock::TimeStampType >
 {
 public:
 

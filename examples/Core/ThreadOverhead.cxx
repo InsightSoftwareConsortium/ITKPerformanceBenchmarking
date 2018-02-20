@@ -24,6 +24,7 @@
 
 #include <sstream>
 #include <fstream>
+#include "PerformanceBenchmarkingUtilities.h"
 
 // This benchmark estimate the overhead for using an additional thread
 // in an ImageFilter a.k.a the time it takes to "spawn" a thread.
@@ -125,7 +126,7 @@ int main( int argc, char * argv[] )
     return EXIT_FAILURE;
     }
 
-  const char * timingsFileName = argv[1];
+  const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
   const int iterations = (argc>2) ? atoi( argv[2] ): 500;
   const int threads = (argc>3) ? atoi( argv[3] ) : itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
 
@@ -136,19 +137,9 @@ int main( int argc, char * argv[] )
     }
 
   ProbeType t1 = time_it(1,iterations);
-
   ProbeType t2 = time_it(threads,iterations);
 
-
-  bool printReportHead = true;
-  bool printSystemInfo = true;
-  bool useTabs = false;
-  collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
-
-  std::ofstream timingsFile( timingsFileName, std::ios::out );
-  printSystemInfo = false;
-  useTabs = true;
-  collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
+  WriteExpandedReport(timingsFileName,collector,true,true,false);
 
   double cost = (t2.GetMinimum() - t1.GetMinimum())/(threads-1.0);
 

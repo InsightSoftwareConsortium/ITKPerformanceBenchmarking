@@ -20,7 +20,7 @@ target_link_libraries(RegionGrowingBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME RegionGrowingBenchmark
   COMMAND RegionGrowingBenchmark
-    ${TEST_OUTPUT_DIR}/RegionGrowingBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/RegionGrowingBenchmark__DATESTAMP__.json
     3
     -1
     ${BRAIN_IMAGE}
@@ -33,7 +33,7 @@ target_link_libraries(WatershedBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME WatershedBenchmark
   COMMAND WatershedBenchmark
-    ${TEST_OUTPUT_DIR}/WatershedBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/WatershedBenchmark__DATESTAMP__.json
     3
     -1
     DATA{../Data/Input/brainweb165a10f17extract45i90z.mha}
@@ -46,7 +46,7 @@ target_link_libraries(LevelSetBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME LevelSetBenchmark
   COMMAND LevelSetBenchmark
-    ${TEST_OUTPUT_DIR}/LevelSetBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/LevelSetBenchmark__DATESTAMP__.json
     3
     -1
     DATA{../Data/Input/brainweb165a10f17extract60i50z.mha}

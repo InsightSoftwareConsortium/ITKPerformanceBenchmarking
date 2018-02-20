@@ -19,14 +19,12 @@
 #include "itkImageFileReader.h"
 #include "itkTransformFileWriter.h"
 #include "itkImageRegistrationMethodv4.h"
-#include "itkTranslationTransform.h"
 #include "itkMeanSquaresImageToImageMetricv4.h"
 #include "itkRegularStepGradientDescentOptimizerv4.h"
-#include "itkCommand.h"
 
 #include "itkHighPriorityRealTimeProbesCollector.h"
+#include "PerformanceBenchmarkingUtilities.h"
 
-#include <fstream>
 
 class CommandIterationUpdate : public itk::Command
 {
@@ -73,7 +71,7 @@ int main( int argc, char * argv[] )
     std::cerr << argv[0] << " timingsFile iterations threads fixedImageFile movingImageFile outputTransformFileName" << std::endl;
     return EXIT_FAILURE;
     }
-  const char * timingsFileName = argv[1];
+  const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
   const int iterations = atoi( argv[2] );
   int threads = atoi( argv[3] );
   const char * fixedImageFileName = argv[4];
@@ -191,16 +189,8 @@ int main( int argc, char * argv[] )
     registration->Update();
     collector.Stop("RegistrationFramework");
     }
-  bool printSystemInfo = true;
-  bool printReportHead = true;
-  bool useTabs = false;
-  collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
 
-  std::ofstream timingsFile( timingsFileName, std::ios::out );
-  printSystemInfo = false;
-  useTabs = true;
-  collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
-
+  WriteExpandedReport(timingsFileName,collector,true,true,false);
   TransformType::ConstPointer transform = registration->GetTransform();
 
   using WriterType = itk::TransformFileWriterTemplate< ParametersValueType >;

@@ -16,7 +16,7 @@ target_link_libraries(MedianBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME MedianBenchmark
   COMMAND MedianBenchmark
-    ${TEST_OUTPUT_DIR}/MedianBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/MedianBenchmark__DATESTAMP__.json
     3
     -1
     ${BRAIN_IMAGE}
@@ -29,7 +29,7 @@ target_link_libraries(GradientMagnitudeBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME GradientMagnitudeBenchmark
   COMMAND GradientMagnitudeBenchmark
-    ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark__DATESTAMP__.json
     16
     -1
     ${BRAIN_IMAGE}
@@ -40,7 +40,7 @@ set_property(TEST GradientMagnitudeBenchmark APPEND PROPERTY LABELS Filtering)
 ExternalData_Add_Test(ITKBenchmarksData
   NAME GradientMagnitudeBenchmark1Thread
   COMMAND GradientMagnitudeBenchmark
-    ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark1Thread.tsv
+    ${TEST_OUTPUT_DIR}/GradientMagnitudeBenchmark1Thread__DATESTAMP__.json
     3
     1
     ${BRAIN_IMAGE}
@@ -53,7 +53,7 @@ target_link_libraries(MinMaxCurvatureFlowBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME MinMaxCurvatureFlowBenchmark
   COMMAND MinMaxCurvatureFlowBenchmark
-    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowBenchmark.tsv
+    ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowBenchmark__DATESTAMP__.json
     3
     -1
     ${BRAIN_IMAGE}

@@ -23,6 +23,7 @@
 #include "itkCommand.h"
 
 #include "itkHighPriorityRealTimeProbesCollector.h"
+#include "PerformanceBenchmarkingUtilities.h"
 
 #include <fstream>
 
@@ -71,7 +72,7 @@ int main( int argc, char * argv[] )
     std::cerr << argv[0] << " timingsFile threads fixedImageFile movingImageFile outputDisplacementFieldFileName" << std::endl;
     return EXIT_FAILURE;
     }
-  const char * timingsFileName = argv[1];
+  const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
   const int iterations = atoi( argv[2] );
   int threads = atoi( argv[3] );
   const char * fixedImageFileName = argv[4];
@@ -146,15 +147,8 @@ int main( int argc, char * argv[] )
     filter->UpdateLargestPossibleRegion();
     collector.Stop("DemonsRegistration");
     }
-  bool printSystemInfo = true;
-  bool printReportHead = true;
-  bool useTabs = false;
-  collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
 
-  std::ofstream timingsFile( timingsFileName, std::ios::out );
-  printSystemInfo = false;
-  useTabs = true;
-  collector.ExpandedReport( timingsFile, printSystemInfo, printReportHead, useTabs );
+  WriteExpandedReport(timingsFileName,collector,true,true,false);
 
   using WriterType = itk::ImageFileWriter< DisplacementFieldType >;
   WriterType::Pointer writer = WriterType::New();
