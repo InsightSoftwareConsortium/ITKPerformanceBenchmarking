@@ -55,3 +55,5 @@ ExternalData_Add_Test(ITKBenchmarksData
     DATA{../Data/Input/brainweb165a10f17translated-1x-1y1zextract88i5z.mha}
   )
 set_property(TEST NormalizedCorrelationBenchmark APPEND PROPERTY LABELS Registration)
+## performance tests should not be run in parallel
+set_tests_properties(RegistrationFrameworkBenchmark DemonsRegistrationBenchmark NormalizedCorrelationBenchmark PROPERTIES RUN_SERIAL TRUE)

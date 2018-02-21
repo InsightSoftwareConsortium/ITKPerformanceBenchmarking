@@ -16,3 +16,5 @@ add_test(
   ${TEST_OUTPUT_DIR}/ThreadOverheadBenchmark.tsv
   1000 )
 set_property(TEST ThreadOverheadBenchmark APPEND PROPERTY LABELS Core)
+## performance tests should not be run in parallel
+set_tests_properties(ThreadOverheadBenchmark PROPERTIES RUN_SERIAL TRUE)
