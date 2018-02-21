@@ -53,3 +53,5 @@ ExternalData_Add_Test(ITKBenchmarksData
     ${TEST_OUTPUT_DIR}/LevelSetBenchmark.mha
   )
 set_property(TEST LevelSetBenchmark APPEND PROPERTY LABELS Segmentation)
+## performance tests should not be run in parallel
+set_tests_properties(RegionGrowingBenchmark WatershedBenchmark LevelSetBenchmark PROPERTIES RUN_SERIAL TRUE)

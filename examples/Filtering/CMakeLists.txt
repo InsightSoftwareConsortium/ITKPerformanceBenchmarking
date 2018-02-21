@@ -60,3 +60,6 @@ ExternalData_Add_Test(ITKBenchmarksData
     ${TEST_OUTPUT_DIR}/MinMaxCurvatureFlowBenchmark.mha
   )
 set_property(TEST MinMaxCurvatureFlowBenchmark APPEND PROPERTY LABELS Filtering)
+
+## performance tests should not be run in parallel
+set_tests_properties(MedianBenchmark GradientMagnitudeBenchmark MinMaxCurvatureFlowBenchmark PROPERTIES RUN_SERIAL TRUE)
