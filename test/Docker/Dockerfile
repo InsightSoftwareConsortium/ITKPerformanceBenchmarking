@@ -6,7 +6,6 @@ RUN REPO=http://cdn-fastly.deb.debian.org && \
 
 RUN apt-get update && apt-get install -y \
   build-essential \
-  cmake \
   git \
   libexpat1-dev \
   libhdf5-dev \
@@ -15,8 +14,14 @@ RUN apt-get update && apt-get install -y \
   libtiff5-dev \
   python \
   ninja-build \
+  wget \
   zlib1g-dev \
   && apt-get clean
+
+RUN wget https://cmake.org/files/v3.11/cmake-3.11.0-rc1-Linux-x86_64.sh && \
+  chmod +x cmake-3.11.0-rc1-Linux-x86_64.sh && \
+  ./cmake-3.11.0-rc1-Linux-x86_64.sh --prefix=/usr/ --skip-license && \
+  rm cmake-3.11.0-rc1-Linux-x86_64.sh
 
 RUN mkdir -p /usr/src/ITKPerformanceBenchmarking-build && \
   mkdir -p /usr/src/ITKBenchmarks-build
