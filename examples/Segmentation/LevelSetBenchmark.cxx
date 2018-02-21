@@ -46,7 +46,7 @@ int main( int argc, char * argv[] )
 
   if( threads > 0 )
     {
-    itk::MultiThreader::SetGlobalDefaultNumberOfThreads( threads );
+    itk::MultiThreaderBase::SetGlobalDefaultNumberOfThreads( threads );
     }
 
   const unsigned int Dimension = 3;
