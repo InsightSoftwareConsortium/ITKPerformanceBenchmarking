@@ -23,9 +23,9 @@ RUN wget https://cmake.org/files/v3.11/cmake-3.11.0-rc1-Linux-x86_64.sh && \
   ./cmake-3.11.0-rc1-Linux-x86_64.sh --prefix=/usr/ --skip-license && \
   rm cmake-3.11.0-rc1-Linux-x86_64.sh
 
-RUN mkdir -p /usr/src/ITKPerformanceBenchmarking-build && \
-  mkdir -p /usr/src/ITKBenchmarks-build
-WORKDIR /usr/src
+RUN mkdir -p /ITKPerformanceBenchmarking-build && \
+  mkdir -p /ITKBenchmarks-build
+WORKDIR /
 
 # ITK master 2018-02-21
 ENV ITK_GIT_TAG a1a52797b0c1217a5f0ced1ef51fc9a2d04e8802
