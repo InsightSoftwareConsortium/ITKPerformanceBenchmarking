@@ -6,6 +6,7 @@ RUN REPO=http://cdn-fastly.deb.debian.org && \
 
 RUN apt-get update && apt-get install -y \
   build-essential \
+  curl \
   git \
   libexpat1-dev \
   libhdf5-dev \
