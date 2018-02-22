@@ -28,8 +28,8 @@ RUN mkdir -p /ITKPerformanceBenchmarking-build && \
   mkdir -p /ITKBenchmarks-build
 WORKDIR /
 
-# ITK master 2018-02-21
-ENV ITK_GIT_TAG a1a52797b0c1217a5f0ced1ef51fc9a2d04e8802
+# ITK master 2018-02-22
+ENV ITK_GIT_TAG 4b1e6c03f1f9f07f2d97521103d5f438eef95d52
 RUN git clone https://github.com/InsightSoftwareConsortium/ITK.git && \
   cd ITK && \
   git checkout ${ITK_GIT_TAG} && \
