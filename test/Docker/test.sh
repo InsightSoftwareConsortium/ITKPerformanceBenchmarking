@@ -23,7 +23,6 @@ set(CTEST_SOURCE_DIRECTORY /ITKPerformanceBenchmarking)
 set(CTEST_BINARY_DIRECTORY /ITKPerformanceBenchmarking-build)
 set(dashboard_model Experimental)
 set(dashboard_no_clean 1)
-set(dashboard_no_update 1)
 set(dashboard_cache "
 ITK_DIR:PATH=/ITK-build
 BUILD_TESTING:BOOL=ON
@@ -44,7 +43,6 @@ set(CTEST_SOURCE_DIRECTORY /ITKPerformanceBenchmarking/examples)
 set(CTEST_BINARY_DIRECTORY /ITKBenchmarks-build)
 set(dashboard_model Experimental)
 set(dashboard_no_clean 1)
-set(dashboard_no_update 1)
 set(dashboard_cache "
 ITK_DIR:PATH=/ITK-build
 ")
