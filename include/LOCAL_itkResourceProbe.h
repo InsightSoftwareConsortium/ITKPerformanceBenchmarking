@@ -37,7 +37,7 @@ namespace itk
   *
   *   \sa TimeResourceProbe, MemoryResourceProbe
   *
-  * \ingroup ITKCommon
+  * \ingroup PerformanceBenchmarking
   */
 template< typename ValueType, typename MeanType >
 class ITK_TEMPLATE_EXPORT LOCAL_ResourceProbe

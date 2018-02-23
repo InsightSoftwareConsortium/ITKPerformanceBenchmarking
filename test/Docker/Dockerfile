@@ -6,7 +6,7 @@ RUN REPO=http://cdn-fastly.deb.debian.org && \
 
 RUN apt-get update && apt-get install -y \
   build-essential \
-  cmake \
+  curl \
   git \
   libexpat1-dev \
   libhdf5-dev \
@@ -15,15 +15,21 @@ RUN apt-get update && apt-get install -y \
   libtiff5-dev \
   python \
   ninja-build \
+  wget \
   zlib1g-dev \
   && apt-get clean
 
-RUN mkdir -p /usr/src/ITKPerformanceBenchmarking-build && \
-  mkdir -p /usr/src/ITKBenchmarks-build
-WORKDIR /usr/src
+RUN wget https://cmake.org/files/v3.11/cmake-3.11.0-rc1-Linux-x86_64.sh && \
+  chmod +x cmake-3.11.0-rc1-Linux-x86_64.sh && \
+  ./cmake-3.11.0-rc1-Linux-x86_64.sh --prefix=/usr/ --skip-license && \
+  rm cmake-3.11.0-rc1-Linux-x86_64.sh
 
-# ITK master 2017-07-18
-ENV ITK_GIT_TAG 72e9386064c583701a35502f661c94d9f4d5884a
+RUN mkdir -p /ITKPerformanceBenchmarking-build && \
+  mkdir -p /ITKBenchmarks-build
+WORKDIR /
+
+# ITK master 2018-02-22
+ENV ITK_GIT_TAG 4b1e6c03f1f9f07f2d97521103d5f438eef95d52
 RUN git clone https://github.com/InsightSoftwareConsortium/ITK.git && \
   cd ITK && \
   git checkout ${ITK_GIT_TAG} && \

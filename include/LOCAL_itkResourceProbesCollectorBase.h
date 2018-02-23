@@ -32,7 +32,7 @@ namespace itk
  *
  *  \sa LOCAL_ResourceProbe
  *
- * \ingroup ITKCommon
+ * \ingroup PerformanceBenchmarking
  */
 template< typename TProbe >
 class ITK_TEMPLATE_EXPORT LOCAL_ResourceProbesCollectorBase
