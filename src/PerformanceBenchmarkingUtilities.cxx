@@ -86,7 +86,7 @@ std::string PerfDateStamp()
 {
   std::time_t t = std::time(nullptr);
   char mbstr[100];
-  if (std::strftime(mbstr, sizeof(mbstr), "%F-%T", std::localtime(&t))) {
+  if (std::strftime(mbstr, sizeof(mbstr), "%F-%H.%M.%S", std::localtime(&t))) {
     return mbstr;
   }
   return "";
