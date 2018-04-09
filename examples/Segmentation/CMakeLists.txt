@@ -41,6 +41,20 @@ ExternalData_Add_Test(ITKBenchmarksData
   )
 set_property(TEST WatershedBenchmark APPEND PROPERTY LABELS Segmentation)
 
+
+add_executable(MorphologicalWatershedBenchmark MorphologicalWatershedBenchmark.cxx)
+target_link_libraries(MorphologicalWatershedBenchmark ${ITK_LIBRARIES})
+ExternalData_Add_Test(ITKBenchmarksData
+  NAME MorphologicalWatershedBenchmark
+  COMMAND MorphologicalWatershedBenchmark
+    ${TEST_OUTPUT_DIR}/MorphologicalWatershedBenchmark__DATESTAMP__.json
+    3
+    DATA{../Data/Input/brainweb165a10f17extract45i90z.mha}
+    ${TEST_OUTPUT_DIR}/MorphologicalWatershedBenchmark.mha
+  )
+set_property(TEST MorphologicalWatershedBenchmark APPEND PROPERTY LABELS Segmentation)
+
+
 add_executable(LevelSetBenchmark LevelSetBenchmark.cxx)
 target_link_libraries(LevelSetBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
