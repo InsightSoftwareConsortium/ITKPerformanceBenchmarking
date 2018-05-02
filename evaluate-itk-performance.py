@@ -139,8 +139,8 @@ itk_information = extract_itk_information(args.src)
 print(itk_information)
 
 
-# print('\nBuilding ITK...')
-# build_itk(args.src, args.bin)
+print('\nBuilding ITK...')
+build_itk(args.src, args.bin)
 
 itk_has_buildinformation = check_for_build_information(args.src)
 
