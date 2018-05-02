@@ -104,7 +104,7 @@ std::string ReplaceOccurrence( std::string str,
   }
   static const std::string under{"_"};
   /* Make the replacement. */
-  str.replace(index, findvalue.size(), under + replacevalue + under + PerformanceGuessGitHash() );
+  str.replace(index, findvalue.size(), replacevalue + under + PerformanceGuessGitHash().substr( 0, 10 ) + under );
   return str;
 }
 

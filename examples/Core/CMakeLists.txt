@@ -13,7 +13,7 @@ target_link_libraries(ThreadOverheadBenchmark ${ITK_LIBRARIES})
 add_test(
   NAME ThreadOverheadBenchmark
   COMMAND ThreadOverheadBenchmark
-  ${METRICS_OUTPUT_DIR}/ThreadOverheadBenchmark__DATESTAMP__.json
+  ${METRICS_OUTPUT_DIR}/__DATESTAMP__ThreadOverheadBenchmark.json
   1000 )
 set_property(TEST ThreadOverheadBenchmark APPEND PROPERTY LABELS Core)
 ## performance tests should not be run in parallel
