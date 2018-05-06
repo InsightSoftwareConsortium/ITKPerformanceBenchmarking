@@ -20,7 +20,7 @@ target_link_libraries(RegistrationFrameworkBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME RegistrationFrameworkBenchmark
   COMMAND RegistrationFrameworkBenchmark
-    ${TEST_OUTPUT_DIR}/RegistrationFrameworkBenchmark__DATESTAMP__.json
+    ${METRICS_OUTPUT_DIR}/__DATESTAMP__RegistrationFrameworkBenchmark.json
     3
     -1
     ${BRAIN_IMAGE}
@@ -34,7 +34,7 @@ target_link_libraries(DemonsRegistrationBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME DemonsRegistrationBenchmark
   COMMAND DemonsRegistrationBenchmark
-    ${TEST_OUTPUT_DIR}/DemonsRegistrationBenchmark__DATESTAMP__.json
+    ${METRICS_OUTPUT_DIR}/__DATESTAMP__DemonsRegistrationBenchmark.json
     3
     -1
     ${BRAIN_IMAGE}
@@ -48,7 +48,7 @@ target_link_libraries(NormalizedCorrelationBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME NormalizedCorrelationBenchmark
   COMMAND NormalizedCorrelationBenchmark
-    ${TEST_OUTPUT_DIR}/NormalizedCorrelationBenchmark__DATESTAMP__.json
+    ${METRICS_OUTPUT_DIR}/__DATESTAMP__NormalizedCorrelationBenchmark.json
     3
     -1
     DATA{../Data/Input/brainweb165a10f17extract88i5z.mha}

@@ -13,8 +13,6 @@ run_parser = subparsers.add_parser('run',
         help='build ITK and build and run the benchmarks')
 run_parser.add_argument('src', help='ITK source directory')
 run_parser.add_argument('bin', help='ITK build directory')
-run_parser.add_argument('benchmark_src',
-        help='ITK performance benchmarks source directory')
 run_parser.add_argument('benchmark_bin',
         help='ITK performance benchmarks build directory')
 run_parser.add_argument('-g', '--git-tag',
@@ -44,7 +42,7 @@ def check_for_required_programs():
         sys.stderr.write("Could not run 'ninja', please install the Ninja build tool\n")
         sys.exit(1)
 
-def create_run_directories(itk_src, itk_bin, benchmark_src, benchmark_bin, git_tag):
+def create_run_directories(itk_src, itk_bin, benchmark_bin, git_tag):
     if not os.path.exists(os.path.join(itk_src, '.git')):
         dirname = os.path.dirname(itk_src)
         if not os.path.exists(dirname):
@@ -58,13 +56,6 @@ def create_run_directories(itk_src, itk_bin, benchmark_src, benchmark_bin, git_t
 
     if not os.path.exists(itk_bin):
         os.makedirs(itk_bin)
-
-    if not os.path.exists(os.path.join(benchmark_src, '.git')):
-        dirname = os.path.dirname(benchmark_src)
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
-        subprocess.check_call(['git', 'clone',
-            'https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking.git', benchmark_src])
 
     if not os.path.exists(benchmark_bin):
         os.makedirs(benchmark_bin)
@@ -129,9 +120,10 @@ def run_benchmarks(benchmark_bin):
     subprocess.check_call(['ctest'])
 
 check_for_required_programs()
+benchmark_src = os.path.abspath(os.path.dirname(__file__))
 
 create_run_directories(args.src, args.bin,
-        args.benchmark_src, args.benchmark_bin,
+        args.benchmark_bin,
         args.git_tag)
 
 print('\n\nITK Repository Information:')
@@ -139,13 +131,13 @@ itk_information = extract_itk_information(args.src)
 print(itk_information)
 
 
-# print('\nBuilding ITK...')
-# build_itk(args.src, args.bin)
+print('\nBuilding ITK...')
+build_itk(args.src, args.bin)
 
 itk_has_buildinformation = check_for_build_information(args.src)
 
 print('\nBuilding benchmarks...')
-build_benchmarks(args.benchmark_src, args.benchmark_bin, args.bin,
+build_benchmarks(benchmark_src, args.benchmark_bin, args.bin,
         itk_has_buildinformation)
 
 print('\nRunning benchmarks...')
