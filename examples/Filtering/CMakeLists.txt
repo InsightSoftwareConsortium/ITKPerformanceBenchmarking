@@ -16,7 +16,7 @@ target_link_libraries(MedianBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME MedianBenchmark
   COMMAND MedianBenchmark
-  ${METRICS_OUTPUT_DIR}/__DATESTAMP__MedianBenchmark.json
+  ${BENCHMARK_RESULTS_OUTPUT_DIR}/__DATESTAMP__MedianBenchmark.json
     3
     -1
     ${BRAIN_IMAGE}
@@ -29,7 +29,7 @@ target_link_libraries(BinaryAddBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME BinaryAddBenchmark
   COMMAND BinaryAddBenchmark
-    ${METRICS_OUTPUT_DIR}/__DATESTAMP__BinaryAddBenchmark.json
+    ${BENCHMARK_RESULTS_OUTPUT_DIR}/__DATESTAMP__BinaryAddBenchmark.json
     50
     1
     ${BRAIN_IMAGE}
@@ -43,7 +43,7 @@ target_link_libraries(UnaryAddBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME UnaryAddBenchmark
   COMMAND UnaryAddBenchmark
-    ${METRICS_OUTPUT_DIR}/__DATESTAMP__UnaryAddBenchmark.json
+    ${BENCHMARK_RESULTS_OUTPUT_DIR}/__DATESTAMP__UnaryAddBenchmark.json
     50
     1
     ${BRAIN_IMAGE}
@@ -58,7 +58,7 @@ target_link_libraries(GradientMagnitudeBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME GradientMagnitudeBenchmark
   COMMAND GradientMagnitudeBenchmark
-    ${METRICS_OUTPUT_DIR}/__DATESTAMP__GradientMagnitudeBenchmark.json
+    ${BENCHMARK_RESULTS_OUTPUT_DIR}/__DATESTAMP__GradientMagnitudeBenchmark.json
     16
     -1
     ${BRAIN_IMAGE}
@@ -69,7 +69,7 @@ set_property(TEST GradientMagnitudeBenchmark APPEND PROPERTY LABELS Filtering)
 ExternalData_Add_Test(ITKBenchmarksData
   NAME GradientMagnitudeBenchmark1Thread
   COMMAND GradientMagnitudeBenchmark
-    ${METRICS_OUTPUT_DIR}/__DATESTAMP__GradientMagnitudeBenchmark1Thread.json
+    ${BENCHMARK_RESULTS_OUTPUT_DIR}/__DATESTAMP__GradientMagnitudeBenchmark1Thread.json
     3
     1
     ${BRAIN_IMAGE}
@@ -82,7 +82,7 @@ target_link_libraries(MinMaxCurvatureFlowBenchmark ${ITK_LIBRARIES})
 ExternalData_Add_Test(ITKBenchmarksData
   NAME MinMaxCurvatureFlowBenchmark
   COMMAND MinMaxCurvatureFlowBenchmark
-    ${METRICS_OUTPUT_DIR}/__DATESTAMP__MinMaxCurvatureFlowBenchmark.json
+    ${BENCHMARK_RESULTS_OUTPUT_DIR}/__DATESTAMP__MinMaxCurvatureFlowBenchmark.json
     3
     -1
     ${BRAIN_IMAGE}
