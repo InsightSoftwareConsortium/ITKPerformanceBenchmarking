@@ -4,10 +4,12 @@ import argparse
 import subprocess
 import sys
 import os
+import socket
 
 parser = argparse.ArgumentParser(prog='evaluate-itk-performance')
 
-subparsers = parser.add_subparsers(help='subcommands for individual steps')
+subparsers = parser.add_subparsers(help='subcommands for individual steps',
+        dest='command')
 
 run_parser = subparsers.add_parser('run',
         help='build ITK and build and run the benchmarks')
@@ -18,29 +20,43 @@ run_parser.add_argument('benchmark_bin',
 run_parser.add_argument('-g', '--git-tag',
         help='ITK Git tag', default='master')
 
+upload_parser = subparsers.add_parser('upload',
+        help='upload the benchmarks to data.kitware.com')
+upload_parser.add_argument('benchmark_bin',
+        help='ITK performance benchmarks build directory')
+upload_parser.add_argument('api_key',
+        help='Your data.kitware.com API key from "My account -> API keys"')
+
 args = parser.parse_args()
 
-def check_for_required_programs():
-    try:
-        subprocess.check_call(['git', '--version'], stdout=subprocess.PIPE)
-    except subprocess.CalledProcessError:
-        sys.stderr.write("Could not run 'git', please install Git\n")
-        sys.exit(1)
-    try:
-        subprocess.check_call(['cmake', '--version'], stdout=subprocess.PIPE)
-    except CalledProcessError:
-        sys.stderr.write("Could not run 'cmake', please install CMake\n")
-        sys.exit(1)
-    try:
-        subprocess.check_call(['ctest', '--version'], stdout=subprocess.PIPE)
-    except CalledProcessError:
-        sys.stderr.write("Could not run 'ctest', please install CMake\n")
-        sys.exit(1)
-    try:
-        subprocess.check_call(['ninja', '--version'], stdout=subprocess.PIPE)
-    except CalledProcessError:
-        sys.stderr.write("Could not run 'ninja', please install the Ninja build tool\n")
-        sys.exit(1)
+def check_for_required_programs(command):
+    if command == 'run':
+        try:
+            subprocess.check_call(['git', '--version'], stdout=subprocess.PIPE)
+        except subprocess.CalledProcessError:
+            sys.stderr.write("Could not run 'git', please install Git\n")
+            sys.exit(1)
+        try:
+            subprocess.check_call(['cmake', '--version'], stdout=subprocess.PIPE)
+        except CalledProcessError:
+            sys.stderr.write("Could not run 'cmake', please install CMake\n")
+            sys.exit(1)
+        try:
+            subprocess.check_call(['ctest', '--version'], stdout=subprocess.PIPE)
+        except CalledProcessError:
+            sys.stderr.write("Could not run 'ctest', please install CMake\n")
+            sys.exit(1)
+        try:
+            subprocess.check_call(['ninja', '--version'], stdout=subprocess.PIPE)
+        except CalledProcessError:
+            sys.stderr.write("Could not run 'ninja', please install the Ninja build tool\n")
+            sys.exit(1)
+    elif command == 'upload':
+        try:
+            import girder_client
+        except ImportError:
+            sys.stderr.write("Could not import girder_client, please run 'python -m pip install girder-client'\n")
+            sys.exit(1)
 
 def create_run_directories(itk_src, itk_bin, benchmark_bin, git_tag):
     if not os.path.exists(os.path.join(itk_src, '.git')):
@@ -119,28 +135,48 @@ def run_benchmarks(benchmark_bin):
     os.chdir(benchmark_bin)
     subprocess.check_call(['ctest'])
 
-check_for_required_programs()
+def upload_benchmark_results(benchmark_bin, api_key=None):
+    hostname = socket.gethostname().lower()
+    results_dir = os.path.join(benchmark_bin, 'BenchmarkResults',
+            hostname)
+    if not os.path.exists(results_dir):
+        sys.stderr.write('Expected results directory does not exist: ' + results_dir)
+        sys.exit(1)
+    from girder_client import GirderClient
+    gc = GirderClient(apiUrl='https://data.kitware.com/api/v1')
+    gc.authenticate(apiKey=api_key)
+    # ITK/PerformanceBenchmarkingResults
+    folder_id = '5af50c818d777f06857985e3'
+    hostname_folder = gc.loadOrCreateFolder(hostname, folder_id, 'folder')
+    gc.upload(os.path.join(results_dir, '*.json'), hostname_folder['_id'],
+            leafFoldersAsItems=False, reuseExisting=True)
+
+check_for_required_programs(args.command)
 benchmark_src = os.path.abspath(os.path.dirname(__file__))
 
-create_run_directories(args.src, args.bin,
-        args.benchmark_bin,
-        args.git_tag)
+if args.command == 'run':
+    create_run_directories(args.src, args.bin,
+            args.benchmark_bin,
+            args.git_tag)
 
-print('\n\nITK Repository Information:')
-itk_information = extract_itk_information(args.src)
-print(itk_information)
+    print('\n\nITK Repository Information:')
+    itk_information = extract_itk_information(args.src)
+    print(itk_information)
 
 
-print('\nBuilding ITK...')
-build_itk(args.src, args.bin)
+    print('\nBuilding ITK...')
+    build_itk(args.src, args.bin)
 
-itk_has_buildinformation = check_for_build_information(args.src)
+    itk_has_buildinformation = check_for_build_information(args.src)
 
-print('\nBuilding benchmarks...')
-build_benchmarks(benchmark_src, args.benchmark_bin, args.bin,
-        itk_has_buildinformation)
+    print('\nBuilding benchmarks...')
+    build_benchmarks(benchmark_src, args.benchmark_bin, args.bin,
+            itk_has_buildinformation)
 
-print('\nRunning benchmarks...')
-run_benchmarks(args.benchmark_bin)
+    print('\nRunning benchmarks...')
+    run_benchmarks(args.benchmark_bin)
 
-print('\nDone running performance benchmarks.')
+    print('\nDone running performance benchmarks.')
+elif args.command == 'upload':
+    upload_benchmark_results(args.benchmark_bin, args.api_key)
+
