@@ -6,5 +6,5 @@ REM From within git-bash we can now invoke evaluate-itk-performance.py
 REM Alternatively, we could directly invoke it
 
 REM @cd ..
-REM @"C:\Program Files\Git\git-bash.exe" REM ITKPerformanceBenchmarking/evaluate-itk-performance.py
+REM @"C:\Program Files\Git\git-bash.exe" python ITKPerformanceBenchmarking/evaluate-itk-performance.py
 REM pause
