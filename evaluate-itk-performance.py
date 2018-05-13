@@ -106,10 +106,9 @@ def build_itk(itk_src, itk_bin):
 def check_for_build_information(itk_src):
     os.chdir(itk_src)
     try:
-        subprocess.check_call(['git', 'merge-base',
+        has_itkbuildinformation = bool(subprocess.check_call(['git', 'merge-base',
             '--is-ancestor', 'HEAD',
-            'fca883daf05ac62ee0449513dbd2ad30ff9591f0']).strip()
-        has_itkbuildinformation = False
+            'fca883daf05ac62ee0449513dbd2ad30ff9591f0']))
     except subprocess.CalledProcessError:
         has_itkbuildinformation = True
     return has_itkbuildinformation
