@@ -5,6 +5,7 @@ import subprocess
 import sys
 import os
 import socket
+import json
 
 parser = argparse.ArgumentParser(prog='evaluate-itk-performance')
 
@@ -78,15 +79,17 @@ def create_run_directories(itk_src, itk_bin, benchmark_bin, git_tag):
 
 def extract_itk_information(itk_src):
     information = dict()
+    information['ITK_MANUAL_BUILD_INFORMATION'] = dict()
+    manual_build_info = information['ITK_MANUAL_BUILD_INFORMATION']
     os.chdir(itk_src)
     itk_git_sha = subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip()
-    information['ITK_GIT_SHA'] = itk_git_sha
+    manual_build_info['GIT_CONFIG_SHA1'] = itk_git_sha
     itk_git_date = subprocess.check_output(['git', 'show', '-s', '--format=%ci',
         'HEAD']).strip()
-    information['ITK_GIT_DATE'] = itk_git_date
+    manual_build_info['GIT_CONFIG_DATE'] = itk_git_date
     local_modifications = subprocess.check_output(['git', 'diff', '--shortstat',
             'HEAD'])
-    information['ITK_GIT_LOCAL_MODIFICATIONS'] = local_modifications
+    manual_build_info['GIT_LOCAL_MODIFICATIONS'] = local_modifications
     print(local_modifications)
     return information
 
@@ -130,7 +133,7 @@ def build_benchmarks(benchmark_src, benchmark_bin,
         benchmark_src])
     subprocess.check_call(['ninja'])
 
-def run_benchmarks(benchmark_bin):
+def run_benchmarks(benchmark_bin, itk_information):
     os.chdir(benchmark_bin)
     subprocess.check_call(['ctest'])
 
@@ -161,6 +164,8 @@ if args.command == 'run':
     print('\n\nITK Repository Information:')
     itk_information = extract_itk_information(args.src)
     print(itk_information)
+    os.environ['ITKPERFORMANCEBENCHMARK_AUX_JSON'] = \
+        json.dumps(itk_information)
 
 
     print('\nBuilding ITK...')
@@ -173,7 +178,7 @@ if args.command == 'run':
             itk_has_buildinformation)
 
     print('\nRunning benchmarks...')
-    run_benchmarks(args.benchmark_bin)
+    run_benchmarks(args.benchmark_bin, itk_information)
 
     print('\nDone running performance benchmarks.')
 elif args.command == 'upload':

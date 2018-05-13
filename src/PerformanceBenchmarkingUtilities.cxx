@@ -34,7 +34,7 @@ export GIT_CONFIG_DATE="$(git show -s --format=%ci HEAD)"
 export GIT_LOCAL_MODIFICATIONS="$(git  diff --shortstat HEAD)"
 export ITKPERFORMANCEBENCHMARK_AUX_JSON="
 {
-\"ITK_MANUAL_BUILD_INFO\": {
+\"ITK_MANUAL_BUILD_INFORMATION\": {
  \"GIT_CONFIG_DATE\": \"${GIT_CONFIG_DATE}\",
  \"GIT_CONFIG_SHA1\": \"${GIT_CONFIG_SHA1}\",
  \"GIT_LOCAL_MODIFICATIONS\": \"${GIT_LOCAL_MODIFICATIONS}\"
@@ -62,12 +62,12 @@ static std::string PerformanceGuessGitHash()
 
   jsonxx::Object auxEnvironmentObject;
   auxEnvironmentObject.parse(getEnvJsonMap());
-  if( auxEnvironmentObject.has<jsonxx::Object>("ITK_MANUAL_BUILD_INFO") )
+  if( auxEnvironmentObject.has<jsonxx::Object>("ITK_MANUAL_BUILD_INFORMATION") )
     {
-    if (auxEnvironmentObject.get<jsonxx::Object>("ITK_MANUAL_BUILD_INFO").has<jsonxx::String>("GIT_CONFIG_SHA1"))
+    if (auxEnvironmentObject.get<jsonxx::Object>("ITK_MANUAL_BUILD_INFORMATION").has<jsonxx::String>("GIT_CONFIG_SHA1"))
       {
       sha1Guess =
-          auxEnvironmentObject.get<jsonxx::Object>("ITK_MANUAL_BUILD_INFO") \
+          auxEnvironmentObject.get<jsonxx::Object>("ITK_MANUAL_BUILD_INFORMATION") \
                               .get<jsonxx::String>("GIT_CONFIG_SHA1", sha1Guess) + "_ENV";
       }
   }

@@ -48,60 +48,61 @@ namespace itk
  * \ingroup PerformanceBenchmarking
  *
  */
-  class PerformanceBenchmarkingInformation final: public itk::Object
+class PerformanceBenchmarkingInformation final: public itk::Object
+{
+public:
+  /** Standard class type aliases. */
+  using Self = PerformanceBenchmarkingInformation;
+  using Pointer = itk::SmartPointer< Self >;
+  using ConstPointer = itk::SmartPointer< const Self >;
+  using MapKeyType = std::string;
+  using MapValueType = std::string;
+  using MapValueDescriptionType = MapValueType;
+
+private:
+  /**
+   * \class InformationValueType
+   * An inner struct to organize dictionary values with descriptions
+   * \ingroup PerformanceBenchmarking
+   */
+  class InformationValueType
   {
   public:
-    /** Standard class type aliases. */
-    using Self = PerformanceBenchmarkingInformation;
-    using Pointer = itk::SmartPointer< Self >;
-    using ConstPointer = itk::SmartPointer< const Self >;
-    using MapKeyType = std::string;
-    using MapValueType = std::string;
-    using MapValueDescriptionType = MapValueType;
+    InformationValueType() = default;
+    InformationValueType( const InformationValueType & ) = default;
+    InformationValueType( InformationValueType && ) = default;
 
-  private:
-    /**
-     * \class InformationValueType
-     * An inner struct to organize dictionary values with descriptions
-     * \ingroup PerformanceBenchmarking
-     */
-    class InformationValueType
-    {
-    public:
-      InformationValueType() = default;
-      InformationValueType( const InformationValueType & ) = default;
-      InformationValueType( InformationValueType && ) = default;
+    const MapValueType            m_Value;
+    const MapValueDescriptionType m_Description;
+  };
+public:
 
-      const MapValueType            m_Value;
-      const MapValueDescriptionType m_Description;
-    };
-  public:
+  using MapStorageType = InformationValueType;
+  using MapType = std::map<MapKeyType, MapStorageType >;
 
-    using MapStorageType = InformationValueType;
-    using MapType = std::map<MapKeyType, MapStorageType >;
+  /** Run-time type information (and related methods). */
+  itkTypeMacro(PerformanceBenchmarkingInformation, Object);
 
-    /** Run-time type information (and related methods). */
-    itkTypeMacro(PerformanceBenchmarkingInformation, Object);
+  /** Returns the global instance */
+  static Pointer New();
 
-    /** Returns the global instance */
-    static Pointer New();
+  /** Returns the global singleton instance of the PerformanceBenchmarkingInformation */
+  static Pointer GetInstance();
+  static const MapType & GetMap();
+  static const MapValueType GetValue(const MapKeyType &&);
+  static const MapValueDescriptionType  GetDescription(const MapKeyType &&);
+  static const std::vector< MapKeyType > GetAllKeys();
 
-    /** Returns the global singleton instance of the PerformanceBenchmarkingInformation */
-    static Pointer GetInstance();
-    static const MapType & GetMap();
-    static const MapValueType GetValue(const MapKeyType &&);
-    static const MapValueDescriptionType  GetDescription(const MapKeyType &&);
-    static const std::vector< MapKeyType > GetAllKeys();
+private:
+  ITK_DISALLOW_COPY_AND_ASSIGN(PerformanceBenchmarkingInformation);
 
-  private:
-    ITK_DISALLOW_COPY_AND_ASSIGN(PerformanceBenchmarkingInformation);
+  PerformanceBenchmarkingInformation();
 
-    PerformanceBenchmarkingInformation();
+  /** To lock on the internal variables */
+  static SimpleFastMutexLock m_Mutex;
+  static Pointer             m_InformationInstance;
+  static MapType             m_Map;
+};  // end of class
 
-    /** To lock on the internal variables */
-    static SimpleFastMutexLock m_Mutex;
-    static Pointer             m_InformationInstance;
-    static MapType             m_Map;
-  };  // end of class
 } // end namespace itk
 #endif
