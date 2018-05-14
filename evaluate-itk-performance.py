@@ -153,6 +153,73 @@ def upload_benchmark_results(benchmark_bin, api_key=None):
     gc.upload(os.path.join(results_dir, '*.json'), hostname_folder['_id'],
             leafFoldersAsItems=False, reuseExisting=True)
 
+def visualize_benchmark_results(benchmark_results_dir):
+    import json
+	import os
+	from os.path import join as pjoin
+	import plotly.plotly as py
+	import plotly.graph_objs as go
+
+	DATA_DIR = './data'
+
+	modules_performance = {}
+
+	for filename in os.listdir(DATA_DIR):
+		filename = pjoin(DATA_DIR, filename)
+		with open(filename) as data_file:
+			data_string = data_file.read()
+			try:
+				df = json.loads(data_string)
+				module_name = df['Probes'][0]['Name']
+
+				if module_name not in modules_performance:
+					modules_performance[module_name] = {}
+
+				probes_mean_time = df['Probes'][0]['Mean']
+				config_date = df['ITK_MANUAL_BUILD_INFO']['GIT_CONFIG_DATE']
+				timestamp = config_date, probes_mean_time
+
+				itk_version = df['SystemInformation']['ITKVersion']
+
+				if itk_version in modules_performance[module_name]:
+					modules_performance[module_name][itk_version].append(timestamp)
+				else:
+					modules_performance[module_name][itk_version] = []
+					modules_performance[module_name][itk_version].append(timestamp)
+
+			except ValueError:
+				print(repr(data_string))
+
+	modules_figs = []
+
+	for module_name, module_dict in modules_performance.items():
+		for itk_version, probes in module_dict.items():
+			modules_data = []
+			# timestamp, probes_mean_time = zip(*probes)
+			timestamp = []
+			probes_mean_time = []
+			for point in probes:
+				timestamp.append(point[0])
+				probes_mean_time.append(point[1])
+			trace = go.Scatter(
+				x=timestamp,
+				y=probes_mean_time,
+				mode='lines+markers',
+				name=itk_version
+			)
+			modules_data.append(trace)
+
+		layout = dict(title='ITK Module: {} <br>Performance stats'.format(module_name),
+					  xaxis=dict(title='Date'),
+					  yaxis=dict(title='Mean Probes Time (s)'),
+					  showlegend=True
+					  )
+		modules_figs.append(dict(data=modules_data, layout=layout))
+
+for module_fig in modules_figs:
+    py.plot(module_fig)
+
+
 check_for_required_programs(args.command)
 benchmark_src = os.path.abspath(os.path.dirname(__file__))
 
