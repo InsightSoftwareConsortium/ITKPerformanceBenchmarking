@@ -22,12 +22,13 @@
 #include "itkObject.h"
 #include "itkSimpleFastMutexLock.h"
 
-
 // A configure time introspection for
 #cmakedefine ITK_HAS_INFORMATION_H
 #ifdef ITK_HAS_INFORMATION_H
 #  include <itkBuildInformation.h>
 #endif
+
+#include "PerformanceBenchmarkingExport.h"
 
 
 namespace itk
@@ -48,7 +49,7 @@ namespace itk
  * \ingroup PerformanceBenchmarking
  *
  */
-class PerformanceBenchmarkingInformation final: public itk::Object
+class PerformanceBenchmarking_EXPORT PerformanceBenchmarkingInformation final: public itk::Object
 {
 public:
   /** Standard class type aliases. */
