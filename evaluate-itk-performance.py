@@ -28,6 +28,13 @@ upload_parser.add_argument('benchmark_bin',
 upload_parser.add_argument('api_key',
         help='Your data.kitware.com API key from "My account -> API keys"')
 
+revisions_parser = subparsers.add_parser('revisions',
+        help='visualize results for different Git sha hash revisions')
+revisions_parser.add_argument('-s', '--sha', nargs='+',
+        help='Git sha hash revisions to compare')
+revisions_parser.add_argument('benchmark_bin',
+        help='ITK performance benchmarks build directory')
+
 args = parser.parse_args()
 
 def check_for_required_programs(command):
@@ -57,6 +64,12 @@ def check_for_required_programs(command):
             import girder_client
         except ImportError:
             sys.stderr.write("Could not import girder_client, please run 'python -m pip install girder-client'\n")
+            sys.exit(1)
+    elif command == 'revisions':
+        try:
+            import plotly
+        except ImportError:
+            sys.stderr.write("Could not import plotly, please run 'python -m pip install plotly'\n")
             sys.exit(1)
 
 def create_run_directories(itk_src, itk_bin, benchmark_bin, git_tag):
@@ -153,71 +166,70 @@ def upload_benchmark_results(benchmark_bin, api_key=None):
     gc.upload(os.path.join(results_dir, '*.json'), hostname_folder['_id'],
             leafFoldersAsItems=False, reuseExisting=True)
 
-def visualize_benchmark_results(benchmark_results_dir):
-    import json
-	import os
+def visualize_revisions(benchmark_results_dir, shas):
+	import json
 	from os.path import join as pjoin
 	import plotly.plotly as py
 	import plotly.graph_objs as go
 
-	DATA_DIR = './data'
+	# DATA_DIR = './data'
 
-	modules_performance = {}
+	# modules_performance = {}
 
-	for filename in os.listdir(DATA_DIR):
-		filename = pjoin(DATA_DIR, filename)
-		with open(filename) as data_file:
-			data_string = data_file.read()
-			try:
-				df = json.loads(data_string)
-				module_name = df['Probes'][0]['Name']
+	# for filename in os.listdir(DATA_DIR):
+		# filename = pjoin(DATA_DIR, filename)
+		# with open(filename) as data_file:
+			# data_string = data_file.read()
+			# try:
+				# df = json.loads(data_string)
+				# module_name = df['Probes'][0]['Name']
 
-				if module_name not in modules_performance:
-					modules_performance[module_name] = {}
+				# if module_name not in modules_performance:
+					# modules_performance[module_name] = {}
 
-				probes_mean_time = df['Probes'][0]['Mean']
-				config_date = df['ITK_MANUAL_BUILD_INFO']['GIT_CONFIG_DATE']
-				timestamp = config_date, probes_mean_time
+				# probes_mean_time = df['Probes'][0]['Mean']
+				# config_date = df['ITK_MANUAL_BUILD_INFO']['GIT_CONFIG_DATE']
+				# timestamp = config_date, probes_mean_time
 
-				itk_version = df['SystemInformation']['ITKVersion']
+				# itk_version = df['SystemInformation']['ITKVersion']
 
-				if itk_version in modules_performance[module_name]:
-					modules_performance[module_name][itk_version].append(timestamp)
-				else:
-					modules_performance[module_name][itk_version] = []
-					modules_performance[module_name][itk_version].append(timestamp)
+				# if itk_version in modules_performance[module_name]:
+					# modules_performance[module_name][itk_version].append(timestamp)
+				# else:
+					# modules_performance[module_name][itk_version] = []
+					# modules_performance[module_name][itk_version].append(timestamp)
 
-			except ValueError:
-				print(repr(data_string))
+			# except ValueError:
+				# print(repr(data_string))
 
-	modules_figs = []
+	# modules_figs = []
 
-	for module_name, module_dict in modules_performance.items():
-		for itk_version, probes in module_dict.items():
-			modules_data = []
-			# timestamp, probes_mean_time = zip(*probes)
-			timestamp = []
-			probes_mean_time = []
-			for point in probes:
-				timestamp.append(point[0])
-				probes_mean_time.append(point[1])
-			trace = go.Scatter(
-				x=timestamp,
-				y=probes_mean_time,
-				mode='lines+markers',
-				name=itk_version
-			)
-			modules_data.append(trace)
+	# for module_name, module_dict in modules_performance.items():
+		# for itk_version, probes in module_dict.items():
+			# modules_data = []
+			# # timestamp, probes_mean_time = zip(*probes)
+			# timestamp = []
+			# probes_mean_time = []
+			# for point in probes:
+				# timestamp.append(point[0])
+				# probes_mean_time.append(point[1])
+			# trace = go.Scatter(
+				# x=timestamp,
+				# y=probes_mean_time,
+				# mode='lines+markers',
+				# name=itk_version
+			# )
+			# modules_data.append(trace)
 
-		layout = dict(title='ITK Module: {} <br>Performance stats'.format(module_name),
-					  xaxis=dict(title='Date'),
-					  yaxis=dict(title='Mean Probes Time (s)'),
-					  showlegend=True
-					  )
-		modules_figs.append(dict(data=modules_data, layout=layout))
+		# layout = dict(title='ITK Module: {} <br>Performance stats'.format(module_name),
+					  # xaxis=dict(title='Date'),
+					  # yaxis=dict(title='Mean Probes Time (s)'),
+					  # showlegend=True
+					  # )
+		# modules_figs.append(dict(data=modules_data, layout=layout))
 
-for module_fig in modules_figs:
-    py.plot(module_fig)
+	# for module_fig in modules_figs:
+		# py.plot(module_fig)
 
 
 check_for_required_programs(args.command)
