@@ -167,69 +167,76 @@ def upload_benchmark_results(benchmark_bin, api_key=None):
             leafFoldersAsItems=False, reuseExisting=True)
 
 def visualize_revisions(benchmark_results_dir, shas):
-	import json
-	from os.path import join as pjoin
-	import plotly.plotly as py
-	import plotly.graph_objs as go
+    import plotly.offline.plotly as py
+    import plotly.graph_objs as go
 
-	# DATA_DIR = './data'
+    # todo: add a command line option to compare across hosts?
+    hostname = socket.gethostname().lower()
+    results_dir = os.path.join(benchmark_results_dir, hostname)
+    result_files = os.listdir(results_dir)
+    result_files.sort()
+    formatted_shas = [sha.strip()[:10] for sha in shas]
 
-	# modules_performance = {}
+    def has_sha(filepath):
+        for sha in formatted_shas:
+            if filepath.find(sha) != -1:
+                return True
+        return False
 
-	# for filename in os.listdir(DATA_DIR):
-		# filename = pjoin(DATA_DIR, filename)
-		# with open(filename) as data_file:
-			# data_string = data_file.read()
-			# try:
-				# df = json.loads(data_string)
-				# module_name = df['Probes'][0]['Name']
+    result_files = filter(has_sha, result_files)
 
-				# if module_name not in modules_performance:
-					# modules_performance[module_name] = {}
+    sha_datasets = dict()
+    for filename in result_files:
+        filepath = os.path.join(results_dir, filename)
+        with open(filepath) as data_file:
+            data_string = data_file.read()
+            try:
+                data = json.loads(data_string)
+                sha = data['ITK_MANUAL_BUILD_INFORMATION']['GIT_CONFIG_SHA1']
+                itk_version = data['SystemInformation']['ITKVersion']
+                config_date = data['ITK_MANUAL_BUILD_INFORMATION']['GIT_CONFIG_DATE']
+                name = itk_version + ' ' + config_date + ' ' + sha[:7]
+                if not sha in sha_datasets:
+                    sha_datasets[sha] = {'x': [], 'y': [], 'name': name}
+                dataset = sha_datasets[sha]
+                benchmark_name = data['Probes'][0]['Name']
+                benchmark_values = data['Probes'][0]['Values']
+                for value in benchmark_values:
+                    dataset['x'].append(benchmark_name)
+                    dataset['y'].append(value)
 
-				# probes_mean_time = df['Probes'][0]['Mean']
-				# config_date = df['ITK_MANUAL_BUILD_INFO']['GIT_CONFIG_DATE']
-				# timestamp = config_date, probes_mean_time
+            except ValueError:
+                print(repr(data_string))
+                print('Unexpected JSON content in file, ' + filename)
+                sys.exit(1)
 
-				# itk_version = df['SystemInformation']['ITKVersion']
+    data = []
+    for dataset in sha_datasets.itervalues():
+        # trace = go.Box(x=dataset['x'], y=dataset['y'], name=dataset['name'])
+        # print(dataset)
+        # print(dataset['x'])
+        # sys.exit(1)
+        trace = go.Box(x=dataset['x'], y=dataset['y'], name=dataset['name'])
+        data.append(trace)
 
-				# if itk_version in modules_performance[module_name]:
-					# modules_performance[module_name][itk_version].append(timestamp)
-				# else:
-					# modules_performance[module_name][itk_version] = []
-					# modules_performance[module_name][itk_version].append(timestamp)
-
-			# except ValueError:
-				# print(repr(data_string))
-
-	# modules_figs = []
-
-	# for module_name, module_dict in modules_performance.items():
-		# for itk_version, probes in module_dict.items():
-			# modules_data = []
-			# # timestamp, probes_mean_time = zip(*probes)
-			# timestamp = []
-			# probes_mean_time = []
-			# for point in probes:
-				# timestamp.append(point[0])
-				# probes_mean_time.append(point[1])
-			# trace = go.Scatter(
-				# x=timestamp,
-				# y=probes_mean_time,
-				# mode='lines+markers',
-				# name=itk_version
-			# )
-			# modules_data.append(trace)
-
-		# layout = dict(title='ITK Module: {} <br>Performance stats'.format(module_name),
-					  # xaxis=dict(title='Date'),
-					  # yaxis=dict(title='Mean Probes Time (s)'),
-					  # showlegend=True
-					  # )
-		# modules_figs.append(dict(data=modules_data, layout=layout))
-
-	# for module_fig in modules_figs:
-		# py.plot(module_fig)
+    layout = go.Layout(title='Revision Comparison',
+            yaxis=dict(
+                title='Time (sec)',
+                zeroline=False,
+                ),
+            xaxis=dict(
+                title='Benchmark',
+                ),
+                margin=dict(
+                    l=40,
+                    r=30,
+                    b=80,
+                    t=100,
+                ),
+            showlegend=True,
+            boxmode='group')
+    fig = go.Figure(data=data, layout=layout)
+    py.plot(fig)
 
 
 check_for_required_programs(args.command)
@@ -262,4 +269,5 @@ if args.command == 'run':
     print('\nDone running performance benchmarks.')
 elif args.command == 'upload':
     upload_benchmark_results(args.benchmark_bin, args.api_key)
-
+elif args.command == 'revisions':
+    visualize_revisions(os.path.join(args.benchmark_bin, 'BenchmarkResults'), args.sha)
