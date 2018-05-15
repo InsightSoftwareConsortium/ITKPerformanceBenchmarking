@@ -32,6 +32,8 @@ revisions_parser = subparsers.add_parser('revisions',
         help='visualize results for different Git sha hash revisions')
 revisions_parser.add_argument('-s', '--sha', nargs='+',
         help='Git sha hash revisions to compare')
+revisions_parser.add_argument('-n', '--names', nargs='*',
+        help='only plot the given benchmark names')
 revisions_parser.add_argument('benchmark_bin',
         help='ITK performance benchmarks build directory')
 
@@ -167,7 +169,7 @@ def upload_benchmark_results(benchmark_bin, api_key=None):
     gc.upload(os.path.join(results_dir, '*.json'), hostname_folder['_id'],
             leafFoldersAsItems=False, reuseExisting=True)
 
-def visualize_revisions(benchmark_results_dir, shas):
+def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None):
     import plotly.plotly as py
     import plotly.graph_objs as go
 
@@ -202,6 +204,9 @@ def visualize_revisions(benchmark_results_dir, shas):
                 dataset = sha_datasets[sha]
                 benchmark_name = data['Probes'][0]['Name']
                 benchmark_values = data['Probes'][0]['Values']
+                if benchmark_names:
+                    if not benchmark_name in benchmark_names:
+                        continue
                 for value in benchmark_values:
                     dataset['x'].append(benchmark_name)
                     dataset['y'].append(value)
@@ -275,4 +280,6 @@ if args.command == 'run':
 elif args.command == 'upload':
     upload_benchmark_results(args.benchmark_bin, args.api_key)
 elif args.command == 'revisions':
-    visualize_revisions(os.path.join(args.benchmark_bin, 'BenchmarkResults'), args.sha)
+    visualize_revisions(os.path.join(args.benchmark_bin, 'BenchmarkResults'),
+            args.sha,
+            benchmark_names=args.names)
