@@ -114,6 +114,7 @@ def build_itk(itk_src, itk_bin):
         '-DCMAKE_CXX_STANDARD:STRING=11',
         '-DBUILD_TESTING:BOOL=OFF',
         '-DBUILD_EXAMPLES:BOOL=OFF',
+        '-DBUILD_SHARED_LIBS:BOOL=ON',
         itk_src])
     subprocess.check_call(['ninja'])
 
