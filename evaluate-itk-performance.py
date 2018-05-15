@@ -226,6 +226,12 @@ def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None):
         data.append(trace)
 
     layout = go.Layout(title='Revision Comparison',
+            font=dict(
+                size=18,
+                ),
+            titlefont=dict(
+                size=32,
+                ),
             yaxis=dict(
                 title='Time (sec)',
                 zeroline=False,
@@ -233,12 +239,12 @@ def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None):
             xaxis=dict(
                 title='Benchmark',
                 ),
-                margin=dict(
-                    l=40,
-                    r=30,
-                    b=120,
-                    t=100,
-                ),
+            margin=dict(
+                l=90,
+                r=30,
+                b=120,
+                t=100,
+            ),
             legend=dict(
                 x=0.02,
                 y=1.0
