@@ -168,7 +168,7 @@ def upload_benchmark_results(benchmark_bin, api_key=None):
             leafFoldersAsItems=False, reuseExisting=True)
 
 def visualize_revisions(benchmark_results_dir, shas):
-    import plotly.offline.plotly as py
+    import plotly.plotly as py
     import plotly.graph_objs as go
 
     # todo: add a command line option to compare across hosts?
@@ -231,8 +231,12 @@ def visualize_revisions(benchmark_results_dir, shas):
                 margin=dict(
                     l=40,
                     r=30,
-                    b=80,
+                    b=120,
                     t=100,
+                ),
+            legend=dict(
+                x=0.02,
+                y=1.0
                 ),
             showlegend=True,
             boxmode='group')
