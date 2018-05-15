@@ -194,6 +194,7 @@ def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None,
     result_files = filter(has_sha, result_files)
 
     sha_datasets = dict()
+    max_time = 0.0
     for filename in result_files:
         filepath = os.path.join(results_dir, filename)
         with open(filepath) as data_file:
@@ -216,6 +217,7 @@ def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None,
                 if benchmark_names:
                     if not benchmark_name in benchmark_names:
                         continue
+                max_time = max(max_time, max(benchmark_values))
                 for value in benchmark_values:
                     dataset['x'].append(benchmark_name)
                     dataset['y'].append(value)
@@ -244,6 +246,8 @@ def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None,
             yaxis=dict(
                 title='Time (sec)',
                 zeroline=False,
+                autorange=False,
+                range=[0.0, max_time],
                 ),
             xaxis=dict(
                 title='Benchmark',
