@@ -34,6 +34,10 @@ revisions_parser.add_argument('-s', '--sha', nargs='+',
         help='Git sha hash revisions to compare')
 revisions_parser.add_argument('-n', '--names', nargs='*',
         help='only plot the given benchmark names')
+revisions_parser.add_argument('-d', '--descriptions', nargs='*',
+        help='descriptions for the sha revisions, used in the legend')
+revisions_parser.add_argument('-t', '--title', default='Revision Comparison',
+        help='plot title')
 revisions_parser.add_argument('benchmark_bin',
         help='ITK performance benchmarks build directory')
 
@@ -169,7 +173,8 @@ def upload_benchmark_results(benchmark_bin, api_key=None):
     gc.upload(os.path.join(results_dir, '*.json'), hostname_folder['_id'],
             leafFoldersAsItems=False, reuseExisting=True)
 
-def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None):
+def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None,
+        title='Revision Comparison', sha_descriptions=None):
     import plotly.plotly as py
     import plotly.graph_objs as go
 
@@ -199,6 +204,10 @@ def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None):
                 itk_version = data['SystemInformation']['ITKVersion']
                 config_date = data['ITK_MANUAL_BUILD_INFORMATION']['GIT_CONFIG_DATE']
                 name = itk_version + ' ' + config_date + ' ' + sha[:7]
+                if sha_descriptions:
+                    for index, test_sha in enumerate(formatted_shas):
+                        if filename.find(test_sha) != -1:
+                            name = sha_descriptions[index]
                 if not sha in sha_datasets:
                     sha_datasets[sha] = {'x': [], 'y': [], 'name': name}
                 dataset = sha_datasets[sha]
@@ -225,7 +234,7 @@ def visualize_revisions(benchmark_results_dir, shas, benchmark_names=None):
         trace = go.Box(x=dataset['x'], y=dataset['y'], name=dataset['name'])
         data.append(trace)
 
-    layout = go.Layout(title='Revision Comparison',
+    layout = go.Layout(title=title,
             font=dict(
                 size=18,
                 ),
@@ -288,4 +297,6 @@ elif args.command == 'upload':
 elif args.command == 'revisions':
     visualize_revisions(os.path.join(args.benchmark_bin, 'BenchmarkResults'),
             args.sha,
-            benchmark_names=args.names)
+            benchmark_names=args.names,
+            title=args.title,
+            sha_descriptions=args.descriptions)
