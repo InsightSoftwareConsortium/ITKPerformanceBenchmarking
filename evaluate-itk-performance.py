@@ -7,6 +7,12 @@ import os
 import socket
 import json
 
+class FullPaths(argparse.Action):
+    """Expand user- and relative-paths"""
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
+
+
 parser = argparse.ArgumentParser(prog='evaluate-itk-performance')
 
 subparsers = parser.add_subparsers(help='subcommands for individual steps',
@@ -14,17 +20,17 @@ subparsers = parser.add_subparsers(help='subcommands for individual steps',
 
 run_parser = subparsers.add_parser('run',
         help='build ITK and build and run the benchmarks')
-run_parser.add_argument('src', help='ITK source directory')
-run_parser.add_argument('bin', help='ITK build directory')
+run_parser.add_argument('src', help='ITK source directory', action = FullPaths)
+run_parser.add_argument('bin', help='ITK build directory', action = FullPaths)
 run_parser.add_argument('benchmark_bin',
-        help='ITK performance benchmarks build directory')
+        help='ITK performance benchmarks build directory', action = FullPaths)
 run_parser.add_argument('-g', '--git-tag',
         help='ITK Git tag', default='master')
 
 upload_parser = subparsers.add_parser('upload',
         help='upload the benchmarks to data.kitware.com')
 upload_parser.add_argument('benchmark_bin',
-        help='ITK performance benchmarks build directory')
+        help='ITK performance benchmarks build directory', action = FullPaths)
 upload_parser.add_argument('api_key',
         help='Your data.kitware.com API key from "My account -> API keys"')
 
@@ -39,7 +45,7 @@ revisions_parser.add_argument('-d', '--descriptions', nargs='*',
 revisions_parser.add_argument('-t', '--title', default='Revision Comparison',
         help='plot title')
 revisions_parser.add_argument('benchmark_bin',
-        help='ITK performance benchmarks build directory')
+        help='ITK performance benchmarks build directory', action = FullPaths)
 
 args = parser.parse_args()
 
