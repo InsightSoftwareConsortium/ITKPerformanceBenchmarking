@@ -474,7 +474,14 @@ LOCAL_ResourceProbe< ValueType, MeanType >
   PrintJSONvar(os, "MeanMinimumDifference", this->GetMean() - this->GetMinimum());
   PrintJSONvar(os, "MeanMinimumDifferencePercent", ratioOfMeanToMinimum * 100);
   PrintJSONvar(os, "MaximumMeanDifference", this->GetMaximum() - this->GetMean());
-  PrintJSONvar(os, "MaximumMeanDifferencePercent", ratioOfMaximumToMean * 100, 4, false);
+  PrintJSONvar(os, "MaximumMeanDifferencePercent", ratioOfMaximumToMean * 100, 4);
+  os << "    " << "\"Values\": [";
+  for( size_t ii = 0; ii < m_ProbeValueList.size() - 1; ++ii )
+    {
+    os << m_ProbeValueList[ii] << ", ";
+    }
+  os << m_ProbeValueList.at(m_ProbeValueList.size() - 1);
+  os << "]\n";
   os << "  }";
 }
 

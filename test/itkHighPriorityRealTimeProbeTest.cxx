@@ -55,7 +55,7 @@ int itkHighPriorityRealTimeProbeTest( int, char * [] )
   std::cout << "InstantValue:      " << localTimer.GetInstantValue() << std::endl;
   std::cout << "Minimum:           " << localTimer.GetMinimum() << std::endl;
   std::cout << "Mean:              " << localTimer.GetMean() << std::endl;
-  std::cout << "Maximu:            " << localTimer.GetMaximum() << std::endl;
+  std::cout << "Maximum:           " << localTimer.GetMaximum() << std::endl;
   std::cout << "Standard deviation:" << localTimer.GetStandardDeviation() << std::endl;
 
   unsigned int iteration (100);
