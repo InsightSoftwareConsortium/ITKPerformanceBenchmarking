@@ -95,7 +95,7 @@ ProbeType time_it(unsigned int threads, unsigned int iterations, bool realtime =
 
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput(image);
-  filter->SetNumberOfThreads( threads );
+  filter->SetNumberOfWorkUnits( threads );
 
   // execute one time out of the loop to allocate memory
   filter->UpdateLargestPossibleRegion();
@@ -105,7 +105,7 @@ ProbeType time_it(unsigned int threads, unsigned int iterations, bool realtime =
 
   const std::string name = ss.str();
 
-  for( int ii = 0; ii < iterations; ++ii )
+  for( unsigned int ii = 0; ii < iterations; ++ii )
     {
     image->Modified();
     collector.Start(name.c_str());
