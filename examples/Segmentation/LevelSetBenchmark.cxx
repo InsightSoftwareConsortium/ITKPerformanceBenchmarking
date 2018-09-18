@@ -47,7 +47,7 @@ int main( int argc, char * argv[] )
 
   if( threads > 0 )
     {
-    itk::MultiThreader::SetGlobalDefaultNumberOfThreads( threads );
+    MultiThreaderName::SetGlobalDefaultNumberOfThreads( threads );
     }
 
   constexpr unsigned int Dimension = 3;

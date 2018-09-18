@@ -95,7 +95,7 @@ ProbeType time_it(unsigned int threads, unsigned int iterations, bool realtime =
 
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput(image);
-  filter->SetNumberOfThreads( threads );
+  filter->SET_PARALLEL_UNITS( threads );
 
   // execute one time out of the loop to allocate memory
   filter->UpdateLargestPossibleRegion();
@@ -105,7 +105,7 @@ ProbeType time_it(unsigned int threads, unsigned int iterations, bool realtime =
 
   const std::string name = ss.str();
 
-  for( int ii = 0; ii < iterations; ++ii )
+  for( unsigned ii = 0; ii < iterations; ++ii )
     {
     image->Modified();
     collector.Start(name.c_str());
@@ -128,7 +128,7 @@ int main( int argc, char * argv[] )
 
   const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
   const int iterations = (argc>2) ? atoi( argv[2] ): 500;
-  const int threads = (argc>3) ? atoi( argv[3] ) : itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
+  const int threads = (argc>3) ? atoi( argv[3] ) : MultiThreaderName::GetGlobalDefaultNumberOfThreads();
 
   if (threads == 1)
     {
