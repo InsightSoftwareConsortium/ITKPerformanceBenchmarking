@@ -65,7 +65,6 @@
 
 namespace
 {
-//------------------------------------------------------------------------------
 // Create the input image when input image is not provided
 template< typename ImageType >
 typename ImageType::Pointer
@@ -129,7 +128,6 @@ CreateInputImage( const std::vector< int >& imageSizes )
   return image;
 }
 
-//------------------------------------------------------------------------------
 // Helper functions used by ValidateArguments()
 bool
 IsStringInVector( const std::string& str, const std::vector< std::string >& vec )
@@ -148,7 +146,6 @@ AreAllStringsInVector( const std::vector< std::string >& args, const std::vector
   return result;
 }
 
-//------------------------------------------------------------------------------
 void
 ReplaceUnderscoreWithSpace( std::string& arg )
 {
@@ -161,7 +158,6 @@ ReplaceUnderscoreWithSpace( std::string& arg )
     }
 }
 
-//------------------------------------------------------------------------------
 bool
 GetImageProperties( const std::string& filename, std::string& pixeltype, std::string& componenttype,
                     unsigned int& dimension, unsigned int& numberofcomponents, std::vector< unsigned int >& imagesize )
@@ -224,7 +220,6 @@ GetImageProperties( const std::string& filename, std::string& pixeltype, std::st
   return true;
 }
 
-//------------------------------------------------------------------------------
 // Command arguments storage
 class Parameters
 {
@@ -261,7 +256,6 @@ public:
   std::string                transformsPrecision;
 };
 
-//------------------------------------------------------------------------------
 template< typename TransformType, typename InputImageType >
 std::string
 GetTransformName( typename TransformType::Pointer& transform )
@@ -311,7 +305,6 @@ GetTransformName( typename TransformType::Pointer& transform )
   return ost.str();
 }
 
-//------------------------------------------------------------------------------
 template< typename InputImageType >
 typename InputImageType::PointType
 ComputeCenterOfTheImage( const typename InputImageType::ConstPointer& image )
@@ -333,7 +326,6 @@ ComputeCenterOfTheImage( const typename InputImageType::ConstPointer& image )
   return center;
 }
 
-//------------------------------------------------------------------------------
 template< typename InputImageType, typename OutputImageType >
 void
 DefineOutputImageProperties( const typename InputImageType::ConstPointer& image,
@@ -372,7 +364,6 @@ DefineOutputImageProperties( const typename InputImageType::ConstPointer& image,
   defaultValue = minValue - 2;
 }
 
-//------------------------------------------------------------------------------
 template< typename InterpolatorType >
 void
 DefineInterpolator( typename InterpolatorType::Pointer& interpolator, const std::string& interpolatorName,
@@ -404,7 +395,6 @@ DefineInterpolator( typename InterpolatorType::Pointer& interpolator, const std:
     }
 }
 
-//------------------------------------------------------------------------------
 template< typename ExtrapolatorType >
 void
 DefineExtrapolator( typename ExtrapolatorType::Pointer& extrapolator, const std::string& extrapolatorName )
@@ -422,7 +412,6 @@ DefineExtrapolator( typename ExtrapolatorType::Pointer& extrapolator, const std:
     }
 }
 
-//------------------------------------------------------------------------------
 template< typename AffineTransformType >
 void
 DefineAffineParameters( typename AffineTransformType::ParametersType& parameters )
@@ -461,7 +450,6 @@ DefineAffineParameters( typename AffineTransformType::ParametersType& parameters
     }
 }
 
-//------------------------------------------------------------------------------
 template< typename TranslationTransformType >
 void
 DefineTranslationParameters( const std::size_t transformIndex,
@@ -477,7 +465,6 @@ DefineTranslationParameters( const std::size_t transformIndex,
     }
 }
 
-//------------------------------------------------------------------------------
 template< typename BSplineTransformType >
 void
 DefineBSplineParameters( const std::size_t transformIndex, typename BSplineTransformType::ParametersType& parameters,
@@ -500,7 +487,6 @@ DefineBSplineParameters( const std::size_t transformIndex, typename BSplineTrans
     }
 }
 
-//------------------------------------------------------------------------------
 template< typename EulerTransformType >
 void
 DefineEulerParameters( const std::size_t transformIndex, typename EulerTransformType::ParametersType& parameters )
@@ -538,7 +524,6 @@ DefineEulerParameters( const std::size_t transformIndex, typename EulerTransform
     }
 }
 
-//------------------------------------------------------------------------------
 template< typename SimilarityTransformType >
 void
 DefineSimilarityParameters( const std::size_t transformIndex,
@@ -578,8 +563,7 @@ DefineSimilarityParameters( const std::size_t transformIndex,
     }
 }
 
-//------------------------------------------------------------------------------
-// This helper function completely set the single transform
+// This helper function completely sets the single transform
 // We are supporting following ITK transforms:
 // IdentityTransform, AffineTransform, TranslationTransform, BSplineTransform,
 // EulerTransform, SimilarityTransform, CompositeTransform
@@ -727,8 +711,7 @@ SetTransform( const std::size_t transformIndex, const std::string& transformName
     }
 }
 
-//------------------------------------------------------------------------------
-// This helper function completely define the transform[s]
+// This helper function completely defines the transform[s]
 // We are supporting following ITK transforms:
 // IdentityTransform, AffineTransform, TranslationTransform, BSplineTransform,
 // EulerTransform, SimilarityTransform, CompositeTransform
@@ -777,7 +760,6 @@ DefineTransform( typename TransformType::Pointer& transform, const Parameters& p
     }
 }
 
-//------------------------------------------------------------------------------
 // Check for transforms that support only 2D/3D not 1D
 bool
 HasNotSupportedTransform1D( const Parameters& _parameters, const unsigned int dimension )
@@ -798,7 +780,6 @@ HasNotSupportedTransform1D( const Parameters& _parameters, const unsigned int di
   return notSupportFor1D;
 }
 
-//------------------------------------------------------------------------------
 // Check if the required arguments are given to the benchmark
 bool
 ValidateArguments( const Parameters& _parameters )
@@ -880,7 +861,6 @@ ValidateArguments( const Parameters& _parameters )
   return true;
 }
 
-//------------------------------------------------------------------------------
 template< typename TransformPrecisionType, typename EulerTransformType, typename SimilarityTransformType,
           class InputImageType, typename OutputImageType = InputImageType >
 int
@@ -1073,7 +1053,6 @@ ProcessImage( const Parameters& _parameters )
   return EXIT_SUCCESS;
 }
 
-//------------------------------------------------------------------------------
 template< typename TransformPrecisionType >
 int
 ProcessImageOfDimension(const std::size_t Dimension, const Parameters& parameters)
@@ -1111,7 +1090,6 @@ ProcessImageOfDimension(const std::size_t Dimension, const Parameters& parameter
 
 } // End of namespace
 
-//------------------------------------------------------------------------------
 void AdjustTransformParameters(Parameters &parameters)
 {
   // If no transform are provided then set to Identity as default, same as Resample constructor does
@@ -1126,7 +1104,6 @@ void AdjustTransformParameters(Parameters &parameters)
   }
 }
 
-//------------------------------------------------------------------------------
 // This test performs benchmarking of the ITK ResampleImageFilter.
 // The benchmarking has been designed for two modes:
 //  a. Execute on the input image from file, when option "-in" "input_image" is provided, or
@@ -1155,7 +1132,7 @@ void AdjustTransformParameters(Parameters &parameters)
 //
 // Command line argument "-i" "Linear" ["Nearest"] ["BSpline"]
 // Command line argument "-soi" controls spline order interpolator for the BSpline interpolator.
-// For "-i" "BSpline" the 0th - 5th order splines are supported, the default 3th.
+// For "-i" "BSpline" the 0th - 5th order splines are supported, the default 3rd.
 //
 // The following ITK extrapolations are supported in this benchmark:
 // itk::NearestNeighborExtrapolateImageFunction
