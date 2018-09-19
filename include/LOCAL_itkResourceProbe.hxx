@@ -37,7 +37,6 @@
 
 #include "LOCAL_itkResourceProbe.h"
 #include "itkNumericTraits.h"
-#include "itkMultiThreader.h"
 #include "itksys/SystemInformation.hxx"
 #include "itkMath.h"
 #include "itkIsNumber.h"
@@ -64,7 +63,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 void
 LOCAL_ResourceProbe< ValueType, MeanType >
-::Reset(void)
+::Reset()
 {
   this->m_TotalValue        = NumericTraits< ValueType >::ZeroValue();
   this->m_StartValue        = NumericTraits< ValueType >::ZeroValue();
@@ -84,7 +83,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 std::string
 LOCAL_ResourceProbe< ValueType, MeanType >
-::GetType(void) const
+::GetType() const
 {
   return this->m_TypeString;
 }
@@ -93,7 +92,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 std::string
 LOCAL_ResourceProbe< ValueType, MeanType >
-::GetUnit(void) const
+::GetUnit() const
 {
   return this->m_UnitString;
 }
@@ -102,7 +101,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 void
 LOCAL_ResourceProbe< ValueType, MeanType >
-::Start(void)
+::Start()
 {
   this->m_NumberOfStarts++;
   this->m_StartValue = this->GetInstantValue();
@@ -112,7 +111,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 void
 LOCAL_ResourceProbe< ValueType, MeanType >
-::Stop(void)
+::Stop()
 {
   ValueType probevalue = this->GetInstantValue() - this->m_StartValue;
   if ( this->m_NumberOfStops == this->m_NumberOfStarts )
@@ -131,7 +130,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 typename LOCAL_ResourceProbe< ValueType, MeanType >::CountType
 LOCAL_ResourceProbe< ValueType, MeanType >
-::GetNumberOfStarts(void) const
+::GetNumberOfStarts() const
 {
   return this->m_NumberOfStarts;
 }
@@ -140,7 +139,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 typename LOCAL_ResourceProbe< ValueType, MeanType >::CountType
 LOCAL_ResourceProbe< ValueType, MeanType >
-::GetNumberOfStops(void) const
+::GetNumberOfStops() const
 {
   return this->m_NumberOfStops;
 }
@@ -149,7 +148,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 typename LOCAL_ResourceProbe< ValueType, MeanType >::CountType
 LOCAL_ResourceProbe< ValueType, MeanType >
-::GetNumberOfIteration(void) const
+::GetNumberOfIteration() const
 {
   return this->m_NumberOfIteration;
 }
@@ -158,7 +157,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 ValueType
 LOCAL_ResourceProbe< ValueType, MeanType >
-::GetTotal(void) const
+::GetTotal() const
 {
   return this->m_TotalValue;
 }
@@ -167,7 +166,7 @@ LOCAL_ResourceProbe< ValueType, MeanType >
 template< typename ValueType, typename MeanType >
 MeanType
 LOCAL_ResourceProbe< ValueType, MeanType >
-::GetMean(void) const
+::GetMean() const
 {
   MeanType meanValue = NumericTraits< MeanType >::ZeroValue();
 

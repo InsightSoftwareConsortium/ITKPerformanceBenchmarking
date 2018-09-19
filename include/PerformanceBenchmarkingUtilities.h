@@ -11,6 +11,16 @@
 #include <ctime> //TODO:  Move to utiliites
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
+#if ITK_VERSION_MAJOR >= 5
+#include "itkMultiThreaderBase.h"
+using MultiThreaderName = itk::MultiThreaderBase;
+#define SET_PARALLEL_UNITS( x ) SetNumberOfWorkUnits( x )
+#else
+#include "itkMultiThreader.h"
+using MultiThreaderName = itk::MultiThreader;
+#define SET_PARALLEL_UNITS( x ) SetNumberOfThreads( x )
+#endif
+
 PerformanceBenchmarking_EXPORT
 std::string
 PerfDateStamp();

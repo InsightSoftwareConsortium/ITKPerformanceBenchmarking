@@ -156,7 +156,7 @@ std::string DecorateWithBuildInformation( std::string  inputJson)
   }
   {
     jsonxx::Object runTimeEnvJsonObject;
-    const unsigned int defaultNumberOfThreads = itk::MultiThreader::GetGlobalDefaultNumberOfThreads();
+    const unsigned int defaultNumberOfThreads = MultiThreaderName::GetGlobalDefaultNumberOfThreads();
     runTimeEnvJsonObject << "GetGlobalDefaultNumberOfThreads" << defaultNumberOfThreads;
     //NOTE: This is the load average, that includes this test, and many other test, and what the
     //      OS was doing around the time of the test.  It is not terribly reliable, but if it is

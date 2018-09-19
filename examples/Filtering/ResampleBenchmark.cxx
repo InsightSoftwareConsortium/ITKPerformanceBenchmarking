@@ -190,7 +190,7 @@ GetImageProperties( const std::string& filename, std::string& pixeltype, std::st
     }
 
   // Extract the ImageIO from the reader
-  ImageIOBaseType::Pointer imageIOBase = reader->GetImageIO();
+  const ImageIOBaseType* imageIOBase = reader->GetImageIO();
 
   // Get the component type, number of components, dimension and pixel type
   dimension = imageIOBase->GetNumberOfDimensions();
@@ -869,7 +869,7 @@ ProcessImage( const Parameters& _parameters )
   // Setting the threads
   if ( _parameters.threads > 0 )
     {
-      itk::MultiThreader::SetGlobalDefaultNumberOfThreads( _parameters.threads );
+      MultiThreaderName::SetGlobalDefaultNumberOfThreads( _parameters.threads );
     }
 
   // Input image dimension
@@ -978,7 +978,7 @@ ProcessImage( const Parameters& _parameters )
   DefineExtrapolator< ExtrapolatorType >( extrapolator, _parameters.extrapolator );
 
   // Print resample execution info
-  std::cout << "Benchmarking Resample filter with " << itk::MultiThreaderBase::GetGlobalDefaultNumberOfThreads()
+  std::cout << "Benchmarking Resample filter with " << MultiThreaderName::GetGlobalDefaultNumberOfThreads()
             << " threads" << std::endl;
   std::cout << "Image size: " << imageSize << std::endl;
   std::cout << "Interpolator type: " << interpolator->GetNameOfClass() << std::endl;

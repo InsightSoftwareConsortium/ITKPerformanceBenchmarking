@@ -22,7 +22,6 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
-#include "itkMultiThreader.h"
 
 namespace itk
 {
