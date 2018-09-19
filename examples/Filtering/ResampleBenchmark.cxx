@@ -79,8 +79,8 @@ CreateInputImage( const std::vector< int >& imageSizes )
   image->SetRegions( typename ImageType::RegionType( imageSize ) );
   image->Allocate();
 
-  ImageType::SpacingType spacing;
-  ImageType::PointType   origin;
+  typename ImageType::SpacingType spacing;
+  typename ImageType::PointType   origin;
 
   if ( ImageType::ImageDimension < 3 )
     {
@@ -103,7 +103,7 @@ CreateInputImage( const std::vector< int >& imageSizes )
   image->SetOrigin( origin );
 
   // Fill the image with some test gradient pattern
-  auto value = itk::NumericTraits< ImageType::PixelType >::Zero;
+  auto value = itk::NumericTraits< typename ImageType::PixelType >::ZeroValue();
   itk::ImageRegionIterator< ImageType > iter( image, image->GetLargestPossibleRegion() );
   while ( !iter.IsAtEnd() )
     {
@@ -477,8 +477,8 @@ DefineBSplineParameters( const std::size_t transformIndex, typename BSplineTrans
   parameters.SetSize( numberOfParameters );
 
   // Create a uniform distribution with seed based on the default + transform index
-  std::default_random_engine                     randomEngine( 1234 + transformIndex );
-  const std::uniform_real_distribution< double > randomNumberDistribution( -1.0, 1.0 );
+  std::default_random_engine               randomEngine( 1234 + transformIndex );
+  std::uniform_real_distribution< double > randomNumberDistribution( -1.0, 1.0 );
 
   // Set the BSpline parameters from the uniform distribution
   for ( std::size_t n = 0; n < numberOfNodes * Dimension; ++n )
