@@ -1,5 +1,10 @@
 # An option to allow building against ITK before 2018-02-20 when itkBuildInformation.h was not available
-option(ITK_HAS_INFORMATION_H "If itk::BuildInformation::GetInstance is available (after 2018-02-20)" ON)
+if (ITK_VERSION_MAJOR LESS 5)
+  set(HAS_INFO OFF)
+else()
+  set(HAS_INFO ON)
+endif()
+option(ITK_HAS_INFORMATION_H "If itk::BuildInformation::GetInstance is available (after 2018-02-20)" ${HAS_INFO})
 
 include(${CMAKE_CURRENT_LIST_DIR}/../CMake/GetGitRevisionDescription.cmake)
 get_git_head_revision(GIT_CONFIG_REFSPEC GIT_CONFIG_SHA1)
