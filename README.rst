@@ -79,3 +79,10 @@ Finally, the user will need to start the Git bash by double-clicking on the
 Note that the module is built with static libraries to allow for ITK
 benchmarking in Windows: the `BUILD_SHARED_LIBS` flag in the
 `evaluate-itk-performance.py <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/3a880e47e99cd0f429771960a4cee4fd70873ec6/evaluate-itk-performance.py#L129>`_ script is set to `OFF`.
+
+
+License
+-------
+
+This software is distributed under the Apache 2.0 license. Please see
+the *LICENSE* file for details.
