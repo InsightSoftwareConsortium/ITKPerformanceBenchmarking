@@ -21,9 +21,6 @@
 #include "PerformanceBenchmarkingUtilities.h"
 #include "PerformanceBenchmarkingInformation.h"
 
-
-#include "itkSimpleFastMutexLock.h"
-#include "itkMutexLockHolder.h"
 #include "itkObjectFactory.h"
 
 #include <ostream>
@@ -44,7 +41,7 @@ m_Map.emplace(                                                                  
 
 namespace itk {
 
-SimpleFastMutexLock PerformanceBenchmarkingInformation::m_Mutex;
+std::mutex PerformanceBenchmarkingInformation::m_Mutex;
 PerformanceBenchmarkingInformation::Pointer PerformanceBenchmarkingInformation::m_InformationInstance;
 PerformanceBenchmarkingInformation::MapType PerformanceBenchmarkingInformation::m_Map;
 
@@ -59,7 +56,7 @@ PerformanceBenchmarkingInformation::Pointer
 PerformanceBenchmarkingInformation
 ::GetInstance()
 {
-  MutexLockHolder<SimpleFastMutexLock> mutexHolder(m_Mutex);
+  std::lock_guard<std::mutex> mutexHolder(m_Mutex);
   if (m_InformationInstance.IsNull())
   {
     m_InformationInstance = ObjectFactory<Self>::Create();
@@ -117,7 +114,6 @@ PerformanceBenchmarkingInformation::GetAllKeys()
 PerformanceBenchmarkingInformation
 ::PerformanceBenchmarkingInformation()
 {
-  MutexLockHolder<SimpleFastMutexLock> mutexHolder(m_Mutex);
   m_InformationInstance = this; //threads need this
   m_InformationInstance->UnRegister(); // Remove extra reference
 

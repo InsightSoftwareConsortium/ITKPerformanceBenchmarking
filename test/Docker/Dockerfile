@@ -28,8 +28,8 @@ RUN mkdir -p /ITKPerformanceBenchmarking-build && \
   mkdir -p /ITKBenchmarks-build
 WORKDIR /
 
-# ITK master 2018-02-22
-ENV ITK_GIT_TAG 4b1e6c03f1f9f07f2d97521103d5f438eef95d52
+# ITK master 2018-10-23
+ENV ITK_GIT_TAG 82ab8bde7679ca21559933356f193a78a1d47848
 RUN git clone https://github.com/InsightSoftwareConsortium/ITK.git && \
   cd ITK && \
   git checkout ${ITK_GIT_TAG} && \
@@ -46,6 +46,7 @@ RUN git clone https://github.com/InsightSoftwareConsortium/ITK.git && \
     -DITK_LEGACY_REMOVE:BOOL=ON \
     -DITK_BUILD_DEFAULT_MODULES:BOOL=OFF \
     -DITK_USE_SYSTEM_LIBRARIES:BOOL=ON \
+    -DITK_USE_SYSTEM_HDF5:BOOL=OFF \
     -DModule_ITKTestKernel:BOOL=ON \
     -DModule_ITKIOImageBase:BOOL=ON \
     -DModule_ITKIOMeta:BOOL=ON \
@@ -62,7 +63,7 @@ RUN git clone https://github.com/InsightSoftwareConsortium/ITK.git && \
     -DModule_ITKRegionGrowing:BOOL=ON \
     -DModule_ITKWatersheds:BOOL=ON \
     -DModule_ITKConnectedComponents:BOOL=ON \
-    -DModule_ITKAnisotropicDiffusion:BOOL=ON \
+    -DModule_ITKAnisotropicSmoothing:BOOL=ON \
     -DModule_ITKFastMarching:BOOL=ON \
     -DModule_ITKLevelSets:BOOL=ON \
   ../ITK && \
