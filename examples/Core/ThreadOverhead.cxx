@@ -73,7 +73,7 @@ public:
 };
 }
 
-ProbeType time_it(unsigned int threads, unsigned int iterations, bool realtime = true)
+static ProbeType time_it(unsigned int threads, unsigned int iterations)
 {
 
   constexpr unsigned int Dimension = 1;

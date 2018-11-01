@@ -46,7 +46,7 @@ int main( int argc, char * argv[] )
   constexpr unsigned int Dimension = 3;
   using PixelType = unsigned char;
 
-  using ImageType = itk::Image< PixelType, 3 >;
+  using ImageType = itk::Image< PixelType, Dimension >;
 
   using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();
