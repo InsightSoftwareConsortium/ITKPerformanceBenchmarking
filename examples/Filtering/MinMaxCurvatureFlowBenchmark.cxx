@@ -47,8 +47,8 @@ int main( int argc, char * argv[] )
   using InputPixelType = unsigned char;
   using OutputPixelType = float;
 
-  using InputImageType = itk::Image< InputPixelType, 3 >;
-  using OutputImageType = itk::Image< OutputPixelType, 3 >;
+  using InputImageType = itk::Image< InputPixelType, Dimension >;
+  using OutputImageType = itk::Image< OutputPixelType, Dimension >;
 
   using ReaderType = itk::ImageFileReader< InputImageType >;
   ReaderType::Pointer reader = ReaderType::New();

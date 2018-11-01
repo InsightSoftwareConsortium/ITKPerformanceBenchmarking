@@ -47,7 +47,7 @@ int main(int argc, char * argv[])
   using PixelType = float;
   using ParametersValueType = double;
 
-  using ImageType = itk::Image< PixelType, 3 >;
+  using ImageType = itk::Image< PixelType, Dimension >;
 
   using ReaderType = itk::ImageFileReader< ImageType >;
   ReaderType::Pointer reader = ReaderType::New();

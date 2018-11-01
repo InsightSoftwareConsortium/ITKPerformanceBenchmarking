@@ -73,7 +73,7 @@ int main( int argc, char * argv[] )
   constexpr unsigned int Dimension = 3;
   using PixelType = float;
 
-  using ImageType = itk::Image< PixelType, 3 >;
+  using ImageType = itk::Image< PixelType, Dimension >;
 
   ImageType::Pointer inputImage1 = ReadImage<ImageType>(inputImage1FileName);
   ImageType::Pointer inputImage2 = ReadImage<ImageType>(inputImage2FileName);
