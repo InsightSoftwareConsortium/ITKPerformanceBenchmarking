@@ -127,8 +127,8 @@ int main( int argc, char * argv[] )
     }
 
   const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
-  const int iterations = (argc>2) ? atoi( argv[2] ): 500;
-  const int threads = (argc>3) ? atoi( argv[3] ) : MultiThreaderName::GetGlobalDefaultNumberOfThreads();
+  const int iterations = (argc>2) ? std::stoi( argv[2] ): 500;
+  const int threads = (argc>3) ? std::stoi( argv[3] ) : MultiThreaderName::GetGlobalDefaultNumberOfThreads();
 
   if (threads == 1)
     {
