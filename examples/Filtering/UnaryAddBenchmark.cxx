@@ -59,8 +59,8 @@ int main( int argc, char * argv[] )
     return EXIT_FAILURE;
     }
   const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
-  const int iterations = atoi( argv[2] );
-  int threads = atoi( argv[3] );
+  const int iterations = std::stoi( argv[2] );
+  int threads = std::stoi( argv[3] );
   const char * inputImage1FileName = argv[4];
   const char * outputImageFileName = argv[5];
 
