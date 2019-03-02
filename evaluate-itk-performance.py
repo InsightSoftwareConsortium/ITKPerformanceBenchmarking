@@ -7,6 +7,21 @@ import os
 import socket
 import json
 
+
+def get_shell_output_as_string(commandlist):
+    """
+    A wrapper function for getting shell values back as strings
+    for both python2 and python3
+    :param commandlist:
+    :return: A newline stripped string object (i.e. not a byte object)
+    """
+    if sys.version_info[0] < 3:
+        return subprocess.check_output(commandlist).strip()
+    else:
+        # In python 3, subprocess.check_call returns byte string.
+        # https://stackoverflow.com/questions/18244126/python3-subprocess-output/18244485
+        return subprocess.getoutput(' '.join(commandlist)).strip()
+
 class FullPaths(argparse.Action):
     """Expand user- and relative-paths"""
     def __call__(self, parser, namespace, values, option_string=None):
@@ -107,14 +122,14 @@ def extract_itk_information(itk_src):
     information['ITK_MANUAL_BUILD_INFORMATION'] = dict()
     manual_build_info = information['ITK_MANUAL_BUILD_INFORMATION']
     os.chdir(itk_src)
-    itk_git_sha = subprocess.check_output(['git', 'rev-parse', 'HEAD']).strip()
-    manual_build_info['GIT_CONFIG_SHA1'] = itk_git_sha
-    itk_git_date = subprocess.check_output(['git', 'show', '-s', '--format=%ci',
-        'HEAD']).strip()
-    manual_build_info['GIT_CONFIG_DATE'] = itk_git_date
-    local_modifications = subprocess.check_output(['git', 'diff', '--shortstat',
-            'HEAD'])
-    manual_build_info['GIT_LOCAL_MODIFICATIONS'] = local_modifications
+    itk_git_sha = get_shell_output_as_string(['git', 'rev-parse', 'HEAD'])
+    manual_build_info['GIT_CONFIG_SHA1'] = str(itk_git_sha)
+    itk_git_date = get_shell_output_as_string(['git', 'show', '-s', '--format=%ci',
+        'HEAD'])
+    manual_build_info['GIT_CONFIG_DATE'] = str(itk_git_date)
+    local_modifications = get_shell_output_as_string(
+        ['git', 'diff', '--shortstat', 'HEAD'])
+    manual_build_info['GIT_LOCAL_MODIFICATIONS'] = str(local_modifications)
     print(local_modifications)
     return information
 
