@@ -24,8 +24,9 @@ run_parser.add_argument('src', help='ITK source directory', action = FullPaths)
 run_parser.add_argument('bin', help='ITK build directory', action = FullPaths)
 run_parser.add_argument('benchmark_bin',
         help='ITK performance benchmarks build directory', action = FullPaths)
-run_parser.add_argument('-g', '--git-tag',
-        help='ITK Git tag', default='master')
+run_parser.add_argument('-r', '--rev-list',
+        help='Arguments for "git rev-list" to select the range of commits to benchmark, for example: "--no-merges v4.10.0..v5.0rc1"',
+        default='--no-merges HEAD~1..')
 
 upload_parser = subparsers.add_parser('upload',
         help='upload the benchmarks to data.kitware.com')
@@ -84,13 +85,7 @@ def check_for_required_programs(command):
             sys.stderr.write("Could not import plotly, please run 'python -m pip install plotly'\n")
             sys.exit(1)
 
-def create_run_directories(itk_src, itk_bin, benchmark_bin, git_tag):
-    if not os.path.exists(os.path.join(itk_src, '.git')):
-        dirname = os.path.dirname(itk_src)
-        if not os.path.exists(dirname):
-            os.makedirs(dirname)
-        subprocess.check_call(['git', 'clone',
-            'https://github.com/InsightSoftwareConsortium/ITK.git', itk_src])
+def initialize_directories(itk_src, itk_bin, benchmark_bin, git_tag):
     os.chdir(itk_src)
     # Stash any uncommited changes
     subprocess.check_call(['git', 'stash'])
@@ -278,30 +273,41 @@ check_for_required_programs(args.command)
 benchmark_src = os.path.abspath(os.path.dirname(__file__))
 
 if args.command == 'run':
-    create_run_directories(args.src, args.bin,
-            args.benchmark_bin,
-            args.git_tag)
+    itk_src = args.src
+    if not os.path.exists(os.path.join(itk_src, '.git')):
+        dirname = os.path.dirname(itk_src)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+        subprocess.check_call(['git', 'clone',
+            'https://github.com/InsightSoftwareConsortium/ITK.git', itk_src])
+    os.chdir(itk_src)
+    revisions = subprocess.check_output('git rev-list ' + args.rev_list,
+            shell=True, universal_newlines=True)
+    for revision in revisions.split():
+        initialize_directories(args.src, args.bin,
+                args.benchmark_bin,
+                revision)
 
-    print('\n\nITK Repository Information:')
-    itk_information = extract_itk_information(args.src)
-    print(itk_information)
-    os.environ['ITKPERFORMANCEBENCHMARK_AUX_JSON'] = \
-        json.dumps(itk_information)
+        print('\n\nITK Repository Information:')
+        itk_information = extract_itk_information(args.src)
+        print(itk_information)
+        os.environ['ITKPERFORMANCEBENCHMARK_AUX_JSON'] = \
+            json.dumps(itk_information)
 
 
-    print('\nBuilding ITK...')
-    build_itk(args.src, args.bin)
+        print('\nBuilding ITK...')
+        build_itk(args.src, args.bin)
 
-    itk_has_buildinformation = check_for_build_information(args.src)
+        itk_has_buildinformation = check_for_build_information(args.src)
 
-    print('\nBuilding benchmarks...')
-    build_benchmarks(benchmark_src, args.benchmark_bin, args.bin,
-            itk_has_buildinformation)
+        print('\nBuilding benchmarks...')
+        build_benchmarks(benchmark_src, args.benchmark_bin, args.bin,
+                itk_has_buildinformation)
 
-    print('\nRunning benchmarks...')
-    run_benchmarks(args.benchmark_bin, itk_information)
+        print('\nRunning benchmarks...')
+        run_benchmarks(args.benchmark_bin, itk_information)
 
-    print('\nDone running performance benchmarks.')
+        print('\nDone running performance benchmarks.')
 elif args.command == 'upload':
     upload_benchmark_results(args.benchmark_bin, args.api_key)
 elif args.command == 'revisions':
