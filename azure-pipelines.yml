@@ -65,7 +65,7 @@ jobs:
       mkdir ITK-build
       cd ITK-build
       $(compilerInitialization)
-      cmake -DCMAKE_C_COMPILER:FILEPATH="$(cCompiler)" -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_CXX_COMPILER="$(cxxCompiler)" -DCMAKE_BUILD_TYPE:STRING=$(CMakeBuildType) -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK
+      cmake -DCMAKE_C_COMPILER:FILEPATH="$(cCompiler)" -DBUILD_SHARED_LIBS:BOOL=OFF -DCMAKE_CXX_COMPILER="$(cxxCompiler)" -DCMAKE_BUILD_TYPE:STRING=$(CMakeBuildType) -DBUILD_TESTING:BOOL=OFF -GNinja ../ITK
       ninja
     workingDirectory: $(Agent.BuildDirectory)
     displayName: 'Build ITK'
