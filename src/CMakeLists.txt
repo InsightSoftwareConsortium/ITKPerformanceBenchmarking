@@ -64,6 +64,4 @@ set( PerformanceBenchmarking_SRCS
     PerformanceBenchmarkingUtilities.cxx
     ${CMAKE_BINARY_DIR}/PerformanceBenchmarkingInformation.h)
 
-add_library( PerformanceBenchmarking ${ITK_LIBRARY_BUILD_TYPE} ${PerformanceBenchmarking_SRCS})
-itk_module_link_dependencies()
-itk_module_target(PerformanceBenchmarking)
+itk_module_add_library(PerformanceBenchmarking ${PerformanceBenchmarking_SRCS})
