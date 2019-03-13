@@ -45,7 +45,7 @@ echo ${ITKPERFORMANCEBENCHMARK_AUX_JSON}
  */
 static std::string getEnvJsonMap()
 {
-  char * auxEnvironmentJson  =  getenv( "ITKPERFORMANCEBENCHMARK_AUX_JSON" );
+  const char * auxEnvironmentJson = itksys::SystemTools::GetEnv( "ITKPERFORMANCEBENCHMARK_AUX_JSON" );
   if ( auxEnvironmentJson != nullptr )
   {
     jsonxx::Object auxEnvironmentObject;
