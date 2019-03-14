@@ -159,6 +159,7 @@ jobs:
         "ld: warning: text-based stub file"
         )
       set(dashboard_no_clean 1)
+      set(dashboard_no_update 1)
       set(ENV{CC} $(cCompiler))
       set(ENV{CXX} $(cxxCompiler))
       set(dashboard_cache "
