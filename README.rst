@@ -1,8 +1,9 @@
 ITKPerformanceBenchmarking
 ==========================
 
-.. image:: https://circleci.com/gh/InsightSoftwareConsortium/ITKPerformanceBenchmarking/tree/master.svg?style=svg
-    :target: https://circleci.com/gh/InsightSoftwareConsortium/ITKPerformanceBenchmarking/tree/master
+.. image:: https://dev.azure.com/InsightSoftwareConsortium/ITKModules/_apis/build/status/InsightSoftwareConsortium.ITKPerformanceBenchmarking?branchName=master
+    :target: https://dev.azure.com/InsightSoftwareConsortium/ITKModules/_build/latest?definitionId=14&branchName=master
+    :alt: Build Status
 
 Real-world tests to benchmark ITK performance.
 
