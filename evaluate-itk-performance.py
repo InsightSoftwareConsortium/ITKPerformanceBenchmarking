@@ -195,7 +195,10 @@ def build_benchmarks(benchmark_src, benchmark_bin,
 
 def run_benchmarks(benchmark_bin, itk_information):
     os.chdir(benchmark_bin)
-    subprocess.check_call(['ctest'])
+    #cmd = ['ctest','-V']
+    cmd = ['ctest']
+    print("Running: {0}".format(' '.join(cmd)))
+    subprocess.check_call(cmd)
 
 def upload_benchmark_results(benchmark_bin, api_key=None):
     hostname = socket.gethostname().lower()
