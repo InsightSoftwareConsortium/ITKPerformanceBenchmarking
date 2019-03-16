@@ -42,6 +42,8 @@ endif()
 
 project(PerformanceBenchmarking)
 
+option(ITK_USES_NUMEROFTHREADS "If ITKv5 uses NumberOfThreads (not NumberOfWorkUnits" OFF)
+
 set(PerformanceBenchmarking_LIBRARIES PerformanceBenchmarking)
 
 include_directories(${CMAKE_BINARY_DIR})

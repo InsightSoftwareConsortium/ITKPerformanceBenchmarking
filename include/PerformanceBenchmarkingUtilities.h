@@ -5,20 +5,20 @@
 #ifndef PerformanceBenchmarkingUtilities_h
 #define PerformanceBenchmarkingUtilities_h
 
-#include "PerformanceBenchmarkingExport.h"
+#include "PerformanceBenchmarkingInformation.h"
 
 #include "jsonxx.h"
 #include <ctime> //TODO:  Move to utiliites
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
-#if ITK_VERSION_MAJOR >= 5
-#include "itkMultiThreaderBase.h"
-using MultiThreaderName = itk::MultiThreaderBase;
-#define SET_PARALLEL_UNITS( x ) SetNumberOfWorkUnits( x )
-#else
+#if ITK_VERSION_MAJOR < 5 || defined(ITK_USES_NUMEROFTHREADS)
 #include "itkMultiThreader.h"
 using MultiThreaderName = itk::MultiThreader;
 #define SET_PARALLEL_UNITS( x ) SetNumberOfThreads( x )
+#else
+#include "itkMultiThreaderBase.h"
+using MultiThreaderName = itk::MultiThreaderBase;
+#define SET_PARALLEL_UNITS( x ) SetNumberOfWorkUnits( x )
 #endif
 
 PerformanceBenchmarking_EXPORT
