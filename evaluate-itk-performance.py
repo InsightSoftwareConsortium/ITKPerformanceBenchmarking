@@ -7,6 +7,8 @@ import os
 import socket
 import json
 
+import glob
+
 
 def get_shell_output_as_string(commandlist):
     """
@@ -331,6 +333,18 @@ if args.command == 'run':
         os.environ['ITKPERFORMANCEBENCHMARK_AUX_JSON'] = \
             json.dumps(itk_information)
 
+        ## Remove vcl_compiler.h in build dir that takes precidence over older non-generated
+        ## vcl_compiler.h in the source tree (older source code).
+        if not os.path.exists( os.path.join( args.src, 'Modules','ThirdParty','VNL','src','vxl','vcl','vcl_compiler.h.in') ):
+             generated_vcl_headers = glob.glob(os.path.join( args.bin, 'Modules','ThirdParty','VNL','src','vxl','vcl',"*.h"))
+             for vcl_header_file in generated_vcl_headers:
+                 os.remove( vcl_header_file )
+
+        ## HDF generates and tries to build .c files from other builds, clean these out
+        hdf5_generated_files = os.path.join( args.bin, 'Modules','ThirdParty','HDF5','src','itkhdf5',"*.c")
+        hdf5_bld_src_files = glob.glob( hdf5_generated_files )
+        for hdf5_file in hdf5_bld_src_files:
+             os.remove( hdf5_file )
 
         print('\nBuilding ITK...')
         build_itk(args.src, args.bin)
