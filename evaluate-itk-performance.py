@@ -40,7 +40,7 @@ run_parser.add_argument('bin', help='ITK build directory', action = FullPaths)
 run_parser.add_argument('benchmark_bin',
         help='ITK performance benchmarks build directory', action = FullPaths)
 run_parser.add_argument('-r', '--rev-list',
-        help='Arguments for "git rev-list" to select the range of commits to benchmark, for example: "--no-merges v4.10.0..v5.0rc1"',
+        help='Arguments for "git rev-list" to select the range of commits to benchmark, for example: "--first-parent v4.10.0..v5.0rc1"',
         default='--no-merges HEAD~1..')
 
 upload_parser = subparsers.add_parser('upload',
