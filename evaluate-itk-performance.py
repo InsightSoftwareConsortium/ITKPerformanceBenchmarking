@@ -43,7 +43,7 @@ run_parser.add_argument('benchmark_bin',
         help='ITK performance benchmarks build directory', action = FullPaths)
 run_parser.add_argument('-r', '--rev-list',
         help='Arguments for "git rev-list" to select the range of commits to benchmark, for example: "--first-parent v4.10.0..v5.0rc1"',
-        default='--no-merges HEAD~1..')
+        default='--first-parent HEAD~1..')
 
 upload_parser = subparsers.add_parser('upload',
         help='upload the benchmarks to data.kitware.com')
@@ -154,20 +154,41 @@ def check_for_build_information(itk_src):
         has_itkbuildinformation = True
     return has_itkbuildinformation
 
+# 2075084be6f9988b1ae2231bca607830fe6d772b is sha1 that rename NumberOfThreads into NumberOfWorkUnits in filters
+# Author: Dzenan Zukic <dzenan.zukic@kitware.com>
+# Date:   Tue Jul 17 19:30:02 2018
+# so all ancestors need to prevent the benchmarking from using
+def check_for_NumberOfThreads(itk_src):
+    os.chdir(itk_src)
+    try:
+        cmd = ['git', 'merge-base',
+            '--is-ancestor', 'HEAD',
+            '2075084be6f9988b1ae2231bca607830fe6d772b']
+        has_itkNumberOfThreads = not bool(subprocess.check_call( cmd ) )
+    except subprocess.CalledProcessError:
+        has_itkNumberOfThreads = False
+    return has_itkNumberOfThreads
+
 def build_benchmarks(benchmark_src, benchmark_bin,
         itk_bin,
-        itk_has_buildinformation):
+        itk_has_buildinformation,
+        itk_has_NumberOfThreads):
     os.chdir(benchmark_bin)
     if itk_has_buildinformation:
         build_information_arg = '-DITK_HAS_INFORMATION_H:BOOL=ON'
     else:
         build_information_arg = '-DITK_HAS_INFORMATION_H:BOOL=OFF'
+    if itk_has_NumberOfThreads:
+        NumberOfThreads_arg = '-DITK_USES_NUMBEROFTHREADS:BOOL=ON'
+    else:
+        NumberOfThreads_arg = '-DITK_USES_NUMBEROFTHREADS:BOOL=OFF'
     subprocess.check_call(['cmake',
         '-G', 'Ninja',
         '-DCMAKE_BUILD_TYPE:STRING=Release',
         '-DCMAKE_CXX_STANDARD:STRING=17',
         '-DITK_DIR:PATH=' + itk_bin,
         build_information_arg,
+        NumberOfThreads_arg,
         benchmark_src])
     subprocess.check_call(['ninja'])
 
@@ -328,10 +349,11 @@ if args.command == 'run':
         build_itk(args.src, args.bin)
 
         itk_has_buildinformation = check_for_build_information(args.src)
+        itk_has_NumberOfThreads = check_for_NumberOfThreads(args.src)
 
         print('\nBuilding benchmarks...')
         build_benchmarks(benchmark_src, args.benchmark_bin, args.bin,
-                itk_has_buildinformation)
+                itk_has_buildinformation, itk_has_NumberOfThreads)
 
         print('\nRunning benchmarks...')
         run_benchmarks(args.benchmark_bin, itk_information)

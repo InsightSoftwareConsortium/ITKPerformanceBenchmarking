@@ -30,6 +30,8 @@
 
 #include "PerformanceBenchmarkingExport.h"
 
+#cmakedefine ITK_USES_NUMBEROFTHREADS
+
 
 namespace itk
 {

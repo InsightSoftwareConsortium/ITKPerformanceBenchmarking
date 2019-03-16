@@ -45,6 +45,14 @@ if(NOT ITK_SOURCE_DIR)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
   endif()
 
+project(PerformanceBenchmarking)
+
+option(ITK_USES_NUMBEROFTHREADS "If ITKv5 uses NumberOfThreads (not NumberOfWorkUnits" OFF)
+
+set(PerformanceBenchmarking_LIBRARIES PerformanceBenchmarking)
+
+include_directories(${CMAKE_BINARY_DIR})
+if(NOT ITK_SOURCE_DIR)
   include(ITKModuleExternal)
 else()
   set(ITK_DIR ${CMAKE_BINARY_DIR})
