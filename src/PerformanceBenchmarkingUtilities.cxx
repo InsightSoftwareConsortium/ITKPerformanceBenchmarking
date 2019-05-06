@@ -158,6 +158,21 @@ std::string DecorateWithBuildInformation( std::string  inputJson)
     jsonxx::Object runTimeEnvJsonObject;
     const unsigned int defaultNumberOfThreads = MultiThreaderName::GetGlobalDefaultNumberOfThreads();
     runTimeEnvJsonObject << "GetGlobalDefaultNumberOfThreads" << defaultNumberOfThreads;
+    std::string threaderString;
+#if ITK_VERSION_MAJOR >= 5
+    itk::MultiThreaderBase::ThreaderType defaultThreader = itk::MultiThreaderBase::GetGlobalDefaultThreader();
+    threaderString = itk::MultiThreaderBase::ThreaderTypeToString(defaultThreader);
+#else
+    if ( itk::MultiThreader::GetGlobalDefaultUseThreadPool() )
+      {
+      threaderString = "Pool";
+      }
+    else
+      {
+      threaderString = "Platform";
+      }
+#endif
+    runTimeEnvJsonObject << "GetGlobalDefaultThreader" << threaderString;
     //NOTE: This is the load average, that includes this test, and many other test, and what the
     //      OS was doing around the time of the test.  It is not terribly reliable, but if it is
     //      much higher than the max number of CPU's then the tests are going to be very unreliable.
