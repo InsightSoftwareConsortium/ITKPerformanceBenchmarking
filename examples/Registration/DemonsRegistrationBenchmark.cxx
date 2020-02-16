@@ -45,13 +45,13 @@ protected:
   using RegistrationFilterType = itk::DemonsRegistrationFilter<ImageType, ImageType, DisplacementFieldType>;
 
 public:
-  virtual void
+  void
   Execute(itk::Object * caller, const itk::EventObject & event) override
   {
     Execute((const itk::Object *)caller, event);
   }
 
-  virtual void
+  void
   Execute(const itk::Object * object, const itk::EventObject & event) override
   {
     const RegistrationFilterType * filter = static_cast<const RegistrationFilterType *>(object);
