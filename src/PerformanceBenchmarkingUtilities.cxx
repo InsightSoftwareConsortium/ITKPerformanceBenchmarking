@@ -196,7 +196,7 @@ DecorateWithBuildInformation(std::string inputJson)
     auxEnvironmentObject.parse(getEnvJsonMap());
     // We need the contents of the env json, not the whole json
     const jsonxx::Object::container internalMap = auxEnvironmentObject.kv_map();
-    for (const auto internalElement : internalMap)
+    for (const auto & internalElement : internalMap)
     {
       o << internalElement.first << *(internalElement.second);
     }
