@@ -54,8 +54,8 @@ template <typename TInput, typename TOutput>
 class Op
 {
 public:
-  Op() {}
-  virtual ~Op() {}
+  Op() = default;
+  virtual ~Op() = default;
   bool
   operator!=(const Op &) const
   {

@@ -55,8 +55,7 @@ LOCAL_ResourceProbe<ValueType, MeanType>::LOCAL_ResourceProbe(std::string type, 
 
 
 template <typename ValueType, typename MeanType>
-LOCAL_ResourceProbe<ValueType, MeanType>::~LOCAL_ResourceProbe()
-{}
+LOCAL_ResourceProbe<ValueType, MeanType>::~LOCAL_ResourceProbe() = default;
 
 
 template <typename ValueType, typename MeanType>
