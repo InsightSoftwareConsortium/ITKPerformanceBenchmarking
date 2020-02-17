@@ -33,7 +33,7 @@ HighPriorityRealTimeProbe ::HighPriorityRealTimeProbe()
 }
 
 
-HighPriorityRealTimeProbe ::~HighPriorityRealTimeProbe() {}
+HighPriorityRealTimeProbe ::~HighPriorityRealTimeProbe() = default;
 
 
 HighPriorityRealTimeProbe::TimeStampType
