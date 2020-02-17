@@ -232,20 +232,16 @@ public:
   // Constructor
   Parameters()
     : timingsFileName("")
-    , iterations(1)
-    , threads(0)
     , inputFileName("")
     , interpolator("Linear")
     , extrapolator("")
-    , useCompositeTransform(false)
-    , splineOrderInterpolator(3)
     , transformsPrecision("float")
   {}
 
   // Benchmark main settings
   std::string timingsFileName;
-  int         iterations;
-  int         threads;
+  int         iterations{ 1 };
+  int         threads{ 0 };
 
   // Input, output images
   std::string              inputFileName;
@@ -256,8 +252,8 @@ public:
   std::string              interpolator;
   std::string              extrapolator;
   std::vector<std::string> transforms;
-  bool                     useCompositeTransform;
-  int                      splineOrderInterpolator;
+  bool                     useCompositeTransform{ false };
+  int                      splineOrderInterpolator{ 3 };
   std::string              transformsPrecision;
 };
 
