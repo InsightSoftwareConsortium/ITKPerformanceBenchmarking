@@ -515,7 +515,7 @@ template <typename T>
 bool
 Object::has(const std::string & key) const
 {
-  container::const_iterator it(value_map_.find(key));
+  auto it(value_map_.find(key));
   return it != value_map_.end() && it->second->is<T>();
 }
 
