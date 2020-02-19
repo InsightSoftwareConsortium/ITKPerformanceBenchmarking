@@ -32,29 +32,30 @@ public:
   using Self = CommandIterationUpdate;
   using Superclass = itk::Command;
   using Pointer = itk::SmartPointer<Self>;
-  itkNewMacro( Self );
+  itkNewMacro(Self);
 
 protected:
-  CommandIterationUpdate() {};
+  CommandIterationUpdate(){};
 
 public:
-
   using OptimizerType = itk::RegularStepGradientDescentOptimizerv4<double>;
-  using OptimizerPointer = const OptimizerType*;
+  using OptimizerPointer = const OptimizerType *;
 
-  void Execute(itk::Object *caller, const itk::EventObject & event) override
+  void
+  Execute(itk::Object * caller, const itk::EventObject & event) override
   {
-    Execute( (const itk::Object *)caller, event);
+    Execute((const itk::Object *)caller, event);
   }
 
-  void Execute(const itk::Object * object, const itk::EventObject & event) override
+  void
+  Execute(const itk::Object * object, const itk::EventObject & event) override
   {
-    OptimizerPointer optimizer = static_cast< OptimizerPointer >( object );
+    OptimizerPointer optimizer = static_cast<OptimizerPointer>(object);
 
-    if( ! itk::IterationEvent().CheckEvent( &event ) )
-      {
+    if (!itk::IterationEvent().CheckEvent(&event))
+    {
       return;
-      }
+    }
 
     std::cout << optimizer->GetCurrentIteration() << " = ";
     std::cout << optimizer->GetValue() << " : ";
@@ -63,140 +64,141 @@ public:
 };
 
 
-int main( int argc, char * argv[] )
+int
+main(int argc, char * argv[])
 {
-  if( argc < 7 )
-    {
+  if (argc < 7)
+  {
     std::cerr << "Usage: " << std::endl;
-    std::cerr << argv[0] << " timingsFile iterations threads fixedImageFile movingImageFile outputTransformFileName" << std::endl;
+    std::cerr << argv[0] << " timingsFile iterations threads fixedImageFile movingImageFile outputTransformFileName"
+              << std::endl;
     return EXIT_FAILURE;
-    }
-  const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
-  const int iterations = std::stoi( argv[2] );
-  int threads = std::stoi( argv[3] );
-  const char * fixedImageFileName = argv[4];
-  const char * movingImageFileName = argv[5];
-  const char * outputTransformFileName = argv[6];
+  }
+  const std::string timingsFileName = ReplaceOccurrence(argv[1], "__DATESTAMP__", PerfDateStamp());
+  const int         iterations = std::stoi(argv[2]);
+  int               threads = std::stoi(argv[3]);
+  const char *      fixedImageFileName = argv[4];
+  const char *      movingImageFileName = argv[5];
+  const char *      outputTransformFileName = argv[6];
 
-  if( threads > 0 )
-    {
-    MultiThreaderName::SetGlobalDefaultNumberOfThreads( threads );
-    }
+  if (threads > 0)
+  {
+    MultiThreaderName::SetGlobalDefaultNumberOfThreads(threads);
+  }
 
   constexpr unsigned int Dimension = 3;
   using PixelType = float;
   using ParametersValueType = double;
 
-  using ImageType = itk::Image< PixelType, 3 >;
+  using ImageType = itk::Image<PixelType, 3>;
 
-  using ReaderType = itk::ImageFileReader< ImageType >;
+  using ReaderType = itk::ImageFileReader<ImageType>;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( fixedImageFileName );
+  reader->SetFileName(fixedImageFileName);
   try
-    {
+  {
     reader->UpdateLargestPossibleRegion();
-    }
-  catch( itk::ExceptionObject & error )
-    {
+  }
+  catch (itk::ExceptionObject & error)
+  {
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   ImageType::Pointer fixedImage = reader->GetOutput();
   fixedImage->DisconnectPipeline();
 
-  reader->SetFileName( movingImageFileName );
+  reader->SetFileName(movingImageFileName);
   try
-    {
+  {
     reader->UpdateLargestPossibleRegion();
-    }
-  catch( itk::ExceptionObject & error )
-    {
+  }
+  catch (itk::ExceptionObject & error)
+  {
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   ImageType::Pointer movingImage = reader->GetOutput();
   movingImage->DisconnectPipeline();
 
 
-  using OptimizerType = itk::RegularStepGradientDescentOptimizerv4< ParametersValueType >;
+  using OptimizerType = itk::RegularStepGradientDescentOptimizerv4<ParametersValueType>;
   OptimizerType::Pointer optimizer = OptimizerType::New();
-  optimizer->SetLearningRate( 4.0 );
-  optimizer->SetMinimumStepLength( 0.001 );
-  optimizer->SetRelaxationFactor( 0.5 );
-  optimizer->SetNumberOfIterations( 200 );
-  //CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
-  //optimizer->AddObserver( itk::IterationEvent(), observer );
+  optimizer->SetLearningRate(4.0);
+  optimizer->SetMinimumStepLength(0.001);
+  optimizer->SetRelaxationFactor(0.5);
+  optimizer->SetNumberOfIterations(200);
+  // CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
+  // optimizer->AddObserver( itk::IterationEvent(), observer );
 
-  using MetricType = itk::MeanSquaresImageToImageMetricv4< ImageType, ImageType >;
+  using MetricType = itk::MeanSquaresImageToImageMetricv4<ImageType, ImageType>;
   MetricType::Pointer metric = MetricType::New();
 
-  using TransformType = itk::TranslationTransform< ParametersValueType, Dimension >;
+  using TransformType = itk::TranslationTransform<ParametersValueType, Dimension>;
 
-  using RegistrationType = itk::ImageRegistrationMethodv4< ImageType, ImageType, TransformType >;
+  using RegistrationType = itk::ImageRegistrationMethodv4<ImageType, ImageType, TransformType>;
   RegistrationType::Pointer registration = RegistrationType::New();
-  registration->SetMetric( metric );
-  registration->SetOptimizer( optimizer );
+  registration->SetMetric(metric);
+  registration->SetOptimizer(optimizer);
 
-  TransformType::Pointer movingInitialTransform = TransformType::New();
-  TransformType::ParametersType initialParameters(
-    movingInitialTransform->GetNumberOfParameters() );
-  initialParameters.Fill( 0.0 );
-  movingInitialTransform->SetParameters( initialParameters );
-  registration->SetMovingInitialTransform( movingInitialTransform );
+  TransformType::Pointer        movingInitialTransform = TransformType::New();
+  TransformType::ParametersType initialParameters(movingInitialTransform->GetNumberOfParameters());
+  initialParameters.Fill(0.0);
+  movingInitialTransform->SetParameters(initialParameters);
+  registration->SetMovingInitialTransform(movingInitialTransform);
 
-  TransformType::Pointer   identityTransform = TransformType::New();
+  TransformType::Pointer identityTransform = TransformType::New();
   identityTransform->SetIdentity();
-  registration->SetFixedInitialTransform( identityTransform );
+  registration->SetFixedInitialTransform(identityTransform);
 
   TransformType::Pointer optimizedTransform = TransformType::New();
-  optimizedTransform->SetParameters( initialParameters );
-  registration->SetInitialTransform( optimizedTransform );
+  optimizedTransform->SetParameters(initialParameters);
+  registration->SetInitialTransform(optimizedTransform);
 
   constexpr unsigned int numberOfLevels = 1;
 
   RegistrationType::ShrinkFactorsArrayType shrinkFactorsPerLevel;
-  shrinkFactorsPerLevel.SetSize( 1 );
+  shrinkFactorsPerLevel.SetSize(1);
   shrinkFactorsPerLevel[0] = 1;
 
   RegistrationType::SmoothingSigmasArrayType smoothingSigmasPerLevel;
-  smoothingSigmasPerLevel.SetSize( 1 );
+  smoothingSigmasPerLevel.SetSize(1);
   smoothingSigmasPerLevel[0] = 0;
 
-  registration->SetNumberOfLevels ( numberOfLevels );
-  registration->SetSmoothingSigmasPerLevel( smoothingSigmasPerLevel );
-  registration->SetShrinkFactorsPerLevel( shrinkFactorsPerLevel );
+  registration->SetNumberOfLevels(numberOfLevels);
+  registration->SetSmoothingSigmasPerLevel(smoothingSigmasPerLevel);
+  registration->SetShrinkFactorsPerLevel(shrinkFactorsPerLevel);
 
   RegistrationType::MetricSamplingStrategyType samplingStrategy = RegistrationType::RANDOM;
-  registration->SetMetricSamplingStrategy( samplingStrategy );
-  registration->SetMetricSamplingPercentage( 0.03 );
+  registration->SetMetricSamplingStrategy(samplingStrategy);
+  registration->SetMetricSamplingPercentage(0.03);
 
-  registration->SetFixedImage( fixedImage );
-  registration->SetMovingImage( movingImage );
+  registration->SetFixedImage(fixedImage);
+  registration->SetMovingImage(movingImage);
 
   using ScalesEstimatorType = itk::RegistrationParameterScalesFromPhysicalShift<MetricType>;
   ScalesEstimatorType::Pointer scalesEstimator = ScalesEstimatorType::New();
-  scalesEstimator->SetMetric( metric );
-  scalesEstimator->SetTransformForward( true );
-  optimizer->SetScalesEstimator( scalesEstimator );
-  optimizer->SetDoEstimateLearningRateOnce( true );
+  scalesEstimator->SetMetric(metric);
+  scalesEstimator->SetTransformForward(true);
+  optimizer->SetScalesEstimator(scalesEstimator);
+  optimizer->SetDoEstimateLearningRateOnce(true);
 
   itk::HighPriorityRealTimeProbesCollector collector;
-  for( int ii = 0; ii < iterations; ++ii )
-    {
+  for (int ii = 0; ii < iterations; ++ii)
+  {
     collector.Start("RegistrationFramework");
-    optimizedTransform->SetParameters( initialParameters );
-    registration->SetInitialTransform( optimizedTransform );
+    optimizedTransform->SetParameters(initialParameters);
+    registration->SetInitialTransform(optimizedTransform);
     registration->Update();
     collector.Stop("RegistrationFramework");
-    }
+  }
 
-  WriteExpandedReport(timingsFileName,collector,true,true,false);
+  WriteExpandedReport(timingsFileName, collector, true, true, false);
   TransformType::ConstPointer transform = registration->GetTransform();
 
-  using WriterType = itk::TransformFileWriterTemplate< ParametersValueType >;
+  using WriterType = itk::TransformFileWriterTemplate<ParametersValueType>;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetFileName( outputTransformFileName );
-  writer->SetInput( transform );
+  writer->SetFileName(outputTransformFileName);
+  writer->SetInput(transform);
   writer->Update();
 
   return EXIT_SUCCESS;

@@ -24,7 +24,8 @@
 
 /**  Decorate with json from an environmental variable
  *
- * export ITKPERFORMANCEBENCHMARK_AUX_JSON="{ \"ITK_PROGRAMMERS_ARE\": [ \"Spectacular\", \"Awesome\", \"Brilliant\", \"Good Looking\" ] }"
+ * export ITKPERFORMANCEBENCHMARK_AUX_JSON="{ \"ITK_PROGRAMMERS_ARE\": [ \"Spectacular\", \"Awesome\", \"Brilliant\",
+\"Good Looking\" ] }"
  *
  * For ITK versions without the new itk::BuildInformation
 cd ${ITK_SRC}
@@ -43,10 +44,11 @@ export ITKPERFORMANCEBENCHMARK_AUX_JSON="
 "
 echo ${ITKPERFORMANCEBENCHMARK_AUX_JSON}
  */
-static std::string getEnvJsonMap()
+static std::string
+getEnvJsonMap()
 {
-  const char * auxEnvironmentJson = itksys::SystemTools::GetEnv( "ITKPERFORMANCEBENCHMARK_AUX_JSON" );
-  if ( auxEnvironmentJson != nullptr )
+  const char * auxEnvironmentJson = itksys::SystemTools::GetEnv("ITKPERFORMANCEBENCHMARK_AUX_JSON");
+  if (auxEnvironmentJson != nullptr)
   {
     jsonxx::Object auxEnvironmentObject;
     auxEnvironmentObject.parse(auxEnvironmentJson);
@@ -56,25 +58,26 @@ static std::string getEnvJsonMap()
 }
 
 
-static std::string PerformanceGuessGitHash()
+static std::string
+PerformanceGuessGitHash()
 {
   std::string sha1Guess("HASHNOTEXPOSED");
 
   jsonxx::Object auxEnvironmentObject;
   auxEnvironmentObject.parse(getEnvJsonMap());
-  if( auxEnvironmentObject.has<jsonxx::Object>("ITK_MANUAL_BUILD_INFORMATION") )
-    {
+  if (auxEnvironmentObject.has<jsonxx::Object>("ITK_MANUAL_BUILD_INFORMATION"))
+  {
     if (auxEnvironmentObject.get<jsonxx::Object>("ITK_MANUAL_BUILD_INFORMATION").has<jsonxx::String>("GIT_CONFIG_SHA1"))
-      {
-      sha1Guess =
-          auxEnvironmentObject.get<jsonxx::Object>("ITK_MANUAL_BUILD_INFORMATION") \
-                              .get<jsonxx::String>("GIT_CONFIG_SHA1", sha1Guess) + "_ENV";
-      }
+    {
+      sha1Guess = auxEnvironmentObject.get<jsonxx::Object>("ITK_MANUAL_BUILD_INFORMATION")
+                    .get<jsonxx::String>("GIT_CONFIG_SHA1", sha1Guess) +
+                  "_ENV";
+    }
   }
 
 #ifdef ITK_HAS_INFORMATION_H
   const std::string itkHash = itk::BuildInformation::GetInstance()->GetValue("GIT_CONFIG_SHA1");
-  if( itkHash.size() > 1 )
+  if (itkHash.size() > 1)
   {
     sha1Guess = itkHash;
   }
@@ -82,19 +85,20 @@ static std::string PerformanceGuessGitHash()
   return sha1Guess;
 }
 
-std::string PerfDateStamp()
+std::string
+PerfDateStamp()
 {
   std::time_t t = std::time(nullptr);
-  char mbstr[100];
-  if (std::strftime(mbstr, sizeof(mbstr), "%F-%H.%M.%S", std::localtime(&t))) {
+  char        mbstr[100];
+  if (std::strftime(mbstr, sizeof(mbstr), "%F-%H.%M.%S", std::localtime(&t)))
+  {
     return mbstr;
   }
   return "";
 }
 
-std::string ReplaceOccurrence( std::string str,
-                              const  std::string && findvalue,
-                              const  std::string && replacevalue)
+std::string
+ReplaceOccurrence(std::string str, const std::string && findvalue, const std::string && replacevalue)
 {
   /* Locate the substring to replace. */
   auto index = str.find(findvalue);
@@ -102,34 +106,40 @@ std::string ReplaceOccurrence( std::string str,
   {
     return str;
   }
-  static const std::string under{"_"};
+  static const std::string under{ "_" };
   /* Make the replacement. */
-  str.replace(index, findvalue.size(), replacevalue + under + PerformanceGuessGitHash().substr( 0, 10 ) + under );
+  str.replace(index, findvalue.size(), replacevalue + under + PerformanceGuessGitHash().substr(0, 10) + under);
   return str;
 }
 
-void WriteExpandedReport(const std::string &timingsFileName, itk::HighPriorityRealTimeProbesCollector &collector,
-                         bool printSystemInfo, bool printReportHead, bool useTabs)
+void
+WriteExpandedReport(const std::string &                        timingsFileName,
+                    itk::HighPriorityRealTimeProbesCollector & collector,
+                    bool                                       printSystemInfo,
+                    bool                                       printReportHead,
+                    bool                                       useTabs)
 {
-  collector.Report( std::cout, printSystemInfo, printReportHead, useTabs );
+  collector.Report(std::cout, printSystemInfo, printReportHead, useTabs);
   std::ofstream timingsFile(timingsFileName, std::ios_base::out);
-  if(timingsFileName.find(".json"))
+  if (timingsFileName.find(".json"))
   {
     std::stringstream probejsonstream;
     collector.JSONReport(probejsonstream, printSystemInfo);
     const std::string finalJsonString = DecorateWithBuildInformation(probejsonstream.str());
     timingsFile << finalJsonString;
   }
-  else {
+  else
+  {
     printSystemInfo = false;
     printReportHead = true;
     useTabs = true;
-    collector.ExpandedReport(timingsFile, printSystemInfo, printReportHead, useTabs);\
+    collector.ExpandedReport(timingsFile, printSystemInfo, printReportHead, useTabs);
   }
   timingsFile.close();
 }
 
-std::string DecorateWithBuildInformation( std::string  inputJson)
+std::string
+DecorateWithBuildInformation(std::string inputJson)
 {
   jsonxx::Object o;
   o.parse(inputJson);
@@ -139,7 +149,7 @@ std::string DecorateWithBuildInformation( std::string  inputJson)
     for (auto items : itk::BuildInformation::GetInstance()->GetMap())
     {
       itkInfoJsonObject << items.first << items.second.m_Value;
-      itkInfoJsonObject << items.first+"_description" << items.second.m_Description;
+      itkInfoJsonObject << items.first + "_description" << items.second.m_Description;
     }
     o << "ITKBuildInformation" << itkInfoJsonObject;
   }
@@ -150,12 +160,12 @@ std::string DecorateWithBuildInformation( std::string  inputJson)
     for (auto items : itk::PerformanceBenchmarkingInformation::GetInstance()->GetMap())
     {
       itkPerformanceBenchmarkJsonObject << items.first << items.second.m_Value;
-      itkPerformanceBenchmarkJsonObject << items.first+"_description" << items.second.m_Description;
+      itkPerformanceBenchmarkJsonObject << items.first + "_description" << items.second.m_Description;
     }
     o << "PerformanceBenchmarkInformation" << itkPerformanceBenchmarkJsonObject;
   }
   {
-    jsonxx::Object runTimeEnvJsonObject;
+    jsonxx::Object     runTimeEnvJsonObject;
     const unsigned int defaultNumberOfThreads = MultiThreaderName::GetGlobalDefaultNumberOfThreads();
     runTimeEnvJsonObject << "GetGlobalDefaultNumberOfThreads" << defaultNumberOfThreads;
     std::string threaderString;
@@ -163,34 +173,34 @@ std::string DecorateWithBuildInformation( std::string  inputJson)
     itk::MultiThreaderBase::ThreaderType defaultThreader = itk::MultiThreaderBase::GetGlobalDefaultThreader();
     threaderString = itk::MultiThreaderBase::ThreaderTypeToString(defaultThreader);
 #else
-    if ( itk::MultiThreader::GetGlobalDefaultUseThreadPool() )
-      {
+    if (itk::MultiThreader::GetGlobalDefaultUseThreadPool())
+    {
       threaderString = "Pool";
-      }
+    }
     else
-      {
+    {
       threaderString = "Platform";
-      }
+    }
 #endif
     runTimeEnvJsonObject << "GetGlobalDefaultThreader" << threaderString;
-    //NOTE: This is the load average, that includes this test, and many other test, and what the
+    // NOTE: This is the load average, that includes this test, and many other test, and what the
     //      OS was doing around the time of the test.  It is not terribly reliable, but if it is
     //      much higher than the max number of CPU's then the tests are going to be very unreliable.
     itksys::SystemInformation hardwareInfo;
-    const double loadAverage = hardwareInfo.GetLoadAverage();
+    const double              loadAverage = hardwareInfo.GetLoadAverage();
     runTimeEnvJsonObject << "ReportWritingLoadAverage" << loadAverage;
     o << "RunTimeInformation" << runTimeEnvJsonObject;
   }
   {
-      jsonxx::Object auxEnvironmentObject;
-      auxEnvironmentObject.parse(getEnvJsonMap());
-      // We need the contents of the env json, not the whole json
-      const jsonxx::Object::container internalMap = auxEnvironmentObject.kv_map();
-      for(const auto internalElement : internalMap)
-      {
-        o << internalElement.first << *(internalElement.second);
-      }
+    jsonxx::Object auxEnvironmentObject;
+    auxEnvironmentObject.parse(getEnvJsonMap());
+    // We need the contents of the env json, not the whole json
+    const jsonxx::Object::container internalMap = auxEnvironmentObject.kv_map();
+    for (const auto internalElement : internalMap)
+    {
+      o << internalElement.first << *(internalElement.second);
+    }
   }
-  //std::cout << o.json() << std::endl;
+  // std::cout << o.json() << std::endl;
   return o.json();
 }

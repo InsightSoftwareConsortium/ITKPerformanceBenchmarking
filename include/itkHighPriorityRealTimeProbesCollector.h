@@ -39,8 +39,8 @@ namespace itk
  * \ingroup PerformanceBenchmarking
  *
  */
-class PerformanceBenchmarking_EXPORT HighPriorityRealTimeProbesCollector:
-  public LOCAL_ResourceProbesCollectorBase< HighPriorityRealTimeProbe >
+class PerformanceBenchmarking_EXPORT HighPriorityRealTimeProbesCollector
+  : public LOCAL_ResourceProbesCollectorBase<HighPriorityRealTimeProbe>
 {
 public:
   /** Constructor */
@@ -50,8 +50,7 @@ public:
   ~HighPriorityRealTimeProbesCollector() override;
 
 private:
-
 };
 } // end namespace itk
 
-#endif //itkHighPriorityRealTimeProbe_h
+#endif // itkHighPriorityRealTimeProbe_h

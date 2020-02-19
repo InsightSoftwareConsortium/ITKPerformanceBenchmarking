@@ -21,22 +21,24 @@
 #include "itkMath.h"
 
 // Check the validation of resource probe's result
-bool CheckTimeProbe(itk::HighPriorityRealTimeProbe& probe)
+bool
+CheckTimeProbe(itk::HighPriorityRealTimeProbe & probe)
 {
   bool check = true;
   // Check the numbers of iteration, starts, and stops
-  check &= (probe.GetNumberOfIteration() == probe.GetNumberOfStarts() );
-  check &= (probe.GetNumberOfIteration() == probe.GetNumberOfStops() );
+  check &= (probe.GetNumberOfIteration() == probe.GetNumberOfStarts());
+  check &= (probe.GetNumberOfIteration() == probe.GetNumberOfStops());
 
   check &= (probe.GetStandardDeviation() >= 0);
-  check &= (probe.GetMinimum()           >= 0);
-  check &= (probe.GetMean()              >= probe.GetMinimum());
-  check &= (probe.GetMaximum()           >= probe.GetMean());
-  check &= (probe.GetTotal()             >= probe.GetMaximum());
+  check &= (probe.GetMinimum() >= 0);
+  check &= (probe.GetMean() >= probe.GetMinimum());
+  check &= (probe.GetMaximum() >= probe.GetMean());
+  check &= (probe.GetTotal() >= probe.GetMaximum());
 
   return check;
 }
-int itkHighPriorityRealTimeProbeTest( int, char * [] )
+int
+itkHighPriorityRealTimeProbeTest(int, char *[])
 {
   // Create an ITK time probe
   itk::HighPriorityRealTimeProbe localTimer;
@@ -58,27 +60,27 @@ int itkHighPriorityRealTimeProbeTest( int, char * [] )
   std::cout << "Maximum:           " << localTimer.GetMaximum() << std::endl;
   std::cout << "Standard deviation:" << localTimer.GetStandardDeviation() << std::endl;
 
-  unsigned int iteration (100);
+  unsigned int iteration(100);
 
-  for(unsigned int it=0; it<iteration; ++it)
-    {
+  for (unsigned int it = 0; it < iteration; ++it)
+  {
     // time a task
     localTimer.Start();
 
     double sum = 0.0;
-    for( unsigned int i = 0; i < 1e6; ++i )
-      {
+    for (unsigned int i = 0; i < 1e6; ++i)
+    {
       sum += i;
-      }
+    }
 
     localTimer.Stop();
-    }
+  }
 
-  if(!CheckTimeProbe(localTimer))
-    {
-     std::cerr << "Validation of Probe failure" << std::endl;
-     return EXIT_FAILURE;
-    }
+  if (!CheckTimeProbe(localTimer))
+  {
+    std::cerr << "Validation of Probe failure" << std::endl;
+    return EXIT_FAILURE;
+  }
 
   // Print current values
   std::cout << "InstantValue:      " << localTimer.GetInstantValue() << std::endl;
@@ -96,26 +98,28 @@ int itkHighPriorityRealTimeProbeTest( int, char * [] )
   // invoke reset
   localTimer.Reset();
 
-  if( localTimer.GetNumberOfStarts() != 0 )
-    {
+  if (localTimer.GetNumberOfStarts() != 0)
+  {
     std::cerr << "Reset() failure" << std::endl;
     return EXIT_FAILURE;
-    }
-  if( localTimer.GetNumberOfStops() != itk::NumericTraits< itk::HighPriorityRealTimeProbe::CountType >::ZeroValue() )
-    {
+  }
+  if (localTimer.GetNumberOfStops() != itk::NumericTraits<itk::HighPriorityRealTimeProbe::CountType>::ZeroValue())
+  {
     std::cerr << "Reset() failure" << std::endl;
     return EXIT_FAILURE;
-    }
- if( itk::Math::NotExactlyEquals(localTimer.GetTotal(), itk::NumericTraits< itk::HighPriorityRealTimeProbe::TimeStampType  >::ZeroValue()) )
-    {
+  }
+  if (itk::Math::NotExactlyEquals(localTimer.GetTotal(),
+                                  itk::NumericTraits<itk::HighPriorityRealTimeProbe::TimeStampType>::ZeroValue()))
+  {
     std::cerr << "Reset() failure" << std::endl;
     return EXIT_FAILURE;
-    }
-  if( itk::Math::NotExactlyEquals(localTimer.GetMean(), itk::NumericTraits< itk::HighPriorityRealTimeProbe::TimeStampType >::ZeroValue()) )
-    {
+  }
+  if (itk::Math::NotExactlyEquals(localTimer.GetMean(),
+                                  itk::NumericTraits<itk::HighPriorityRealTimeProbe::TimeStampType>::ZeroValue()))
+  {
     std::cerr << "Reset() failure" << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
   /** Invoke GetRealTimeClock. */
   itk::RealTimeStamp timeStamp = localTimer.GetHighPriorityRealTimeClock()->GetRealTimeStamp();

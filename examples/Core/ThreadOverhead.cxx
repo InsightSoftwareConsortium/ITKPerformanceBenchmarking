@@ -41,8 +41,8 @@
 using ProbeType = itk::HighPriorityRealTimeProbe;
 using CollectorType = itk::HighPriorityRealTimeProbesCollector;
 
-//using CollectorType = itk::TimeProbesCollectorBase;
-//using ProbeType = itk::TimeProbe;
+// using CollectorType = itk::TimeProbesCollectorBase;
+// using ProbeType = itk::TimeProbe;
 
 
 namespace
@@ -50,36 +50,40 @@ namespace
 
 CollectorType collector;
 
-template< typename TInput, typename TOutput >
+template <typename TInput, typename TOutput>
 class Op
 {
 public:
   Op() {}
   virtual ~Op() {}
-  bool operator!=(const Op &) const
+  bool
+  operator!=(const Op &) const
   {
     return false;
   }
 
-  bool operator==(const Op & other) const
+  bool
+  operator==(const Op & other) const
   {
-    return !( *this != other );
+    return !(*this != other);
   }
 
-  inline TOutput operator()(const TInput & A) const
+  inline TOutput
+  operator()(const TInput & A) const
   {
-    return static_cast< TOutput >( A + 1);
+    return static_cast<TOutput>(A + 1);
   }
 };
-}
+} // namespace
 
-static ProbeType time_it(unsigned int threads, unsigned int iterations)
+static ProbeType
+time_it(unsigned int threads, unsigned int iterations)
 {
 
   constexpr unsigned int Dimension = 1;
   using PixelType = float;
 
-  using ImageType = itk::Image<PixelType,Dimension>;
+  using ImageType = itk::Image<PixelType, Dimension>;
 
   ImageType::Pointer image = ImageType::New();
 
@@ -89,13 +93,11 @@ static ProbeType time_it(unsigned int threads, unsigned int iterations)
   image->FillBuffer(0);
 
 
-  using FilterType = itk::UnaryFunctorImageFilter< ImageType,
-                                        ImageType,
-                                        Op<PixelType,PixelType > >;
+  using FilterType = itk::UnaryFunctorImageFilter<ImageType, ImageType, Op<PixelType, PixelType>>;
 
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput(image);
-  filter->SET_PARALLEL_UNITS( threads );
+  filter->SET_PARALLEL_UNITS(threads);
 
   // execute one time out of the loop to allocate memory
   filter->UpdateLargestPossibleRegion();
@@ -105,43 +107,44 @@ static ProbeType time_it(unsigned int threads, unsigned int iterations)
 
   const std::string name = ss.str();
 
-  for( unsigned ii = 0; ii < iterations; ++ii )
-    {
+  for (unsigned ii = 0; ii < iterations; ++ii)
+  {
     image->Modified();
     collector.Start(name.c_str());
     filter->UpdateLargestPossibleRegion();
     collector.Stop(name.c_str());
-    }
+  }
 
   return collector.GetProbe(name.c_str());
 }
 
 
-int main( int argc, char * argv[] )
+int
+main(int argc, char * argv[])
 {
-  if( argc > 3 )
-    {
+  if (argc > 3)
+  {
     std::cerr << "Usage: " << std::endl;
     std::cerr << argv[0] << " timingsFile [iterations [threads]]" << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
-  const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
-  const int iterations = (argc>2) ? std::stoi( argv[2] ): 500;
-  const int threads = (argc>3) ? std::stoi( argv[3] ) : MultiThreaderName::GetGlobalDefaultNumberOfThreads();
+  const std::string timingsFileName = ReplaceOccurrence(argv[1], "__DATESTAMP__", PerfDateStamp());
+  const int         iterations = (argc > 2) ? std::stoi(argv[2]) : 500;
+  const int         threads = (argc > 3) ? std::stoi(argv[3]) : MultiThreaderName::GetGlobalDefaultNumberOfThreads();
 
   if (threads == 1)
-    {
+  {
     std::cout << "Unable to estimate the cost with only one thread!" << std::endl;
     return EXIT_FAILURE;
-    }
+  }
 
-  ProbeType t1 = time_it(1,iterations);
-  ProbeType t2 = time_it(threads,iterations);
+  ProbeType t1 = time_it(1, iterations);
+  ProbeType t2 = time_it(threads, iterations);
 
-  WriteExpandedReport(timingsFileName,collector,true,true,false);
+  WriteExpandedReport(timingsFileName, collector, true, true, false);
 
-  double cost = (t2.GetMinimum() - t1.GetMinimum())/(threads-1.0);
+  double cost = (t2.GetMinimum() - t1.GetMinimum()) / (threads - 1.0);
 
   std::cout << "\n\nEstimated overhead cost per thread: " << cost * 1e6 << " micro-seconds\n\n";
 

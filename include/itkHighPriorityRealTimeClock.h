@@ -23,27 +23,27 @@
 #include "PerformanceBenchmarkingExport.h"
 
 #if defined(_WIN32)
-#include <windows.h>
-#endif  // defined(_WIN32)
+#  include <windows.h>
+#endif // defined(_WIN32)
 
 namespace itk
 {
 
 /** \class HighPriorityRealTimeClock
-* \brief The HighPriorityRealTimeClock provides a timestamp from a real-time clock.
-*
-* It subclasses from RealTimeClock to bump the process priority.
-*
-* \ingroup PerformanceBenchmarking
-*
-*/
+ * \brief The HighPriorityRealTimeClock provides a timestamp from a real-time clock.
+ *
+ * It subclasses from RealTimeClock to bump the process priority.
+ *
+ * \ingroup PerformanceBenchmarking
+ *
+ */
 class PerformanceBenchmarking_EXPORT HighPriorityRealTimeClock : public RealTimeClock
 {
 public:
   using Self = HighPriorityRealTimeClock;
   using Superclass = RealTimeClock;
-  using Pointer = SmartPointer< Self >;
-  using ConstPointer = SmartPointer< const Self >;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for defining the name of the class */
   itkTypeMacro(HighPriorityRealTimeClock, RealTimeClock);
@@ -59,21 +59,23 @@ protected:
   ~HighPriorityRealTimeClock() override;
 
   /** Method for raising and restoring the priority */
-  virtual void RaisePriority();
-  virtual void RestorePriority();
+  virtual void
+  RaisePriority();
+  virtual void
+  RestorePriority();
 
 private:
-
 #if defined(_WIN32)
-  DWORD  m_OldPriorityClass;
-  int    m_OldThreadPriority;
+  DWORD m_OldPriorityClass;
+  int   m_OldThreadPriority;
 #else
-  int    m_OldProcessPriority;
-#endif  //  defined(_WIN32)
+  int m_OldProcessPriority;
+#endif //  defined(_WIN32)
 
-  void   DisplayErrorMessage();
+  void
+  DisplayErrorMessage();
 };
 
 } // end of namespace itk
 
-#endif  // __itkHighPriorityRealTimeClock_h
+#endif // __itkHighPriorityRealTimeClock_h

@@ -26,22 +26,18 @@
 namespace itk
 {
 
-HighPriorityRealTimeProbe
-::HighPriorityRealTimeProbe() :LOCAL_ResourceProbe< TimeStampType, TimeStampType >("Time", "s")
+HighPriorityRealTimeProbe ::HighPriorityRealTimeProbe()
+  : LOCAL_ResourceProbe<TimeStampType, TimeStampType>("Time", "s")
 {
   this->m_HighPriorityRealTimeClock = HighPriorityRealTimeClock::New();
 }
 
 
-HighPriorityRealTimeProbe
-::~HighPriorityRealTimeProbe()
-{
-}
+HighPriorityRealTimeProbe ::~HighPriorityRealTimeProbe() {}
 
 
 HighPriorityRealTimeProbe::TimeStampType
-HighPriorityRealTimeProbe
-::GetInstantValue() const
+HighPriorityRealTimeProbe ::GetInstantValue() const
 {
   // Get the current time.
   return m_HighPriorityRealTimeClock->GetTimeInSeconds();

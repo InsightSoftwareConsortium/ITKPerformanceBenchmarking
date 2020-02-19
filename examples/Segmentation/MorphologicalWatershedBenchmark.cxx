@@ -29,67 +29,68 @@
 #include <fstream>
 
 
-int main( int argc, char * argv[] )
+int
+main(int argc, char * argv[])
 {
-  if( argc < 5 )
-    {
+  if (argc < 5)
+  {
     std::cerr << "Usage: " << std::endl;
     std::cerr << argv[0] << " timingsFile iterations inputImageFile outputImageFile" << std::endl;
     return EXIT_FAILURE;
-    }
-  const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
-  const int iterations = std::stoi( argv[2] );
-  const char * inputImageFileName = argv[3];
-  const char * outputImageFileName = argv[4];
+  }
+  const std::string timingsFileName = ReplaceOccurrence(argv[1], "__DATESTAMP__", PerfDateStamp());
+  const int         iterations = std::stoi(argv[2]);
+  const char *      inputImageFileName = argv[3];
+  const char *      outputImageFileName = argv[4];
 
   constexpr unsigned int Dimension = 3;
   using PixelType = float;
 
-  using ImageType = itk::Image< PixelType, Dimension >;
-  using LabelImageType = itk::Image< unsigned long long, Dimension >;
+  using ImageType = itk::Image<PixelType, Dimension>;
+  using LabelImageType = itk::Image<unsigned long long, Dimension>;
 
-  using ReaderType = itk::ImageFileReader< ImageType >;
+  using ReaderType = itk::ImageFileReader<ImageType>;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( inputImageFileName );
+  reader->SetFileName(inputImageFileName);
   try
-    {
+  {
     reader->UpdateLargestPossibleRegion();
-    }
-  catch( itk::ExceptionObject & error )
-    {
+  }
+  catch (itk::ExceptionObject & error)
+  {
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   ImageType::Pointer inputImage = reader->GetOutput();
   inputImage->DisconnectPipeline();
 
-  using GradientMagnitudeFilterType = itk::GradientMagnitudeRecursiveGaussianImageFilter< ImageType, ImageType >;
+  using GradientMagnitudeFilterType = itk::GradientMagnitudeRecursiveGaussianImageFilter<ImageType, ImageType>;
   GradientMagnitudeFilterType::Pointer gradientMagnitudeFilter = GradientMagnitudeFilterType::New();
-  gradientMagnitudeFilter->SetInput( inputImage );
-  gradientMagnitudeFilter->SetSigma( 5.0 );
+  gradientMagnitudeFilter->SetInput(inputImage);
+  gradientMagnitudeFilter->SetSigma(5.0);
 
-  using WatershedFilterType = itk::MorphologicalWatershedImageFilter< ImageType, LabelImageType >;
+  using WatershedFilterType = itk::MorphologicalWatershedImageFilter<ImageType, LabelImageType>;
   WatershedFilterType::Pointer watershedFilter = WatershedFilterType::New();
-  watershedFilter->SetInput( gradientMagnitudeFilter->GetOutput() );
-  watershedFilter->SetLevel( 0.3 );
+  watershedFilter->SetInput(gradientMagnitudeFilter->GetOutput());
+  watershedFilter->SetLevel(0.3);
   watershedFilter->FullyConnectedOn();
   watershedFilter->MarkWatershedLineOff();
 
   itk::HighPriorityRealTimeProbesCollector collector;
-  for( int ii = 0; ii < iterations; ++ii )
-    {
+  for (int ii = 0; ii < iterations; ++ii)
+  {
     inputImage->Modified();
     collector.Start("Watershed");
     watershedFilter->UpdateLargestPossibleRegion();
     collector.Stop("Watershed");
-    }
+  }
 
   WriteExpandedReport(timingsFileName, collector, true, true, false);
 
-  using WriterType = itk::ImageFileWriter< LabelImageType >;
+  using WriterType = itk::ImageFileWriter<LabelImageType>;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetFileName( outputImageFileName );
-  writer->SetInput( watershedFilter->GetOutput() );
+  writer->SetFileName(outputImageFileName);
+  writer->SetInput(watershedFilter->GetOutput());
   writer->Update();
 
   return EXIT_SUCCESS;
