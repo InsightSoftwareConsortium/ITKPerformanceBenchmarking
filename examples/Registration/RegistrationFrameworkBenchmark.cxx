@@ -168,7 +168,7 @@ main(int argc, char * argv[])
   registration->SetSmoothingSigmasPerLevel(smoothingSigmasPerLevel);
   registration->SetShrinkFactorsPerLevel(shrinkFactorsPerLevel);
 
-  RegistrationType::MetricSamplingStrategyType samplingStrategy = RegistrationType::RANDOM;
+  RegistrationType::MetricSamplingStrategyEnum samplingStrategy = RegistrationType::MetricSamplingStrategyEnum::RANDOM;
   registration->SetMetricSamplingStrategy(samplingStrategy);
   registration->SetMetricSamplingPercentage(0.03);
 
