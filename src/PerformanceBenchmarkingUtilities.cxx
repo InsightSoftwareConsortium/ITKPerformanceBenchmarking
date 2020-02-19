@@ -170,7 +170,7 @@ DecorateWithBuildInformation(std::string inputJson)
     runTimeEnvJsonObject << "GetGlobalDefaultNumberOfThreads" << defaultNumberOfThreads;
     std::string threaderString;
 #if ITK_VERSION_MAJOR >= 5
-    itk::MultiThreaderBase::ThreaderType defaultThreader = itk::MultiThreaderBase::GetGlobalDefaultThreader();
+    itk::MultiThreaderBase::ThreaderEnum defaultThreader = itk::MultiThreaderBase::GetGlobalDefaultThreader();
     threaderString = itk::MultiThreaderBase::ThreaderTypeToString(defaultThreader);
 #else
     if (itk::MultiThreader::GetGlobalDefaultUseThreadPool())
