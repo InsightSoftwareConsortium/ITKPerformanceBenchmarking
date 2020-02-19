@@ -12,34 +12,28 @@
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
 #if ITK_VERSION_MAJOR >= 5
-#include "itkMultiThreaderBase.h"
+#  include "itkMultiThreaderBase.h"
 using MultiThreaderName = itk::MultiThreaderBase;
-#define SET_PARALLEL_UNITS( x ) SetNumberOfWorkUnits( x )
+#  define SET_PARALLEL_UNITS(x) SetNumberOfWorkUnits(x)
 #else
-#include "itkMultiThreader.h"
+#  include "itkMultiThreader.h"
 using MultiThreaderName = itk::MultiThreader;
-#define SET_PARALLEL_UNITS( x ) SetNumberOfThreads( x )
+#  define SET_PARALLEL_UNITS(x) SetNumberOfThreads(x)
 #endif
 
-PerformanceBenchmarking_EXPORT
-std::string
-PerfDateStamp();
+PerformanceBenchmarking_EXPORT std::string
+                               PerfDateStamp();
 
-PerformanceBenchmarking_EXPORT
-std::string
-ReplaceOccurrence( std::string str,
-                   const  std::string && findvalue,
-                   const  std::string && replacevalue );
+PerformanceBenchmarking_EXPORT std::string
+                               ReplaceOccurrence(std::string str, const std::string && findvalue, const std::string && replacevalue);
 
-PerformanceBenchmarking_EXPORT
-std::string
-DecorateWithBuildInformation( std::string inputJson);
+PerformanceBenchmarking_EXPORT std::string
+                               DecorateWithBuildInformation(std::string inputJson);
 
-PerformanceBenchmarking_EXPORT
-void
-WriteExpandedReport( const std::string &timingsFileName,
-                     itk::HighPriorityRealTimeProbesCollector &collector,
-                     bool printSystemInfo,
-                     bool printReportHead,
-                     bool useTabs );
+PerformanceBenchmarking_EXPORT void
+WriteExpandedReport(const std::string &                        timingsFileName,
+                    itk::HighPriorityRealTimeProbesCollector & collector,
+                    bool                                       printSystemInfo,
+                    bool                                       printReportHead,
+                    bool                                       useTabs);
 #endif

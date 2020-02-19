@@ -37,17 +37,15 @@ namespace itk
  * \ingroup PerformanceBenchmarking
  *
  */
-class PerformanceBenchmarking_EXPORT HighPriorityRealTimeProbe: public
-  LOCAL_ResourceProbe< HighPriorityRealTimeClock::TimeStampType, HighPriorityRealTimeClock::TimeStampType >
+class PerformanceBenchmarking_EXPORT HighPriorityRealTimeProbe
+  : public LOCAL_ResourceProbe<HighPriorityRealTimeClock::TimeStampType, HighPriorityRealTimeClock::TimeStampType>
 {
 public:
-
   /** Type for measuring time. See the RealTimeClock class for details on the
    * precision and units of this clock signal */
   using TimeStampType = HighPriorityRealTimeClock::TimeStampType;
 
 public:
-
   /** Constructor */
   HighPriorityRealTimeProbe();
 
@@ -55,14 +53,14 @@ public:
   ~HighPriorityRealTimeProbe() override;
 
   /** Get the current time. */
-  TimeStampType GetInstantValue() const override;
+  TimeStampType
+  GetInstantValue() const override;
 
   /** Get a handle to m_RealTimeClock. */
-  itkGetConstObjectMacro( HighPriorityRealTimeClock, HighPriorityRealTimeClock );
+  itkGetConstObjectMacro(HighPriorityRealTimeClock, HighPriorityRealTimeClock);
 
 private:
   HighPriorityRealTimeClock::Pointer m_HighPriorityRealTimeClock;
-
 };
 } // end namespace itk
-#endif //itkHighPriorityRealTimeProbe_h
+#endif // itkHighPriorityRealTimeProbe_h

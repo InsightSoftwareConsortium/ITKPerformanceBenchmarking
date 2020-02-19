@@ -24,84 +24,85 @@
 #include "PerformanceBenchmarkingUtilities.h"
 
 
-int main(int argc, char * argv[])
+int
+main(int argc, char * argv[])
 {
-  if( argc < 6 )
-    {
+  if (argc < 6)
+  {
     std::cerr << "Usage: " << std::endl;
     std::cerr << argv[0] << " timingsFile iterations threads fixedImageFile movingImageFile" << std::endl;
     return EXIT_FAILURE;
-    }
-  const std::string timingsFileName = ReplaceOccurrence( argv[1], "__DATESTAMP__", PerfDateStamp());
-  const int iterations = std::stoi( argv[2] );
-  int threads = std::stoi( argv[3] );
+  }
+  const std::string timingsFileName = ReplaceOccurrence(argv[1], "__DATESTAMP__", PerfDateStamp());
+  const int         iterations = std::stoi(argv[2]);
+  int               threads = std::stoi(argv[3]);
   const std::string fixedImageFileName = argv[4];
   const std::string movingImageFileName = argv[5];
 
-  if( threads > 0 )
-    {
-    MultiThreaderName::SetGlobalDefaultNumberOfThreads( threads );
-    }
+  if (threads > 0)
+  {
+    MultiThreaderName::SetGlobalDefaultNumberOfThreads(threads);
+  }
 
   constexpr unsigned int Dimension = 3;
   using PixelType = float;
   using ParametersValueType = double;
 
-  using ImageType = itk::Image< PixelType, Dimension >;
+  using ImageType = itk::Image<PixelType, Dimension>;
 
-  using ReaderType = itk::ImageFileReader< ImageType >;
+  using ReaderType = itk::ImageFileReader<ImageType>;
   ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName( fixedImageFileName );
+  reader->SetFileName(fixedImageFileName);
   try
-    {
+  {
     reader->UpdateLargestPossibleRegion();
-    }
-  catch( itk::ExceptionObject & error )
-    {
+  }
+  catch (itk::ExceptionObject & error)
+  {
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   ImageType::Pointer fixedImage = reader->GetOutput();
   fixedImage->DisconnectPipeline();
 
-  reader->SetFileName( movingImageFileName );
+  reader->SetFileName(movingImageFileName);
   try
-    {
+  {
     reader->UpdateLargestPossibleRegion();
-    }
-  catch( itk::ExceptionObject & error )
-    {
+  }
+  catch (itk::ExceptionObject & error)
+  {
     std::cerr << "Error: " << error << std::endl;
     return EXIT_FAILURE;
-    }
+  }
   ImageType::Pointer movingImage = reader->GetOutput();
   movingImage->DisconnectPipeline();
 
 
-  using CorrelationFilterType = itk::FFTNormalizedCorrelationImageFilter< ImageType, ImageType >;
+  using CorrelationFilterType = itk::FFTNormalizedCorrelationImageFilter<ImageType, ImageType>;
   CorrelationFilterType::Pointer correlationFilter = CorrelationFilterType::New();
-  correlationFilter->SetFixedImage( fixedImage );
-  correlationFilter->SetMovingImage( movingImage );
+  correlationFilter->SetFixedImage(fixedImage);
+  correlationFilter->SetMovingImage(movingImage);
 
-  using PadFilterType = itk::FFTPadImageFilter< ImageType >;
+  using PadFilterType = itk::FFTPadImageFilter<ImageType>;
   PadFilterType::Pointer padFilter = PadFilterType::New();
-  padFilter->SetInput( correlationFilter->GetOutput() );
-  padFilter->SetSizeGreatestPrimeFactor( 2 );
+  padFilter->SetInput(correlationFilter->GetOutput());
+  padFilter->SetSizeGreatestPrimeFactor(2);
 
-  using MaximumCalculatorType = itk::MinimumMaximumImageCalculator< ImageType >;
+  using MaximumCalculatorType = itk::MinimumMaximumImageCalculator<ImageType>;
   MaximumCalculatorType::Pointer maximumCalculator = MaximumCalculatorType::New();
-  maximumCalculator->SetImage( padFilter->GetOutput() );
+  maximumCalculator->SetImage(padFilter->GetOutput());
 
   itk::HighPriorityRealTimeProbesCollector collector;
-  for( int ii = 0; ii < iterations; ++ii )
-    {
+  for (int ii = 0; ii < iterations; ++ii)
+  {
     fixedImage->Modified();
     movingImage->Modified();
     collector.Start("NormalizedCorrelation");
     padFilter->UpdateLargestPossibleRegion();
     maximumCalculator->ComputeMaximum();
     collector.Stop("NormalizedCorrelation");
-    }
+  }
 
   WriteExpandedReport(timingsFileName, collector, true, true, false);
 

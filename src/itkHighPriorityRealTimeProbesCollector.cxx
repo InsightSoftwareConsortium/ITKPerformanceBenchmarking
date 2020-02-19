@@ -20,15 +20,9 @@
 namespace itk
 {
 
-HighPriorityRealTimeProbesCollector
-::HighPriorityRealTimeProbesCollector()
-{
-}
+HighPriorityRealTimeProbesCollector ::HighPriorityRealTimeProbesCollector() {}
 
 
-HighPriorityRealTimeProbesCollector
-::~HighPriorityRealTimeProbesCollector()
-{
-}
+HighPriorityRealTimeProbesCollector ::~HighPriorityRealTimeProbesCollector() {}
 
 } // end namespace itk
