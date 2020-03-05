@@ -46,7 +46,6 @@ main(int argc, char * argv[])
 
   constexpr unsigned int Dimension = 3;
   using PixelType = float;
-  using ParametersValueType = double;
 
   using ImageType = itk::Image<PixelType, Dimension>;
 
