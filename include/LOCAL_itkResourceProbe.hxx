@@ -192,7 +192,7 @@ LOCAL_ResourceProbe<ValueType, MeanType>::GetStandardDeviation()
   std::transform(this->m_ProbeValueList.begin(),
                  this->m_ProbeValueList.end(),
                  diff.begin(),
-                 std::bind2nd(std::minus<ValueType>(), static_cast<ValueType>(this->m_MeanValue)));
+                 std::bind(std::minus<ValueType>(), std::placeholders::_1, static_cast<ValueType>(this->m_MeanValue)));
   ValueType sqsum = std::inner_product(diff.begin(), diff.end(), diff.begin(), NumericTraits<ValueType>::ZeroValue());
 
   int sz = static_cast<int>(this->m_ProbeValueList.size()) - 1;
