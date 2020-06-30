@@ -3,10 +3,6 @@ ITKPerformanceBenchmarking
 
 .. image:: https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/workflows/Build,%20test,%20package/badge.svg
 
-.. image:: https://dev.azure.com/InsightSoftwareConsortium/ITKModules/_apis/build/status/InsightSoftwareConsortium.ITKPerformanceBenchmarking?branchName=master
-    :target: https://dev.azure.com/InsightSoftwareConsortium/ITKModules/_build/latest?definitionId=14&branchName=master
-    :alt: Build Status
-
 Real-world tests to benchmark ITK performance.
 
 New classes increase operating system process priority to
