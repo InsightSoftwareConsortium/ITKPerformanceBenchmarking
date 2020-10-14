@@ -95,7 +95,7 @@ public:
   static const std::vector< MapKeyType > GetAllKeys();
 
 private:
-  ITK_DISALLOW_COPY_AND_ASSIGN(PerformanceBenchmarkingInformation);
+  ITK_DISALLOW_COPY_AND_MOVE(PerformanceBenchmarkingInformation);
 
   PerformanceBenchmarkingInformation();
 
