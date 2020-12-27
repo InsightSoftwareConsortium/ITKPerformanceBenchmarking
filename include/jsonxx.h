@@ -316,18 +316,19 @@ public:
     type_ = BOOL_;
     bool_value_ = b;
   }
-#define $number(TYPE)                                                                                                  \
+#define local_number(TYPE)                                                                                             \
   void import(const TYPE & n)                                                                                          \
   {                                                                                                                    \
     reset();                                                                                                           \
     type_ = NUMBER_;                                                                                                   \
     number_value_ = static_cast<long double>(n);                                                                       \
   }
-  $number(char) $number(int) $number(long) $number(long long) $number(unsigned char) $number(unsigned int)
-    $number(unsigned long) $number(unsigned long long) $number(float) $number(double) $number(long double)
-#undef $number
+  local_number(char) local_number(int) local_number(long) local_number(long long) local_number(unsigned char)
+    local_number(unsigned int) local_number(unsigned long) local_number(unsigned long long) local_number(float)
+      local_number(double) local_number(long double)
+#undef local_number
 #if JSONXX_COMPILER_HAS_CXX11 > 0
-      void import(const std::nullptr_t &)
+        void import(const std::nullptr_t &)
   {
     reset();
     type_ = NULL_;
@@ -515,7 +516,7 @@ template <typename T>
 bool
 Object::has(const std::string & key) const
 {
-  auto it(value_map_.find(key));
+  container::const_iterator it(value_map_.find(key));
   return it != value_map_.end() && it->second->is<T>();
 }
 
@@ -696,7 +697,8 @@ template <typename T>
 inline Object &
 Object::operator<<(const T & value)
 {
-  return *this << Value(value), *this;
+  *this << Value(value);
+  return *this;
 }
 
 } // namespace jsonxx
