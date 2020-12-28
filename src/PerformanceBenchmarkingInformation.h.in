@@ -66,13 +66,9 @@ private:
    * An inner struct to organize dictionary values with descriptions
    * \ingroup PerformanceBenchmarking
    */
-  class InformationValueType
+  struct InformationValueType
   {
   public:
-    InformationValueType() = default;
-    InformationValueType( const InformationValueType & ) = default;
-    InformationValueType( InformationValueType && ) = default;
-
     const MapValueType            m_Value;
     const MapValueDescriptionType m_Description;
   };
