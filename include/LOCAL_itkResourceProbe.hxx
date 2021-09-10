@@ -34,12 +34,12 @@
 #include <algorithm>
 #include <functional>
 #include <utility>
+#include <type_traits>
 
 #include "LOCAL_itkResourceProbe.h"
 #include "itkNumericTraits.h"
 #include "itksys/SystemInformation.hxx"
 #include "itkMath.h"
-#include "itkIsNumber.h"
 
 namespace itk
 {
@@ -371,7 +371,7 @@ LOCAL_ResourceProbe<ValueType, MeanType>::PrintJSONvar(std::ostream & os,
                                                        unsigned       indent,
                                                        bool           comma)
 {
-  bool varIsNumber = mpl::IsNumber<T>::Value;
+  bool varIsNumber = std::is_arithmetic<T>::value;
   while (indent > 0)
   {
     os << ' ';
