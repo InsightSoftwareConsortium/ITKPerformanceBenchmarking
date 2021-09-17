@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.16.3)
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 11) # Supported values are ``11``, ``14``, and ``17``.
+  set(CMAKE_CXX_STANDARD 14) # Supported values are ``14``, ``17`` and ``20``.
 endif()
 if(NOT CMAKE_CXX_STANDARD_REQUIRED)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -20,8 +20,7 @@ if(NOT ITK_SOURCE_DIR)
   foreach(p
       ## Only policies introduced after the cmake_minimum_required
       ## version need to explicitly be set to NEW.
-      CMP0070 #3.10.0 Define ``file(GENERATE)`` behavior for relative paths.
-      CMP0071 #3.10.0 Let ``AUTOMOC`` and ``AUTOUIC`` process ``GENERATED`` files.
+      # currently empty
       )
     if(POLICY ${p})
       cmake_policy(SET ${p} NEW)
