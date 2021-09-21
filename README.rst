@@ -27,12 +27,6 @@ module.  To enable it, set::
 
 in ITK's CMake build configuration.
 
-
-# Driving performance benchmarks for a given ITK source tree
-
-  See ITK_PerformanceTestingDriver.sh in this directory
-
-
 Requirements
 ------------
 - `CMake <https://cmake.org/>`_
