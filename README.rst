@@ -31,7 +31,7 @@ Requirements
 ------------
 - `CMake <https://cmake.org/>`_
 - `Ninja <https://ninja-build.org/>`_
-
+- `Python <https://www.python.org/>`_
 
 Notes for running the benchmarks
 --------------------------------
