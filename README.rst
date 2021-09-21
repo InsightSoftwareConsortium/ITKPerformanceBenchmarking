@@ -39,12 +39,12 @@ An example to call the benchmarking script is::
 
   $ python ./evaluate-itk-performance.py run -g {ITK-version} {ITK-source} {ITK-build} {ITKPerformanceBenchmarking-build}
 
-where `{ITK-version}` is the ITK version that the user wishes to evaluate.
+where ``{ITK-version}`` is the ITK version that the user wishes to evaluate.
 
-Also, note that the ITK source folder `(ITK-source}`, where the specific
+Also, note that the ITK source folder ``(ITK-source}``, where the specific
 version is fetched, needs to exist.
 
-The generated/result `JSON` files are placed in::
+The generated/result ``JSON`` files are placed in::
 
   ./{ITKPerformanceBenchmarking-build}/BenchmarkResults/{machine-name}
 
@@ -70,7 +70,7 @@ Finally, the user will need to start the Git bash by double-clicking on the
 ``RunWithVisualStudio.cmd`` script.
 
 Note that the module is built with static libraries to allow for ITK
-benchmarking in Windows: the `BUILD_SHARED_LIBS` flag in the
+benchmarking in Windows: the ``BUILD_SHARED_LIBS`` flag in the
 `evaluate-itk-performance.py <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/3a880e47e99cd0f429771960a4cee4fd70873ec6/evaluate-itk-performance.py#L129>`_ script is set to `OFF`.
 
 
