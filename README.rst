@@ -61,7 +61,7 @@ usually under::
   C:/Program Files/Microsoft Visual Studio {version}/VC/bin/cl.exe
 
 The user will need to change the path to the *vcvars\*.bat* command file in the
-`RunWithVisualStudio.cmd <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/3a880e47e99cd0f429771960a4cee4fd70873ec6/RunWithVisualStudio.cmd#L1>`_ command line script to the specific location of their
+`RunWithVisualStudio.cmd <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/master/RunWithVisualStudio.cmd#L1>`_ command line script to the specific location of their
 *vcvars* file, e.g.::
 
   C:/Program Files/Microsoft Visual Studio {version}/VC/vcvarsall.bat
@@ -71,7 +71,7 @@ Finally, the user will need to start the Git bash by double-clicking on the
 
 Note that the module is built with static libraries to allow for ITK
 benchmarking in Windows: the ``BUILD_SHARED_LIBS`` flag in the
-`evaluate-itk-performance.py <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/3a880e47e99cd0f429771960a4cee4fd70873ec6/evaluate-itk-performance.py#L129>`_ script is set to `OFF`.
+`evaluate-itk-performance.py <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/master/evaluate-itk-performance.py#L129>`_ script is set to `OFF`.
 
 
 License
