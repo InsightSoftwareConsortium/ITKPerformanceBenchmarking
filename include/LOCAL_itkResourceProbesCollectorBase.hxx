@@ -18,7 +18,6 @@
 #ifndef itkLOCALResourceProbesCollectorBase_hxx
 #define itkLOCALResourceProbesCollectorBase_hxx
 
-#include "LOCAL_itkResourceProbesCollectorBase.h"
 #include <iostream>
 
 namespace itk
