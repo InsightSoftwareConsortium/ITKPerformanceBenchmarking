@@ -6,7 +6,7 @@
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *         https://www.apache.org/licenses/LICENSE-2.0.txt
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -1129,7 +1129,7 @@ AdjustTransformParameters(Parameters & parameters)
 //  b. Execute on the test gradient pattern image when option "-is" "dim1" ["dim2"] ["dim3"] is provided.
 //     The dimension (1D/2D/3D) of the input image will be auto detected.
 // Option (a) required to maintain maximum compatibility with Insight Journal article:
-// http://www.insight-journal.org/browse/publication/884
+// https://www.insight-journal.org/browse/publication/884
 // Option (b) does not required any input file to be provided or downloaded. The test gradient pattern will
 // be created as an input. That makes execution of the benchmark easy.
 // Both options "-in" and "-is" should be maintained for this benchmark.
@@ -1193,7 +1193,7 @@ AdjustTransformParameters(Parameters & parameters)
 // benchmarking 10 times.
 //  ResampleBenchmark -is 512 512 256 -i BSpline -soi 5 -e Nearest -t  Translation Affine BSpline Euler Similarity
 //                    -tp double -out input.mha output.mha -iterations 10 -tf tf.json
-// 7. Similar to Insight Journal article http://www.insight-journal.org/browse/publication/884 execution:
+// 7. Similar to Insight Journal article https://www.insight-journal.org/browse/publication/884 execution:
 // Resample 3D image from file with BSpline interpolator, Affine and BSpline transforms, save the input image.
 // ResampleBenchmark -in "insight_journal\data\image-256x256x256-3D.mha" -i BSpline -t Affine BSpline
 //                   -out input.mha output.mha -tf tf.json

@@ -9,8 +9,8 @@ For more information, see::
   McCormick M., Kang H.J., Barre S.
   Performance Benchmarking the Insight Toolkit
   The Insight Journal. January-December. 2016.
-  http://hdl.handle.net/10380/3557
-  http://insight-journal.org/browse/publication/972
+  https://hdl.handle.net/10380/3557
+  https://insight-journal.org/browse/publication/972
 ")
 
 itk_module(PerformanceBenchmarking

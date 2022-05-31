@@ -34,7 +34,7 @@
 #endif
 
 #ifdef _MSC_VER
-// disable the C4127 warning if using VC, see http://stackoverflow.com/a/12042515
+// disable the C4127 warning if using VC, see https://stackoverflow.com/a/12042515
 #  define JSONXX_ASSERT(...)                                                                                           \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -96,7 +96,7 @@ unquoted_keys_are_enabled()
 enum Format
 {
   JSON = 0,     // JSON output
-  JSONx = 1,    // XML output, JSONx  format. see http://goo.gl/I3cxs
+  JSONx = 1,    // XML output, JSONx  format. see https://goo.gl/I3cxs
   JXML = 2,     // XML output, JXML   format. see https://github.com/r-lyeh/JXML
   JXMLex = 3,   // XML output, JXMLex format. see https://github.com/r-lyeh/JXMLex
   TaggedXML = 4 // XML output, tagged XML format. see https://github.com/hjiang/jsonxx/issues/12
