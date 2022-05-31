@@ -1,7 +1,7 @@
 FROM debian:9
 MAINTAINER Insight Software Consortium <community@itk.org>
 
-RUN REPO=http://cdn-fastly.deb.debian.org && \
+RUN REPO=https://cdn-fastly.deb.debian.org && \
   echo "deb $REPO/debian stretch main\ndeb $REPO/debian stretch-updates main\ndeb $REPO/debian-security stretch/updates main" > /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y \

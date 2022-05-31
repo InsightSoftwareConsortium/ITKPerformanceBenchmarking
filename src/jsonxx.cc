@@ -1045,8 +1045,8 @@ const char * defheader[] = { "",
 const char * defrootattrib[] = { "",
 
                                  " xsi:schemaLocation=\"http://www.datapower.com/schemas/json jsonx.xsd\""
-                                 " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-                                 " xmlns:json=\"http://www.ibm.com/xmlns/prod/2009/jsonx\"",
+                                 " xmlns:xsi=\"https://www.w3.org/2001/XMLSchema-instance\""
+                                 " xmlns:json=\"https://www.ibm.com/xmlns/prod/2009/jsonx\"",
 
                                  "",
 
