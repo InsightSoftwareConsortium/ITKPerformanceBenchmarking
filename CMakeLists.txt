@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.22.1)
 # Need to set CMAKE_CXX_STANDARD, CMAKE_CXX_STANDARD_REQUIRED, CMAKE_CXX_EXTENSIONS
 # before calling project to ensure that it is available globally within your CMake project.
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17) # Supported values are ``14``, ``17`` and ``20``.
+  set(CMAKE_CXX_STANDARD 17) # Supported values are ``17`` and ``20``.
 endif()
 if(NOT CMAKE_CXX_STANDARD_REQUIRED)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
