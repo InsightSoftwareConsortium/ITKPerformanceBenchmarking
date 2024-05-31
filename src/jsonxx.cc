@@ -14,6 +14,7 @@
 #include <vector>
 #include <limits>
 #include <mutex>
+#include <math.h>
 
 // Snippet that creates an assertion function that works both in DEBUG & RELEASE mode.
 // JSONXX_ASSERT(...) macro will redirect to this. assert() macro is kept untouched.
@@ -46,6 +47,7 @@ bool parse_bool(std::istream& input, Boolean& value);
 bool parse_comment(std::istream &input);
 bool parse_null(std::istream& input);
 bool parse_number(std::istream& input, Number& value);
+bool parse_number_inf(std::istream& input, Number& value, std::streampos rollback);
 bool parse_object(std::istream& input, Object& object);
 bool parse_string(std::istream& input, String& value);
 bool parse_identifier(std::istream& input, String& value);
@@ -78,7 +80,7 @@ bool match(const char* pattern, std::istream& input) {
 bool parse_string(std::istream& input, String& value) {
     char ch = '\0', delimiter = '"';
     if (!match("\"", input))  {
-        if (parser_is_strict()) {
+        if (Parser == Strict) {
             return false;
         }
         delimiter = '\'';
@@ -122,7 +124,7 @@ bool parse_string(std::istream& input, String& value) {
                             ss << std::hex << ch;
                         }
                         if( input.good() && (ss >> i) )
-                            value.push_back(static_cast<char>(i));
+                            value.push_back(i);
                     }
                     break;
                 default:
@@ -169,7 +171,7 @@ bool parse_identifier(std::istream& input, String& value) {
             (ch >= 'a' && ch <= 'z') ||
             (ch >= 'A' && ch <= 'Z') ||
             (ch >= '0' && ch <= '9')) {
-            value.push_back(ch);
+            value.push_back(ch);            
         }
         else if(ch == '\t' || ch == ' ') {
             input >> std::ws;
@@ -182,33 +184,61 @@ bool parse_identifier(std::istream& input, String& value) {
     }
 }
 
-class IOStateMasker {
-    public:
-    explicit IOStateMasker(std::istream& input): stream(input) {
-       mask = input.exceptions();
-       input.exceptions(std::istream::goodbit);
-    }
-
-    ~IOStateMasker() {
-        stream.exceptions(mask);
-    }
-
-    private:
-    std::istream& stream;
-    std::istream::iostate mask;
-};
-
 bool parse_number(std::istream& input, Number& value) {
     input >> std::ws;
     std::streampos rollback = input.tellg();
-    IOStateMasker masker(input);
     input >> value;
     if (input.fail()) {
+        if (parse_number_inf(input, value, rollback)) {
+            return true;
+        }
+
         input.clear();
         input.seekg(rollback);
         return false;
     }
+
+#if JSONXX_HANDLE_INFINITY
+    if (value >= MaxNumberRange) {
+        value = std::numeric_limits<Number>::infinity();
+    }
+    else if (value <= MinNumberRange) {
+        value = -std::numeric_limits<Number>::infinity();
+    }
+#endif
     return true;
+}
+
+bool parse_number_inf(std::istream& input, Number& value, std::streampos rollback) {
+    input.clear();
+    input.seekg(rollback);
+
+    switch (input.peek()) {
+        case '-':
+            input.get();
+            value = -std::numeric_limits<Number>::infinity();
+            break;
+        case '+':
+        case '0'...'9':
+            input.get();
+            value = std::numeric_limits<Number>::infinity();
+            break;
+        default:
+            return false;
+    }
+
+    int ch;
+    do {
+        ch = input.get();
+    } while (isdigit(ch));
+
+    if (ch != 'E' && ch != 'e') {
+        return false;
+    }
+
+    int exponent;
+    input >> exponent;
+    return !input.fail();
 }
 
 bool parse_bool(std::istream& input, Boolean& value) {
@@ -227,7 +257,7 @@ bool parse_null(std::istream& input) {
     if (match("null", input))  {
         return true;
     }
-    if (parser_is_strict()) {
+    if (Parser == Strict) {
         return false;
     }
     return (input.peek()==',');
@@ -242,7 +272,7 @@ bool parse_object(std::istream& input, Object& object) {
 }
 
 bool parse_comment(std::istream &input) {
-    if( parser_is_permissive() )
+    if( Parser == Permissive )
     if( !input.eof() && input.peek() == '/' )
     {
         char ch0(0);
@@ -299,9 +329,9 @@ bool Object::parse(std::istream& input, Object& object) {
 
     do {
         std::string key;
-        if (unquoted_keys_are_enabled()) {
+        if(UnquotedKeys == Enabled) {
             if (!parse_identifier(input, key)) {
-                if (parser_is_permissive()) {
+                if (Parser == Permissive) {
                     if (input.peek() == '}')
                         break;
                 }
@@ -310,7 +340,7 @@ bool Object::parse(std::istream& input, Object& object) {
         }
         else {
             if (!parse_string(input, key)) {
-                if (parser_is_permissive()) {
+                if (Parser == Permissive) {
                     if (input.peek() == '}')
                         break;
                 }
@@ -325,18 +355,7 @@ bool Object::parse(std::istream& input, Object& object) {
             delete v;
             break;
         }
-        // TODO(hjiang): Add an option to allow duplicated keys?
-        if (object.value_map_.find(key) == object.value_map_.end()) {
-          object.value_map_[key] = v;
-        } else {
-          if (parser_is_permissive()) {
-            delete object.value_map_[key];
-            object.value_map_[key] = v;
-          } else {
-            delete v;
-            return false;
-          }
-        }
+        object.value_map_[key] = v;
     } while (match(",", input));
 
 
@@ -394,7 +413,6 @@ bool Value::parse(std::istream& input, Value& value) {
             return true;
         }
         delete value.array_value_;
-        value.array_value_ = 0;
     }
     value.object_value_ = new Object();
     if (parse_object(input, *value.object_value_)) {
@@ -402,7 +420,6 @@ bool Value::parse(std::istream& input, Value& value) {
         return true;
     }
     delete value.object_value_;
-    value.object_value_ = 0;
     return false;
 }
 
@@ -545,38 +562,30 @@ typedef unsigned char byte;
 
 //template<bool quote>
 std::string escape_string( const std::string &input, const bool quote = false ) {
-    static std::string map[256], *once = 0;
-    static std::mutex mutex;
-    if( !once ) {
-        // The problem here is that, once is initializing at the end of job, but if multithreaded application is starting this for the first time
-        // it will jump into this part with several threads and cause double free or corruptions.
-        // To prevent it, it is required to have mutex, to lock other threads while only one of them is constructing the static map.
-        mutex.lock();
-        if (!once) {
-            // base
-            for( int i = 0; i < 256; ++i ) {
-                map[ i ] = std::string() + char(i);
-            }
-            // non-printable
-            for( int i = 0; i < 32; ++i ) {
-                std::stringstream str;
-                str << "\\u" << std::hex << std::setw(4) << std::setfill('0') << i;
-                map[ i ] = str.str();
-            }
-            // exceptions
-            map[ byte('"') ] = "\\\"";
-            map[ byte('\\') ] = "\\\\";
-            map[ byte('/') ] = "\\/";
-            map[ byte('\b') ] = "\\b";
-            map[ byte('\f') ] = "\\f";
-            map[ byte('\n') ] = "\\n";
-            map[ byte('\r') ] = "\\r";
-            map[ byte('\t') ] = "\\t";
-
-            once = map;
+    static std::string map[256];
+    static std::once_flag once;
+    std::call_once(once, []{
+        // base
+        for( int i = 0; i < 256; ++i ) {
+            map[ i ] = std::string() + char(i);
         }
-        mutex.unlock();
-    }
+        // non-printable
+        for( int i = 0; i < 32; ++i ) {
+            std::stringstream str;
+            str << "\\u" << std::hex << std::setw(4) << std::setfill('0') << i;
+            map[ i ] = str.str();
+        }
+        // exceptions
+        map[ byte('"') ] = "\\\"";
+        map[ byte('\\') ] = "\\\\";
+        map[ byte('/') ] = "\\/";
+        map[ byte('\b') ] = "\\b";
+        map[ byte('\f') ] = "\\f";
+        map[ byte('\n') ] = "\\n";
+        map[ byte('\r') ] = "\\r";
+        map[ byte('\t') ] = "\\t";
+    });
+    
     std::string output;
     output.reserve( input.size() * 2 + 2 ); // worst scenario
     if( quote ) output += '"';
@@ -592,18 +601,33 @@ namespace json {
     std::string remove_last_comma( const std::string &_input ) {
         std::string input( _input );
         size_t size = input.size();
-        if( size > 2 )
+        if( size > 2 ) {
             if( input[ size - 2 ] == ',' )
                 input[ size - 2 ] = ' ';
+            if( input[ size - 1 ] == ',' ) // compact case
+                input.resize(size - 1);
+        }
         return input;
     }
 
-    std::string tag( unsigned format, unsigned depth, const std::string &name, const jsonxx::Value &t) {
+    std::string tag( unsigned format, unsigned depth, const std::string &name, const jsonxx::Value &t, PrintMode printMode, int floatPrecision = std::numeric_limits<double>::digits10 + 1) {
         std::stringstream ss;
-        const std::string tab(depth, '\t');
+        std::string tab(depth, '\t');
+        std::string newLine("\n");
+        std::string space(" ");
+
+        switch (printMode) {
+            case Compact:
+                tab = "";
+                newLine = "";
+                space = "";
+                break;
+            case Pretty:
+                break;
+        }
 
         if( !name.empty() )
-            ss << tab << '\"' << escape_string( name ) << '\"' << ':' << ' ';
+            ss << tab << '\"' << escape_string( name ) << '\"' << ':' << space;
         else
             ss << tab;
 
@@ -612,35 +636,49 @@ namespace json {
             default:
             case jsonxx::Value::NULL_:
                 ss << "null";
-                return ss.str() + ",\n";
+                return ss.str() + "," + newLine;
 
             case jsonxx::Value::BOOL_:
                 ss << ( t.bool_value_ ? "true" : "false" );
-                return ss.str() + ",\n";
+                return ss.str() + "," + newLine;
 
             case jsonxx::Value::ARRAY_:
-                ss << "[\n";
+                ss << "[" + newLine;
                 for(Array::container::const_iterator it = t.array_value_->values().begin(),
                     end = t.array_value_->values().end(); it != end; ++it )
-                  ss << tag( format, depth+1, std::string(), **it );
-                return remove_last_comma( ss.str() ) + tab + "]" ",\n";
+                  ss << tag( format, depth+1, std::string(), **it, printMode, floatPrecision );
+                return remove_last_comma( ss.str() ) + tab + "]" "," + newLine;
 
             case jsonxx::Value::STRING_:
                 ss << '\"' << escape_string( *t.string_value_ ) << '\"';
-                return ss.str() + ",\n";
+                return ss.str() + "," + newLine;
 
             case jsonxx::Value::OBJECT_:
-                ss << "{\n";
+                ss << "{" + newLine;
                 for(Object::container::const_iterator it=t.object_value_->kv_map().begin(),
                     end = t.object_value_->kv_map().end(); it != end ; ++it)
-                  ss << tag( format, depth+1, it->first, *it->second );
-                return remove_last_comma( ss.str() ) + tab + "}" ",\n";
+                  ss << tag( format, depth+1, it->first, *it->second, printMode, floatPrecision);
+                return remove_last_comma( ss.str() ) + tab + "}" "," + newLine;
 
             case jsonxx::Value::NUMBER_:
-                // max precision
-                ss << std::setprecision(std::numeric_limits<long double>::digits10 + 1);
-                ss << t.number_value_;
-                return ss.str() + ",\n";
+                if (isfinite(t.number_value_)) {
+                    // max precision
+                    ss << std::setprecision(floatPrecision);
+                    ss << t.number_value_;
+                }
+#if JSONXX_HANDLE_INFINITY
+                else if (t.number_value_ > MaxNumberRange) {
+                    ss << InfinityRepresentation;
+                }
+                else if (t.number_value_ < MinNumberRange) {
+                    ss << '-' << InfinityRepresentation;
+                }
+#endif
+                else {
+                    JSONXX_WARN( "No JSONXX support for number value " << t.number_value_ );
+                    ss << "null"; // NaN or other stuff we cannot represent
+                }
+                return ss.str() + "," + newLine;
         }
     }
 } // namespace jsonxx::anon::json
@@ -648,8 +686,9 @@ namespace json {
 namespace xml {
 
 std::string escape_attrib( const std::string &input ) {
-    static std::string map[256], *once = 0;
-    if( !once ) {
+    static std::string map[256];
+    static std::once_flag once;
+    std::call_once(once, [] {
         for( int i = 0; i < 256; ++i )
             map[ i ] = "_";
         for( int i = int('a'); i <= int('z'); ++i )
@@ -658,8 +697,8 @@ std::string escape_attrib( const std::string &input ) {
             map[ i ] = std::string() + char(i);
         for( int i = int('0'); i <= int('9'); ++i )
             map[ i ] = std::string() + char(i);
-        once = map;
-    }
+    });
+    
     std::string output;
     output.reserve( input.size() ); // worst scenario
     for( std::string::const_iterator it = input.begin(), end = input.end(); it != end; ++it )
@@ -668,18 +707,19 @@ std::string escape_attrib( const std::string &input ) {
 }
 
 std::string escape_tag( const std::string &input, unsigned format ) {
-    static std::string map[256], *once = 0;
-    if( !once ) {
+    static std::string map[256];
+    static std::once_flag once;
+    std::call_once(once, [=] {
         for( int i = 0; i < 256; ++i )
             map[ i ] = std::string() + char(i);
         map[ byte('<') ] = "&lt;";
         map[ byte('>') ] = "&gt;";
-
+        
         switch( format )
         {
             default:
                 break;
-
+                
             case jsonxx::JXML:
             case jsonxx::JXMLex:
             case jsonxx::JSONx:
@@ -687,9 +727,8 @@ std::string escape_tag( const std::string &input, unsigned format ) {
                 map[ byte('&') ] = "&amp;";
                 break;
         }
+    });
 
-        once = map;
-    }
     std::string output;
     output.reserve( input.size() * 5 ); // worst scenario
     for( std::string::const_iterator it = input.begin(), end = input.end(); it != end; ++it )
@@ -786,7 +825,7 @@ std::string close_tag( unsigned format, char type, const std::string &name ) {
     }
 }
 
-std::string tag( unsigned format, unsigned depth, const std::string &name, const jsonxx::Value &t, const std::string &attr = std::string() ) {
+std::string tag( unsigned format, unsigned depth, const std::string &name, const jsonxx::Value &t, const std::string &attr = std::string(), int floatPrecision = std::numeric_limits<double>::digits10 + 1) {
     std::stringstream ss;
     const std::string tab(depth, '\t');
 
@@ -805,7 +844,7 @@ std::string tag( unsigned format, unsigned depth, const std::string &name, const
         case jsonxx::Value::ARRAY_:
             for(Array::container::const_iterator it = t.array_value_->values().begin(),
                 end = t.array_value_->values().end(); it != end; ++it )
-              ss << tag( format, depth+1, std::string(), **it );
+              ss << tag( format, depth+1, std::string(), **it, std::string(), floatPrecision );
             return tab + open_tag( format, 'a', name, attr ) + '\n'
                        + ss.str()
                  + tab + close_tag( format, 'a', name ) + '\n';
@@ -819,14 +858,14 @@ std::string tag( unsigned format, unsigned depth, const std::string &name, const
         case jsonxx::Value::OBJECT_:
             for(Object::container::const_iterator it=t.object_value_->kv_map().begin(),
                 end = t.object_value_->kv_map().end(); it != end ; ++it)
-              ss << tag( format, depth+1, it->first, *it->second );
+              ss << tag( format, depth+1, it->first, *it->second, std::string(), floatPrecision );
             return tab + open_tag( format, 'o', name, attr ) + '\n'
                        + ss.str()
                  + tab + close_tag( format, 'o', name ) + '\n';
 
         case jsonxx::Value::NUMBER_:
             // max precision
-            ss << std::setprecision(std::numeric_limits<long double>::digits10 + 1);
+            ss << std::setprecision(floatPrecision);
             ss << t.number_value_;
             return tab + open_tag( format, 'n', name, std::string(), format == jsonxx::JXMLex ? ss.str() : std::string() )
                        + ss.str()
@@ -870,20 +909,20 @@ const char *defrootattrib[] = {
 
 } // namespace jsonxx::anon
 
-std::string Object::json() const {
+std::string Object::json(PrintMode printMode, int floatPrecision) const {
     using namespace json;
 
     jsonxx::Value v;
     v.object_value_ = const_cast<jsonxx::Object*>(this);
     v.type_ = jsonxx::Value::OBJECT_;
 
-    std::string result = tag( jsonxx::JSON, 0, std::string(), v );
+    std::string result = tag( jsonxx::JSON, 0, std::string(), v, printMode, floatPrecision );
 
     v.object_value_ = 0;
     return remove_last_comma( result );
 }
 
-std::string Object::xml( unsigned format, const std::string &header, const std::string &attrib ) const {
+std::string Object::xml( unsigned format, const std::string &header, const std::string &attrib, int floatPrecision ) const {
     using namespace xml;
     JSONXX_ASSERT( format == jsonxx::JSONx || format == jsonxx::JXML || format == jsonxx::JXMLex || format == jsonxx::TaggedXML );
 
@@ -891,26 +930,26 @@ std::string Object::xml( unsigned format, const std::string &header, const std::
     v.object_value_ = const_cast<jsonxx::Object*>(this);
     v.type_ = jsonxx::Value::OBJECT_;
 
-    std::string result = tag( format, 0, std::string(), v, attrib.empty() ? std::string(defrootattrib[format]) : attrib );
+    std::string result = tag( format, 0, std::string(), v, attrib.empty() ? std::string(defrootattrib[format]) : attrib, floatPrecision );
 
     v.object_value_ = 0;
     return ( header.empty() ? std::string(defheader[format]) : header ) + result;
 }
 
-std::string Array::json() const {
+std::string Array::json(PrintMode printMode, int floatPrecision) const {
     using namespace json;
 
     jsonxx::Value v;
     v.array_value_ = const_cast<jsonxx::Array*>(this);
     v.type_ = jsonxx::Value::ARRAY_;
 
-    std::string result = tag( jsonxx::JSON, 0, std::string(), v );
+    std::string result = tag( jsonxx::JSON, 0, std::string(), v, printMode, floatPrecision);
 
     v.array_value_ = 0;
     return remove_last_comma( result );
 }
 
-std::string Array::xml( unsigned format, const std::string &header, const std::string &attrib ) const {
+std::string Array::xml( unsigned format, const std::string &header, const std::string &attrib, int floatPrecision ) const {
     using namespace xml;
     JSONXX_ASSERT( format == jsonxx::JSONx || format == jsonxx::JXML || format == jsonxx::JXMLex || format == jsonxx::TaggedXML );
 
@@ -918,7 +957,7 @@ std::string Array::xml( unsigned format, const std::string &header, const std::s
     v.array_value_ = const_cast<jsonxx::Array*>(this);
     v.type_ = jsonxx::Value::ARRAY_;
 
-    std::string result = tag( format, 0, std::string(), v, attrib.empty() ? std::string(defrootattrib[format]) : attrib );
+    std::string result = tag( format, 0, std::string(), v, attrib.empty() ? std::string(defrootattrib[format]) : attrib, floatPrecision );
 
     v.array_value_ = 0;
     return ( header.empty() ? std::string(defheader[format]) : header ) + result;
@@ -1105,13 +1144,6 @@ Array::Array(const Array &other) {
 }
 Array::Array(const Value &value) {
   import(value);
-}
-void Array::append(const Array &other) {
-    if (this != &other) {
-        values_.push_back( new Value(other) );
-    } else {
-        append( Array(*this) );
-    }
 }
 void Array::import(const Array &other) {
   if (this != &other) {
