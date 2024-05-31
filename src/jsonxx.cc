@@ -219,7 +219,16 @@ bool parse_number_inf(std::istream& input, Number& value, std::streampos rollbac
             value = -std::numeric_limits<Number>::infinity();
             break;
         case '+':
-        case '0'...'9':
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
             input.get();
             value = std::numeric_limits<Number>::infinity();
             break;
