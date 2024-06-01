@@ -52,8 +52,8 @@ The generated/result ``JSON`` files are placed in::
 Notes for benchmarking in Windows
 ---------------------------------
 
-**CMake** and **Ninja** need to be in the **PATH**. Also, the **C++ compiler**
-has to be in the *PATH* so that Ninja can find it.
+**CMake** and **Ninja** need to be in the ``PATH``. Also, the **C++ compiler**
+has to be in the ``PATH`` so that Ninja can find it.
 
 For the Microsoft Visual Studio compiler, the C++ compiler is a file that is
 usually under::
