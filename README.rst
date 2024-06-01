@@ -71,7 +71,7 @@ Finally, the user will need to start the Git bash by double-clicking on the
 
 Note that the module is built with static libraries to allow for ITK
 benchmarking in Windows: the ``BUILD_SHARED_LIBS`` flag in the
-`evaluate-itk-performance.py <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/master/evaluate-itk-performance.py#L129>`_ script is set to `OFF`.
+`evaluate-itk-performance.py <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/master/evaluate-itk-performance.py>`_ script is set to `OFF`.
 
 
 License
