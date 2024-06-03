@@ -52,8 +52,8 @@ The generated/result ``JSON`` files are placed in::
 Notes for benchmarking in Windows
 ---------------------------------
 
-**CMake** and **Ninja** need to be in the **PATH**. Also, the **C++ compiler**
-has to be in the *PATH* so that Ninja can find it.
+**CMake** and **Ninja** need to be in the ``PATH``. Also, the **C++ compiler**
+has to be in the ``PATH`` so that Ninja can find it.
 
 For the Microsoft Visual Studio compiler, the C++ compiler is a file that is
 usually under::
@@ -71,7 +71,7 @@ Finally, the user will need to start the Git bash by double-clicking on the
 
 Note that the module is built with static libraries to allow for ITK
 benchmarking in Windows: the ``BUILD_SHARED_LIBS`` flag in the
-`evaluate-itk-performance.py <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/master/evaluate-itk-performance.py#L129>`_ script is set to `OFF`.
+`evaluate-itk-performance.py <https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking/blob/master/evaluate-itk-performance.py>`_ script is set to `OFF`.
 
 
 License
