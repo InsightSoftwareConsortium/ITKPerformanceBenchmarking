@@ -31,37 +31,32 @@
 
 // Construct const versions via the emplace method.  This macro simplifies the text
 // written in ITK/Modules/Core/Common/src/CMakeLists.txt.
-#define MAKE_MAP_ENTRY(KEY, VALUE, DESCRIPTION )                                          \
-m_Map.emplace(                                                                            \
-  std::pair< MapKeyType, InformationValueType>(                                           \
-    MapKeyType{ KEY },                                                                    \
-    InformationValueType{ MapValueType{ VALUE }, MapValueDescriptionType{ DESCRIPTION } } \
-  )                                                                                       \
-)
+#define MAKE_MAP_ENTRY(KEY, VALUE, DESCRIPTION)              \
+  m_Map.emplace(std::pair<MapKeyType, InformationValueType>( \
+    MapKeyType{ KEY }, InformationValueType{ MapValueType{ VALUE }, MapValueDescriptionType{ DESCRIPTION } }))
 
-namespace itk {
+namespace itk
+{
 
-std::mutex PerformanceBenchmarkingInformation::m_Mutex;
+std::mutex                                  PerformanceBenchmarkingInformation::m_Mutex;
 PerformanceBenchmarkingInformation::Pointer PerformanceBenchmarkingInformation::m_InformationInstance;
 PerformanceBenchmarkingInformation::MapType PerformanceBenchmarkingInformation::m_Map;
 
 PerformanceBenchmarkingInformation::Pointer
-PerformanceBenchmarkingInformation
-::New()
+PerformanceBenchmarkingInformation ::New()
 {
   return Self::GetInstance();
 }
 
 PerformanceBenchmarkingInformation::Pointer
-PerformanceBenchmarkingInformation
-::GetInstance()
+PerformanceBenchmarkingInformation ::GetInstance()
 {
   std::lock_guard<std::mutex> mutexHolder(m_Mutex);
   if (m_InformationInstance.IsNull())
   {
     m_InformationInstance = ObjectFactory<Self>::Create();
     {
-      new PerformanceBenchmarkingInformation(); //constructor sets m_InformationInstance
+      new PerformanceBenchmarkingInformation(); // constructor sets m_InformationInstance
     }
   }
   return m_InformationInstance;
@@ -74,50 +69,49 @@ PerformanceBenchmarkingInformation::GetMap()
 }
 
 const PerformanceBenchmarkingInformation::MapValueType
-PerformanceBenchmarkingInformation::GetValue(const MapKeyType &&key)
+PerformanceBenchmarkingInformation::GetValue(const MapKeyType && key)
 {
-  const MapType &localMap = PerformanceBenchmarkingInformation::GetInstance()->GetMap();
+  const MapType & localMap = PerformanceBenchmarkingInformation::GetInstance()->GetMap();
 
   auto it = localMap.find(key);
   if (it != localMap.end())
   {
     return it->second.m_Value;
   }
-  return {""};
+  return { "" };
 }
 
 const PerformanceBenchmarkingInformation::MapValueDescriptionType
 PerformanceBenchmarkingInformation::GetDescription(const MapKeyType && key)
 {
-  const MapType &localMap = PerformanceBenchmarkingInformation::GetInstance()->GetMap();
+  const MapType & localMap = PerformanceBenchmarkingInformation::GetInstance()->GetMap();
 
   auto it = localMap.find(key);
   if (it != localMap.end())
   {
     return it->second.m_Description;
   }
-  return {""};
+  return { "" };
 }
 
-const std::vector<  PerformanceBenchmarkingInformation::MapKeyType >
+const std::vector<PerformanceBenchmarkingInformation::MapKeyType>
 PerformanceBenchmarkingInformation::GetAllKeys()
 {
-  std::vector< PerformanceBenchmarkingInformation::MapKeyType > keyVector;
+  std::vector<PerformanceBenchmarkingInformation::MapKeyType> keyVector;
   keyVector.reserve(30);
-  for( auto elem : PerformanceBenchmarkingInformation::GetInstance()->m_Map )
+  for (auto elem : PerformanceBenchmarkingInformation::GetInstance()->m_Map)
   {
-    keyVector.emplace_back( elem.first );
+    keyVector.emplace_back(elem.first);
   }
   return keyVector;
 }
 
-PerformanceBenchmarkingInformation
-::PerformanceBenchmarkingInformation()
+PerformanceBenchmarkingInformation ::PerformanceBenchmarkingInformation()
 {
-  m_InformationInstance = this; //threads need this
+  m_InformationInstance = this;        // threads need this
   m_InformationInstance->UnRegister(); // Remove extra reference
 
   @MAPPING_VALUES@
 }
 
-} //end namespace itk
+} // end namespace itk

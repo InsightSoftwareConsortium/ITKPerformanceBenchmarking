@@ -49,16 +49,10 @@ HighPriorityRealTimeClock ::DisplayErrorMessage()
 }
 
 
-HighPriorityRealTimeClock ::HighPriorityRealTimeClock()
-{
-  this->RaisePriority();
-}
+HighPriorityRealTimeClock ::HighPriorityRealTimeClock() { this->RaisePriority(); }
 
 
-HighPriorityRealTimeClock ::~HighPriorityRealTimeClock()
-{
-  this->RestorePriority();
-}
+HighPriorityRealTimeClock ::~HighPriorityRealTimeClock() { this->RestorePriority(); }
 
 
 void
