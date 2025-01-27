@@ -35,19 +35,19 @@
 
 #ifdef _MSC_VER
 // disable the C4127 warning if using VC, see https://stackoverflow.com/a/12042515
-#  define JSONXX_ASSERT(...)                                                                                           \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      __pragma(warning(push)) __pragma(warning(disable : 4127)) if (jsonxx::Assertions) __pragma(warning(pop))         \
-        jsonxx::assertion(__FILE__, __LINE__, #__VA_ARGS__, bool(__VA_ARGS__));                                        \
-      __pragma(warning(push)) __pragma(warning(disable : 4127))                                                        \
+#  define JSONXX_ASSERT(...)                                                                                   \
+    do                                                                                                         \
+    {                                                                                                          \
+      __pragma(warning(push)) __pragma(warning(disable : 4127)) if (jsonxx::Assertions) __pragma(warning(pop)) \
+        jsonxx::assertion(__FILE__, __LINE__, #__VA_ARGS__, bool(__VA_ARGS__));                                \
+      __pragma(warning(push)) __pragma(warning(disable : 4127))                                                \
     } while (0) __pragma(warning(pop))
 #else
-#  define JSONXX_ASSERT(...)                                                                                           \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      if (jsonxx::Assertions)                                                                                          \
-        jsonxx::assertion(__FILE__, __LINE__, #__VA_ARGS__, bool(__VA_ARGS__));                                        \
+#  define JSONXX_ASSERT(...)                                                    \
+    do                                                                          \
+    {                                                                           \
+      if (jsonxx::Assertions)                                                   \
+        jsonxx::assertion(__FILE__, __LINE__, #__VA_ARGS__, bool(__VA_ARGS__)); \
     } while (0)
 #endif
 
@@ -316,12 +316,12 @@ public:
     type_ = BOOL_;
     bool_value_ = b;
   }
-#define local_number(TYPE)                                                                                             \
-  void import(const TYPE & n)                                                                                          \
-  {                                                                                                                    \
-    reset();                                                                                                           \
-    type_ = NUMBER_;                                                                                                   \
-    number_value_ = static_cast<long double>(n);                                                                       \
+#define local_number(TYPE)                       \
+  void import(const TYPE & n)                    \
+  {                                              \
+    reset();                                     \
+    type_ = NUMBER_;                             \
+    number_value_ = static_cast<long double>(n); \
   }
   local_number(char) local_number(int) local_number(long) local_number(long long) local_number(unsigned char)
     local_number(unsigned int) local_number(unsigned long) local_number(unsigned long long) local_number(float)

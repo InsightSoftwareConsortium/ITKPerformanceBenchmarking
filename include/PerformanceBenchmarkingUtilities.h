@@ -25,7 +25,7 @@ PerformanceBenchmarking_EXPORT std::string
                                PerfDateStamp();
 
 PerformanceBenchmarking_EXPORT std::string
-                               ReplaceOccurrence(std::string str, const std::string && findvalue, const std::string && replacevalue);
+ReplaceOccurrence(std::string str, const std::string && findvalue, const std::string && replacevalue);
 
 PerformanceBenchmarking_EXPORT std::string
                                DecorateWithBuildInformation(std::string inputJson);
