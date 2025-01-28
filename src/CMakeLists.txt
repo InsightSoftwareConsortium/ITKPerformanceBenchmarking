@@ -53,7 +53,7 @@ set(MAPPING_VALUES "
 ")
 
 configure_file(PerformanceBenchmarkingInformation.cxx.in ${CMAKE_BINARY_DIR}/PerformanceBenchmarkingInformation.cxx)
-configure_file(PerformanceBenchmarkingInformation.h.in ${CMAKE_BINARY_DIR}/PerformanceBenchmarkingInformation.h)
+configure_file(PerformanceBenchmarkingInformation.h.in ${CMAKE_BINARY_DIR}/include/PerformanceBenchmarkingInformation.h)
 
 set( PerformanceBenchmarking_SRCS
     jsonxx.cc ## MIT License https://github.com/hjiang/jsonxx
@@ -62,7 +62,7 @@ set( PerformanceBenchmarking_SRCS
     itkHighPriorityRealTimeProbe.cxx
     itkHighPriorityRealTimeProbesCollector.cxx
     PerformanceBenchmarkingUtilities.cxx
-    ${CMAKE_BINARY_DIR}/PerformanceBenchmarkingInformation.h)
+    ${CMAKE_BINARY_DIR}/include/PerformanceBenchmarkingInformation.h)
 
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
