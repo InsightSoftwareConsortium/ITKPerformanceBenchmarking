@@ -67,13 +67,17 @@ itkHighPriorityRealTimeProbeTest(int, char *[])
     // time a task
     localTimer.Start();
 
-    double sum = 0.0;
-    for (unsigned int i = 0; i < 1e6; ++i)
+    double                 sum = 0.0;
+    constexpr unsigned int big_stopping_criteria = 1e6;
+    for (unsigned int i = 0; i < big_stopping_criteria; ++i)
     {
       sum += i;
     }
 
     localTimer.Stop();
+    // Need to use the variable sum to ensure that it is not optimized away.
+    std::cout << "     Time for simple addition summing loop with " << big_stopping_criteria
+              << " iterations: " << localTimer.GetMean() << " sum = (" << sum << ")\n";
   }
 
   if (!CheckTimeProbe(localTimer))
