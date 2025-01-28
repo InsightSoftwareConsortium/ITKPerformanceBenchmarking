@@ -1,7 +1,9 @@
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.22.1)
 
+# Need to set CMAKE_CXX_STANDARD, CMAKE_CXX_STANDARD_REQUIRED, CMAKE_CXX_EXTENSIONS
+# before calling project to ensure that it is available globally within your CMake project.
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14) # Supported values are ``14``, ``17`` and ``20``.
+  set(CMAKE_CXX_STANDARD 17) # Supported values are ``14``, ``17`` and ``20``.
 endif()
 if(NOT CMAKE_CXX_STANDARD_REQUIRED)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,9 +12,14 @@ if(NOT CMAKE_CXX_EXTENSIONS)
   set(CMAKE_CXX_EXTENSIONS OFF)
 endif()
 
-## If building external to ITK, we need to capture
-## required build setting from ITK prior to calling
-## project()
+
+project(PerformanceBenchmarking
+  VERSION 0.9.0
+  DESCRIPTION
+    "Real-world tests to benchmark ITK performance."
+  HOMEPAGE_URL "https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking"
+  LANGUAGES CXX C
+)
 if(NOT ITK_SOURCE_DIR)
   find_package(ITK REQUIRED)
   list(APPEND CMAKE_MODULE_PATH ${ITK_CMAKE_DIR})
@@ -27,7 +34,6 @@ if(NOT ITK_SOURCE_DIR)
     endif()
   endforeach()
 
-
   # Set a default build type if none was specified
   if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     message(STATUS "Setting build type to 'Release' as none was specified.")
@@ -35,12 +41,7 @@ if(NOT ITK_SOURCE_DIR)
     # Set the possible values of build type for cmake-gui
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
   endif()
-  enable_language(C)
-  enable_language(CXX)
 endif()
-
-project(PerformanceBenchmarking)
-
 set(PerformanceBenchmarking_LIBRARIES PerformanceBenchmarking)
 
 include_directories(${CMAKE_BINARY_DIR})
