@@ -111,7 +111,7 @@ PerformanceBenchmarkingInformation ::PerformanceBenchmarkingInformation()
   m_InformationInstance = this;        // threads need this
   m_InformationInstance->UnRegister(); // Remove extra reference
 
-  @MAPPING_VALUES @
+  @MAPPING_VALUES@
 }
 
 } // end namespace itk
