@@ -1,4 +1,10 @@
-set(DOCUMENTATION "New classes increase operating system process priority to
+# the top-level README is used for describing this module, just
+# re-used it for documentation here
+get_filename_component(MY_CURRENT_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+file(READ "${MY_CURRENT_DIR}/README.md" DOCUMENTATION)
+
+set(DOCUMENTATION
+       	"New classes increase operating system process priority to
 minimize the impact of other processes running on the system.
 
 These classes are used by a used by a suite of example ITK benchmarks to

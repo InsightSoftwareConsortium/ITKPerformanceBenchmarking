@@ -1,5 +1,11 @@
-cmake_minimum_required(VERSION 3.10.2)
-project(ITKBenchmarks NONE)
+cmake_minimum_required(VERSION 3.22.1)
+project(ITKBenchmarks
+  VERSION 0.9.0
+  DESCRIPTION
+    "Benchmarks performance."
+  HOMEPAGE_URL "https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking"
+  LANGUAGES CXX C
+)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake ${CMAKE_MODULE_PATH})
 include(ITKBenchmarksExternalData)

@@ -20,6 +20,9 @@ project(PerformanceBenchmarking
   HOMEPAGE_URL "https://github.com/InsightSoftwareConsortium/ITKPerformanceBenchmarking"
   LANGUAGES CXX C
 )
+
+set(PerformanceBenchmarking_LIBRARIES PerformanceBenchmarking)
+
 if(NOT ITK_SOURCE_DIR)
   find_package(ITK REQUIRED)
   list(APPEND CMAKE_MODULE_PATH ${ITK_CMAKE_DIR})
@@ -41,14 +44,12 @@ if(NOT ITK_SOURCE_DIR)
     # Set the possible values of build type for cmake-gui
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
   endif()
-endif()
-set(PerformanceBenchmarking_LIBRARIES PerformanceBenchmarking)
 
-include_directories(${CMAKE_BINARY_DIR})
-if(NOT ITK_SOURCE_DIR)
   include(ITKModuleExternal)
 else()
   set(ITK_DIR ${CMAKE_BINARY_DIR})
   itk_module_impl()
 endif()
-add_subdirectory(examples)
+
+itk_module_examples() # This builds the src directory
+add_subdirectory(examples) # this builds each of the itk benchmark domains

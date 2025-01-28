@@ -1,9 +1,17 @@
 name: Build, test, package
 
-on: [push,pull_request]
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-test-cxx:
+  cxx-build-workflow:
     runs-on: ${{ matrix.os }}
     strategy:
       max-parallel: 3
@@ -40,7 +48,7 @@ jobs:
           python -m pip install ninja
 
       - name: Get specific version of CMake, Ninja
-        uses: lukka/get-cmake@latest
+        uses: lukka/get-cmake@3.31.5
 
       - name: Download ITK
         run: |
