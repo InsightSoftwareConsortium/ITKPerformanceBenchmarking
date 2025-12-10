@@ -18,3 +18,14 @@ add_test(
 set_property(TEST ThreadOverheadBenchmark APPEND PROPERTY LABELS Core)
 ## performance tests should not be run in parallel
 set_tests_properties(ThreadOverheadBenchmark PROPERTIES RUN_SERIAL TRUE)
+
+add_executable(VectorIterationBenchmark itkVectorIterationBenchmark.cxx )
+target_link_libraries(VectorIterationBenchmark ${ITK_LIBRARIES})
+add_test(
+  NAME VectorIterationBenchmark
+  COMMAND VectorIterationBenchmark
+  ${BENCHMARK_RESULTS_OUTPUT_DIR}/__DATESTAMP__VectorIterationBenchmark.json
+  50 128 )
+set_property(TEST VectorIterationBenchmark APPEND PROPERTY LABELS Core)
+## performance tests should not be run in parallel
+set_tests_properties(VectorIterationBenchmark PROPERTIES RUN_SERIAL TRUE)
