@@ -36,6 +36,12 @@
 #include <fstream>
 
 
+namespace
+{
+template <typename T>
+static constexpr bool isVariableLengthVector = std::is_same_v<T, itk::VariableLengthVector<typename T::ValueType>>;
+}
+
 // Helper function to initialize an image with random values
 template <typename TImage>
 typename TImage::Pointer
@@ -94,12 +100,24 @@ CopyScanlineIterator(const TInputImage * inputPtr, TOutputImage * outputPtr)
     while (!inputIt.IsAtEndOfLine())
     {
       const InputPixelType & inputPixel = inputIt.Get();
-      OutputPixelType        value(outputIt.Get());
-      for (unsigned int k = 0; k < componentsPerPixel; ++k)
+
+      if constexpr (isVariableLengthVector<OutputPixelType>)
       {
-        value[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
+        OutputPixelType value(outputIt.Get());
+        for (unsigned int k = 0; k < componentsPerPixel; ++k)
+        {
+          value[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
+        }
       }
-      outputIt.Set(value);
+      else
+      {
+        OutputPixelType value;
+        for (unsigned int k = 0; k < componentsPerPixel; ++k)
+        {
+          value[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
+        }
+        outputIt.Set(value);
+      }
 
       ++inputIt;
       ++outputIt;
@@ -133,12 +151,23 @@ CopyScanlineIteratorNumericTraits(const TInputImage * inputPtr, TOutputImage * o
     {
       const InputPixelType & inputPixel = inputIt.Get();
 
-      OutputPixelType value{ outputIt.Get() };
-      for (unsigned int k = 0; k < componentsPerPixel; ++k)
+      if constexpr (isVariableLengthVector<OutputPixelType>)
       {
-        value[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
+        OutputPixelType value(outputIt.Get());
+        for (unsigned int k = 0; k < componentsPerPixel; ++k)
+        {
+          value[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
+        }
       }
-      outputIt.Set(value);
+      else
+      {
+        OutputPixelType value;
+        for (unsigned int k = 0; k < componentsPerPixel; ++k)
+        {
+          value[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
+        }
+        outputIt.Set(value);
+      }
 
       ++inputIt;
       ++outputIt;
@@ -171,12 +200,13 @@ CopyImageRegionRange(const TInputImage * inputPtr, TOutputImage * outputPtr)
   while (inputIt != inputEnd)
   {
     const InputPixelType & inputPixel = *inputIt;
-    OutputPixelType        outputPixel{ *outputIt };
+    std::conditional_t<isVariableLengthVector<OutputPixelType>, OutputPixelType, OutputPixelType &> outputPixel{
+      *outputIt
+    };
     for (unsigned int k = 0; k < componentsPerPixel; ++k)
     {
       outputPixel[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
     }
-    *outputIt = outputPixel;
 
     ++inputIt;
     ++outputIt;
@@ -206,12 +236,13 @@ CopyImageRegionRangeNumericTraits(const TInputImage * inputPtr, TOutputImage * o
   while (inputIt != inputEnd)
   {
     const InputPixelType & inputPixel = *inputIt;
-    OutputPixelType        outputPixel{ *outputIt };
+    std::conditional_t<isVariableLengthVector<OutputPixelType>, OutputPixelType, OutputPixelType &> outputPixel{
+      *outputIt
+    };
     for (unsigned int k = 0; k < componentsPerPixel; ++k)
     {
       outputPixel[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
     }
-    *outputIt = outputPixel;
     ++inputIt;
     ++outputIt;
   }
@@ -235,12 +266,13 @@ CopyImageRegionRangeNumericTraitsAsRange(const TInputImage * inputPtr, TOutputIm
   const unsigned int componentsPerPixel = itk::NumericTraits<OutputPixelType>::GetLength(*outputIt);
   for (const InputPixelType & inputPixel : itk::ImageRegionRange<const TInputImage>(*inputPtr, inputRegion))
   {
-    OutputPixelType outputPixel{ *outputIt };
+    std::conditional_t<isVariableLengthVector<OutputPixelType>, OutputPixelType, OutputPixelType &> outputPixel{
+      *outputIt
+    };
     for (unsigned int k = 0; k < componentsPerPixel; ++k)
     {
       outputPixel[k] = static_cast<typename OutputPixelType::ValueType>(inputPixel[k]);
     }
-    *outputIt = outputPixel;
     ++outputIt;
   }
 }
