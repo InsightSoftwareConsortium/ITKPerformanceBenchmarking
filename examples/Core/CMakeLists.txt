@@ -29,3 +29,14 @@ add_test(
 set_property(TEST VectorIterationBenchmark APPEND PROPERTY LABELS Core)
 ## performance tests should not be run in parallel
 set_tests_properties(VectorIterationBenchmark PROPERTIES RUN_SERIAL TRUE)
+
+add_executable(CopyIterationBenchmark itkCopyIterationBenchmark.cxx )
+target_link_libraries(CopyIterationBenchmark ${ITK_LIBRARIES})
+add_test(
+  NAME CopyIterationBenchmark
+  COMMAND CopyIterationBenchmark
+  ${BENCHMARK_RESULTS_OUTPUT_DIR}/__DATESTAMP__CopyIterationBenchmark.json
+  25 128 )
+set_property(TEST CopyIterationBenchmark APPEND PROPERTY LABELS Core)
+## performance tests should not be run in parallel
+set_tests_properties(CopyIterationBenchmark PROPERTIES RUN_SERIAL TRUE)
