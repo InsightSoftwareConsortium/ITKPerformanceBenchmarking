@@ -22,6 +22,10 @@ project(PerformanceBenchmarking
 )
 
 set(PerformanceBenchmarking_LIBRARIES PerformanceBenchmarking)
+# Path for configured PerformanceBenchmarkingInformation.h
+set(PerformanceBenchmarking_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/include/)
+
+set(Module_PerformanceBenchmarking_BUILD_EXAMPLES ON)
 
 if(NOT ITK_SOURCE_DIR)
   find_package(ITK REQUIRED)
@@ -51,5 +55,4 @@ else()
   itk_module_impl()
 endif()
 
-itk_module_examples() # This builds the src directory
-add_subdirectory(examples) # this builds each of the itk benchmark domains
+itk_module_examples() # This builds the examples directory
