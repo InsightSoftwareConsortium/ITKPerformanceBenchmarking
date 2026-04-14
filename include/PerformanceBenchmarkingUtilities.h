@@ -22,7 +22,7 @@ using MultiThreaderName = itk::MultiThreaderBase;
 #endif
 
 PerformanceBenchmarking_EXPORT std::string
-PerfDateStamp();
+                               PerfDateStamp();
 
 PerformanceBenchmarking_EXPORT std::string
 ReplaceOccurrence(std::string str, const std::string && findvalue, const std::string && replacevalue);
