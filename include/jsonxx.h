@@ -5,15 +5,16 @@
 //   Sean Middleditch <sean@middleditch.us>
 //   rlyeh <https://github.com/r-lyeh>
 
-#pragma once
+#ifndef JSONXX_DEFINE_H
+#define JSONXX_DEFINE_H
 
 #include <cstddef>
-#include <cassert>
 #include <iostream>
+#include <limits>
 #include <map>
 #include <vector>
 #include <string>
-#include <sstream>
+#include <string_view>
 
 // jsonxx versioning: major.minor-extra where
 // major = { number }
@@ -33,28 +34,32 @@
 #  define JSONXX_COMPILER_HAS_CXX11 0
 #endif
 
-#ifdef _MSC_VER
-// disable the C4127 warning if using VC, see https://stackoverflow.com/a/12042515
-#  define JSONXX_ASSERT(...)                                                                                   \
-    do                                                                                                         \
-    {                                                                                                          \
-      __pragma(warning(push)) __pragma(warning(disable : 4127)) if (jsonxx::Assertions) __pragma(warning(pop)) \
-        jsonxx::assertion(__FILE__, __LINE__, #__VA_ARGS__, bool(__VA_ARGS__));                                \
-      __pragma(warning(push)) __pragma(warning(disable : 4127))                                                \
-    } while (0) __pragma(warning(pop))
+#define JSONXX_ASSERT(...)                                                    \
+  do                                                                          \
+  {                                                                           \
+    if (jsonxx::Assertions)                                                   \
+      jsonxx::assertion(__FILE__, __LINE__, #__VA_ARGS__, bool(__VA_ARGS__)); \
+  } while (0)
+
+#ifndef JSONXX_HANDLE_INFINITY
+#  define JSONXX_HANDLE_INFINITY 1
+#endif
+
+#ifdef DEBUG
+#  define JSONXX_WARN(...) std::cerr << "[WARN] " << __VA_ARGS__ << std::endl;
 #else
-#  define JSONXX_ASSERT(...)                                                    \
-    do                                                                          \
-    {                                                                           \
-      if (jsonxx::Assertions)                                                   \
-        jsonxx::assertion(__FILE__, __LINE__, #__VA_ARGS__, bool(__VA_ARGS__)); \
-    } while (0)
+#  define JSONXX_WARN(...) ;
 #endif
 
 namespace jsonxx
 {
 
-// FIXME(hjiang): Those should really be dynamic.
+enum PrintMode
+{
+  Pretty,
+  Compact,
+};
+
 // Settings
 enum Settings
 {
@@ -66,37 +71,18 @@ enum Settings
   // values
   Parser = Permissive,     // permissive or strict parsing
   UnquotedKeys = Disabled, // support of unquoted keys
-  Assertions = Enabled     // enabled or disabled assertions (these asserts work both in DEBUG and RELEASE builds)
+#if DEBUG
+  Assertions = Enabled // enabled or disabled assertions (these asserts work both in DEBUG and RELEASE builds)
+#else
+  Assertions = Disabled // enabled or disabled assertions (these asserts work both in DEBUG and RELEASE builds)
+#endif
 };
-
-#ifdef _MSC_VER
-#  pragma warning(push)
-#  pragma warning(disable : 4127)
-#endif
-inline bool
-parser_is_strict()
-{
-  return Parser == Strict;
-}
-inline bool
-parser_is_permissive()
-{
-  return Parser == Permissive;
-}
-inline bool
-unquoted_keys_are_enabled()
-{
-  return UnquotedKeys == Enabled;
-}
-#ifdef _MSC_VER
-#  pragma warning(pop)
-#endif
 
 // Constants for .write() and .xml() methods
 enum Format
 {
   JSON = 0,     // JSON output
-  JSONx = 1,    // XML output, JSONx  format. see https://goo.gl/I3cxs
+  JSONx = 1,    // XML output, JSONx  format. see http://goo.gl/I3cxs
   JXML = 2,     // XML output, JXML   format. see https://github.com/r-lyeh/JXML
   JXMLex = 3,   // XML output, JXMLex format. see https://github.com/r-lyeh/JXMLex
   TaggedXML = 4 // XML output, tagged XML format. see https://github.com/hjiang/jsonxx/issues/12
@@ -111,6 +97,21 @@ struct Null
 class Value;
 class Object;
 class Array;
+
+// Range of Number. Valid numbers outside the range as considered infinite
+constexpr Number MaxNumberRange = std::numeric_limits<double>::max();
+constexpr Number MinNumberRange = -std::numeric_limits<double>::max();
+
+// JSON representation of infinite numbers
+constexpr const char * InfinityRepresentation = "1e500";
+
+// Default value
+static const String  EmptyString = "";
+static const Number  Zero = 0;
+static const Number  MinusOne = -1;
+static const Number  One = 1;
+static const Boolean True = true;
+static const Boolean False = false;
 
 // Identity meta-function
 template <typename T>
@@ -161,6 +162,11 @@ public:
   const T &
   get(const std::string & key, const typename identity<T>::type & default_value) const;
 
+  // Delete unsafe operation
+  template <typename T>
+  const T &
+  get(const std::string & key, typename identity<T>::type && default_value) const = delete;
+
   size_t
   size() const;
   bool
@@ -169,11 +175,12 @@ public:
   const std::map<std::string, Value *> &
   kv_map() const;
   std::string
-  json() const;
+  json(PrintMode printMode = PrintMode::Compact, int floatPrecision = std::numeric_limits<double>::digits10 + 1) const;
   std::string
   xml(unsigned            format = JSONx,
       const std::string & header = std::string(),
-      const std::string & attrib = std::string()) const;
+      const std::string & attrib = std::string(),
+      int                 floatPrecision = std::numeric_limits<double>::digits10 + 1) const;
   std::string
   write(unsigned format) const;
 
@@ -212,6 +219,8 @@ protected:
   std::string odd;
 };
 
+static const Object EmptyObject = {};
+
 class Array
 {
 public:
@@ -238,17 +247,23 @@ public:
   const T &
   get(unsigned int i, const typename identity<T>::type & default_value) const;
 
+  // Delete unsafe operation
+  template <typename T>
+  const T &
+  get(unsigned int i, typename identity<T>::type && default_value) const = delete;
+
   const std::vector<Value *> &
   values() const
   {
     return values_;
   }
   std::string
-  json() const;
+  json(PrintMode printMode = PrintMode::Compact, int floatPrecision = std::numeric_limits<double>::digits10 + 1) const;
   std::string
   xml(unsigned            format = JSONx,
       const std::string & header = std::string(),
-      const std::string & attrib = std::string()) const;
+      const std::string & attrib = std::string(),
+      int                 floatPrecision = std::numeric_limits<double>::digits10 + 1) const;
 
   std::string
   write(unsigned format) const
@@ -262,13 +277,6 @@ public:
   bool
                                parse(const std::string & input);
   typedef std::vector<Value *> container;
-  void
-  append(const Array & other);
-  void
-  append(const Value & value)
-  {
-    import(value);
-  }
   void
   import(const Array & other);
   void
@@ -290,6 +298,8 @@ protected:
   container values_;
 };
 
+static const Array EmptyArray = {};
+
 // A value could be a number, an array, a string, an object, a
 // boolean, or null
 class Value
@@ -300,15 +310,22 @@ public:
   void
   reset();
 
+#ifdef JSONXX_ALLOW_INVALID_TYPES
   template <typename T>
+  [[deprecated("this type is not natively supported by jsonxx, therefore its value will be converted to 'null'")]]
   void
-  import(const T &)
+  import(const T & t)
   {
     reset();
     type_ = INVALID_;
-    // debug
-    // std::cout << "[WARN] No support for " << typeid(t).name() << std::endl;
+    JSONXX_WARN("No JSONXX support for " << typeid(t).name());
   }
+#else
+  template <typename T>
+  void
+  import(const T & t) = delete;
+#endif
+
   void
   import(const bool & b)
   {
@@ -316,19 +333,18 @@ public:
     type_ = BOOL_;
     bool_value_ = b;
   }
-#define local_number(TYPE)                       \
+#define $number(TYPE)                            \
   void import(const TYPE & n)                    \
   {                                              \
     reset();                                     \
     type_ = NUMBER_;                             \
     number_value_ = static_cast<long double>(n); \
   }
-  local_number(char) local_number(int) local_number(long) local_number(long long) local_number(unsigned char)
-    local_number(unsigned int) local_number(unsigned long) local_number(unsigned long long) local_number(float)
-      local_number(double) local_number(long double)
-#undef local_number
+  $number(char) $number(int) $number(long) $number(long long) $number(unsigned char) $number(unsigned int)
+    $number(unsigned long) $number(unsigned long long) $number(float) $number(double) $number(long double)
+#undef $number
 #if JSONXX_COMPILER_HAS_CXX11 > 0
-        void import(const std::nullptr_t &)
+      void import(const std::nullptr_t &)
   {
     reset();
     type_ = NULL_;
@@ -346,6 +362,24 @@ public:
     reset();
     type_ = STRING_;
     *(string_value_ = new String()) = s;
+  }
+  void
+  import(const std::string_view & sv)
+  {
+    reset();
+    type_ = STRING_;
+    *(string_value_ = new String()) = sv;
+  }
+  template <typename T>
+  void
+  import(const std::vector<T> & array)
+  {
+    Array a;
+    for (const auto & elmt : array)
+    {
+      a << elmt;
+    }
+    import(a);
   }
   void
   import(const Array & a)
@@ -408,14 +442,31 @@ public:
     return *this;
   }
   Value(const Value & other);
-  template <typename T>
-  Value(const T & t)
-    : type_(INVALID_)
-  {
-    import(t);
+
+#define $Value(TYPE)    \
+  Value(const TYPE & t) \
+    : type_(INVALID_)   \
+  {                     \
+    import(t);          \
   }
-  template <size_t N>
-  Value(const char (&t)[N])
+
+#ifdef JSONXX_ALLOW_INVALID_TYPES
+  template <typename T>
+  $Value(T)
+#else
+  $Value(bool) $Value(char) $Value(int) $Value(long) $Value(long long) $Value(unsigned char) $Value(unsigned int)
+    $Value(unsigned long) $Value(unsigned long long) $Value(float) $Value(double) $Value(long double)
+#  if JSONXX_COMPILER_HAS_CXX11 > 0
+      $Value(std::nullptr_t)
+#  endif
+        $Value(Null) $Value(String) $Value(std::string_view) template <typename T>
+        $Value(std::vector<T>) $Value(Array) $Value(Object)
+#endif
+
+#undef $Value
+
+    template <size_t N>
+    Value(const char (&t)[N])
     : type_(INVALID_)
   {
     import(std::string(t));
@@ -464,6 +515,8 @@ protected:
   parse(std::istream & input, Value & value);
 };
 
+static const Value EmptyValue = {};
+
 template <typename T>
 bool
 Array::has(unsigned int i) const
@@ -501,15 +554,15 @@ template <typename T>
 const T &
 Array::get(unsigned int i, const typename identity<T>::type & default_value) const
 {
-  if (has<T>(i))
+  if (i < size())
   {
     const Value * v = values_.at(i);
-    return v->get<T>();
+    if (v->is<T>())
+    {
+      return v->get<T>();
+    }
   }
-  else
-  {
-    return default_value;
-  }
+  return default_value;
 }
 
 template <typename T>
@@ -540,9 +593,10 @@ template <typename T>
 const T &
 Object::get(const std::string & key, const typename identity<T>::type & default_value) const
 {
-  if (has<T>(key))
+  auto iterator = value_map_.find(key);
+  if (iterator != value_map_.end() && iterator->second->is<T>())
   {
-    return value_map_.find(key)->second->get<T>();
+    return iterator->second->get<T>();
   }
   else
   {
@@ -700,7 +754,6 @@ Object::operator<<(const T & value)
   *this << Value(value);
   return *this;
 }
-
 } // namespace jsonxx
 
 std::ostream &
@@ -709,3 +762,5 @@ std::ostream &
 operator<<(std::ostream & stream, const jsonxx::Object & v);
 std::ostream &
 operator<<(std::ostream & stream, const jsonxx::Array & v);
+
+#endif
