@@ -12,17 +12,17 @@
 #include "itkHighPriorityRealTimeProbesCollector.h"
 
 #if ITK_VERSION_MAJOR < 5 || defined(ITK_USES_NUMBEROFTHREADS)
-#include "itkMultiThreader.h"
+#  include "itkMultiThreader.h"
 using MultiThreaderName = itk::MultiThreader;
-#define SET_PARALLEL_UNITS( x ) SetNumberOfThreads( x )
+#  define SET_PARALLEL_UNITS(x) SetNumberOfThreads(x)
 #else
-#include "itkMultiThreaderBase.h"
+#  include "itkMultiThreaderBase.h"
 using MultiThreaderName = itk::MultiThreaderBase;
-#define SET_PARALLEL_UNITS( x ) SetNumberOfWorkUnits( x )
+#  define SET_PARALLEL_UNITS(x) SetNumberOfWorkUnits(x)
 #endif
 
 PerformanceBenchmarking_EXPORT std::string
-                               PerfDateStamp();
+PerfDateStamp();
 
 PerformanceBenchmarking_EXPORT std::string
 ReplaceOccurrence(std::string str, const std::string && findvalue, const std::string && replacevalue);
