@@ -48,12 +48,9 @@ if(NOT ITK_SOURCE_DIR)
     # Set the possible values of build type for cmake-gui
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
   endif()
+endif()
 
-project(PerformanceBenchmarking)
-
-option(ITK_USES_NUMBEROFTHREADS "If ITKv5 uses NumberOfThreads (not NumberOfWorkUnits" OFF)
-
-set(PerformanceBenchmarking_LIBRARIES PerformanceBenchmarking)
+option(ITK_USES_NUMBEROFTHREADS "If ITKv5 uses NumberOfThreads (not NumberOfWorkUnits)" OFF)
 
 include_directories(${CMAKE_BINARY_DIR})
 if(NOT ITK_SOURCE_DIR)
