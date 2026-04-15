@@ -219,7 +219,12 @@ protected:
   std::string odd;
 };
 
-static const Object EmptyObject = {};
+inline const Object &
+EmptyObject()
+{
+  static const Object instance;
+  return instance;
+}
 
 class Array
 {
@@ -298,7 +303,12 @@ protected:
   container values_;
 };
 
-static const Array EmptyArray = {};
+inline const Array &
+EmptyArray()
+{
+  static const Array instance;
+  return instance;
+}
 
 // A value could be a number, an array, a string, an object, a
 // boolean, or null
@@ -515,7 +525,12 @@ protected:
   parse(std::istream & input, Value & value);
 };
 
-static const Value EmptyValue = {};
+inline const Value &
+EmptyValue()
+{
+  static const Value instance;
+  return instance;
+}
 
 template <typename T>
 bool
