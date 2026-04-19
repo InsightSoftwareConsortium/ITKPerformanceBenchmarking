@@ -42,3 +42,9 @@ cmake-build*/**
 doc/*.pyg
 doc/_minted-ITKPerformanceBenchmarking/*
 
+
+# Python / ASV
+*.egg-info/
+__pycache__/
+.asv/
+/itk-repo
