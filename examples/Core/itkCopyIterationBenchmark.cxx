@@ -33,6 +33,47 @@
 #include <fstream>
 
 
+// Pixel-construction traits.
+//
+// For scalar and FixedArray-backed images, `static_cast<PixelType>(count)`
+// produces a pixel whose value encodes `count`. For VectorImage, whose
+// PixelType is `itk::VariableLengthVector<T>`, the single-argument
+// constructor is a LENGTH constructor — `VLV<float>(count)` yields a
+// vector of size `count`, not a multi-component pixel with value `count`.
+// Passing that length-mismatched value through the VectorImage pixel
+// accessor used to read out-of-spec memory ("happens to work" prior to
+// ITK commit 1d87efa5) and now segfaults, because the accessor copies
+// exactly `NumberOfComponentsPerPixel` elements from the source's
+// internal data pointer — which is null when the source VLV has size 0.
+//
+// The specialization below constructs a correctly-sized
+// VariableLengthVector pixel, filled with `count` (cast to the value
+// type). This makes the benchmark portable across all ITK versions in
+// the v5.3 → main range regardless of how `VLV(0)` is represented
+// internally.
+template <typename TPixel>
+struct PixelFiller
+{
+  static TPixel
+  Make(unsigned int count, unsigned int /*componentsPerPixel*/)
+  {
+    return static_cast<TPixel>(count);
+  }
+};
+
+template <typename TValue>
+struct PixelFiller<itk::VariableLengthVector<TValue>>
+{
+  static itk::VariableLengthVector<TValue>
+  Make(unsigned int count, unsigned int componentsPerPixel)
+  {
+    itk::VariableLengthVector<TValue> pixel(componentsPerPixel);
+    pixel.Fill(static_cast<TValue>(count));
+    return pixel;
+  }
+};
+
+
 // Helper function to initialize an image with random values
 template <typename TImage>
 typename TImage::Pointer
@@ -54,7 +95,7 @@ CreateAndInitializeImage(const typename TImage::SizeType & size, unsigned int nu
   itk::ImageRegionIterator<TImage> it(image, region);
   for (; !it.IsAtEnd(); ++it)
   {
-    it.Set(static_cast<PixelType>(count));
+    it.Set(PixelFiller<PixelType>::Make(count, numberOfComponentsPerPixel));
     ++count;
   }
 
