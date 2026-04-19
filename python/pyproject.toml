@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "itk_perf_shim"
+version = "0.1.0"
+description = "Subprocess shim invoking ITKPerformanceBenchmarking C++ benchmarks for ASV."
+requires-python = ">=3.9"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["itk_perf_shim*"]
