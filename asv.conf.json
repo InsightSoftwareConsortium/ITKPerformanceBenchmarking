@@ -4,7 +4,7 @@
     "project_url": "https://itk.org/",
     "_comment_repo": "'repo' points at the ITK source tree whose commits label the time series. The caller (CI workflow or local smoke test) must create a symlink named 'itk-repo' at the root of this harness pointing to the ITK clone before invoking asv.",
     "repo": "itk-repo",
-    "branches": ["origin/master"],
+    "branches": ["origin/main"],
     "environment_type": "existing",
     "show_commit_url": "https://github.com/InsightSoftwareConsortium/ITK/commit/",
     "benchmark_dir": "benchmarks",

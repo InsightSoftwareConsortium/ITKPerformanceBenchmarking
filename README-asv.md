@@ -69,7 +69,7 @@ asv run --machine $(hostname -s) --set-commit-hash "$ITK_SHA" --python=same
 ```sh
 # Assumes ITK-base-build and ITK-head-build already exist, and the
 # itk-repo symlink points at the ITK clone.
-BASE_SHA=$(cd itk-repo && git merge-base origin/master HEAD)
+BASE_SHA=$(cd itk-repo && git merge-base origin/main HEAD)
 HEAD_SHA=$(cd itk-repo && git rev-parse HEAD)
 
 ITK_BENCHMARK_BIN=/path/to/ITK-base-build/bin \
