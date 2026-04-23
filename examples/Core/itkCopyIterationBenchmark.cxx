@@ -116,7 +116,6 @@ template <typename TInputImage, typename TOutputImage>
 void
 CopyRegionIterator(const TInputImage * inputPtr, TOutputImage * outputPtr)
 {
-  using InputPixelType = typename TInputImage::PixelType;
   using OutputPixelType = typename TOutputImage::PixelType;
   using ImageRegionConstIterator = itk::ImageRegionConstIterator<TInputImage>;
   using ImageRegionIterator = itk::ImageRegionIterator<TOutputImage>;
@@ -139,7 +138,6 @@ template <typename TInputImage, typename TOutputImage>
 void
 CopyScanlineIterator(const TInputImage * inputPtr, TOutputImage * outputPtr)
 {
-  using InputPixelType = typename TInputImage::PixelType;
   using OutputPixelType = typename TOutputImage::PixelType;
   using ImageScanlineConstIterator = itk::ImageScanlineConstIterator<TInputImage>;
   using ImageScanlineIterator = itk::ImageScanlineIterator<TOutputImage>;
