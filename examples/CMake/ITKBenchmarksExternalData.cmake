@@ -25,6 +25,11 @@ set(ExternalData_URL_TEMPLATES "" CACHE STRING
 file:///var/bigharddrive/%(algo)/%(hash)")
 mark_as_advanced(ExternalData_URL_TEMPLATES)
 list(APPEND ExternalData_URL_TEMPLATES
+  # Primary CID source: ITKTestingData gh-pages mirror.
+  # %(algo) substitutes the uppercase algorithm name (CID, MD5, SHA512),
+  # matching the case-sensitive directory layout on the gh-pages branch.
+  "https://insightsoftwareconsortium.github.io/ITKTestingData/%(algo)/%(hash)"
+
   # Data published on MIDAS
   "https://midas3.kitware.com/midas/api/rest?method=midas.bitstream.download&checksum=%(hash)&algorithm=%(algo)"
 
